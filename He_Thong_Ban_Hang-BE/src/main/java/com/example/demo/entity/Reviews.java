@@ -36,8 +36,8 @@ public class Reviews {
     private String description;
     
     @ManyToOne
-    @JoinColumn(name="tour_id")
-    private Tour tours;
+    @JoinColumn(name="product_id")
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name="user_id")

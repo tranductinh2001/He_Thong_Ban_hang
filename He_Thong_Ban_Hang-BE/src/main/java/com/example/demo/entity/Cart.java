@@ -27,5 +27,5 @@ public class Cart {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id") // Liên kết với bảng CartItems
-    private List<CartItem> items = new ArrayList<>();
+    private List<Product> items = new ArrayList<>();
 }

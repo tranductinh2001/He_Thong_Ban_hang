@@ -131,13 +131,13 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		User user = userRepository.findByUsername(request.getUsername())
 				.orElseThrow(() -> new NotFoundException("Not Found User"));
-		user.setFirstname(request.getFirstname());
-		user.setLastname(request.getLastname());
+		user.setFirstName(request.getFirstname());
+		user.setLastName(request.getLastname());
 		user.setEmail(request.getEmail());
-		user.setCountry(request.getCountry());
-		user.setState(request.getState());
+		user.setAddress(request.getCountry());
+		//user.setState(request.getState());
 		user.setAddress(request.getAddress());
-		user.setPhone(request.getPhone());
+		user.setNumberPhone(request.getPhone());
 		userRepository.save(user);
 		return user;
 	}

@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -74,4 +75,11 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiresAt;
 
+    @ManyToMany
+    @JoinColumn(name = "tour_id")
+    private List<Product> product;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

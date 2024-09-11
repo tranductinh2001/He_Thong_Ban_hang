@@ -101,9 +101,7 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary="Đăng ký")
     public ResponseEntity<?> register(@Valid @RequestBody CreateUserRequest request){
-      
         userService.register(request);
-      
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 

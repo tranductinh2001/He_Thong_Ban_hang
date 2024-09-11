@@ -99,11 +99,10 @@ export default function RegisterPage() {
     e.preventDefault();
 
     // console.log("form ", payload);
-    // Tạo một bản sao của payload mà không có trường confirmPassword
     const { confirmPassword, ...payloadWithoutConfirmPassword } = {
       ...payload,
     };
-
+    console.log("form ", payloadWithoutConfirmPassword);
     dispatch(register(payloadWithoutConfirmPassword));
   };
 
@@ -364,7 +363,8 @@ export default function RegisterPage() {
                 </label>
                 <div className="mt-2">
                   <input
-                  onFocus={handleFocus} onBlur={handleBlur}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     id="first_name"
                     name="first_name"
                     type="text"
@@ -392,7 +392,8 @@ export default function RegisterPage() {
                 </label>
                 <div className="mt-2">
                   <input
-                  onFocus={handleFocus} onBlur={handleBlur}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     id="dob"
                     name="dob"
                     type="date"
@@ -420,8 +421,8 @@ export default function RegisterPage() {
                 </label>
                 <div className="mt-2">
                   <input
-
-onFocus={handleFocus} onBlur={handleBlur}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     id="number_phone"
                     name="number_phone"
                     type="text"
@@ -449,7 +450,8 @@ onFocus={handleFocus} onBlur={handleBlur}
                 </label>
                 <div className="mt-2">
                   <input
-                  onFocus={handleFocus} onBlur={handleBlur}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     id="address"
                     name="address"
                     type="text"

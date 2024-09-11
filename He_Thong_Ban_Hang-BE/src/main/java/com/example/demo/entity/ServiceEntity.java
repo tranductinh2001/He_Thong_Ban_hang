@@ -31,6 +31,6 @@ public class ServiceEntity {
     private long price;
     
     @ManyToOne
-    @JoinColumn(name = "tour_id")
-    private Tour tour;
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

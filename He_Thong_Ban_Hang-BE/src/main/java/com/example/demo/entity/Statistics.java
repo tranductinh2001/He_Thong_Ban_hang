@@ -27,7 +27,7 @@ public class Statistics { // thống kê
     
     private long revenue; // doanh thu theo time 
     
-//    private long customerCount; // số lượng khách hàng
+    private long customerCount; // số lượng khách hàng
     
     private long soldToursCount;  // số lượng tour đã bán
     
