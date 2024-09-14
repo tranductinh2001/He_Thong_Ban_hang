@@ -1,10 +1,8 @@
 package com.example.demo.service.impl;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,7 +68,7 @@ public class UserServiceImpl implements UserService {
 				userRepository.save(user);
 			} else {
 				User newUser = new User();
-				newUser.setUsername(username);
+				newUser.setEmail(username);
 				newUser.setVerificationCode(code);
 				userRepository.save(newUser);
 			}
@@ -81,41 +79,68 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void register(CreateUserRequest request) {
+		System.out.println(" register đã được thực thi "+request);
 		// TODO Auto-generated method stub
 		User user = new User();
-		user.setUsername(request.getUsername());
+
+		// Set các thuộc tính từ request\
+		user.setUsername(request.getEmail());
+		user.setFirstName(request.getFirstName());
+		user.setLastName(request.getLastName());
 		user.setEmail(request.getEmail());
-		user.setPassword(encoder.encode(request.getPassword()));
-		Set<String> strRoles = request.getRole();
-		Set<Role> roles = new HashSet<>();
+		user.setNumberPhone(request.getNumberPhone());
+		user.setAddress(request.getAddress());
 
-		if (strRoles == null) {
-			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-			roles.add(userRole);
-		} else {
-			strRoles.forEach(role -> {
-				switch (role) {
-				case "admin":
-					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(adminRole);
+		// Định dạng ngày tháng
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-					break;
-				case "mod":
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(modRole);
-
-					break;
-				default:
-					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(userRole);
-				}
-			});
+		try {
+			Date dob = formatter.parse(request.getDob());
+			user.setDob(dob);
+		} catch (ParseException e) {
+			System.out.println("Lỗi: Định dạng ngày tháng không hợp lệ.");
+			throw new RuntimeException("Ngày tháng không hợp lệ: " + e.getMessage());
 		}
-		user.setRoles(roles);
+
+		// Mã hóa mật khẩu
+		user.setPassword(encoder.encode(request.getPassword()));
+
+		// Lấy danh sách quyền từ request
+//		Set<String> strRoles = request.getRole();
+//		Set<Role> roles = new HashSet<>();
+//
+//		if (strRoles == null || strRoles.isEmpty()) {
+//			// Mặc định cấp quyền ROLE_USER nếu không có quyền nào trong request
+//			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//			roles.add(userRole);
+//		} else {
+//			// Gán các quyền từ request vào cho người dùng
+//			strRoles.forEach(role -> {
+//				switch (role) {
+//					case "admin":
+//						Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+//								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//						roles.add(adminRole);
+//						break;
+//					case "mod":
+//						Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+//								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//						roles.add(modRole);
+//						break;
+//					default:
+//						Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+//						roles.add(userRole);
+//				}
+//			});
+//		}
+//
+//		// Set các quyền cho người dùng
+//		user.setRoles(roles);
+
+		// Đánh dấu tài khoản là chưa kích hoạt (chờ xác thực qua email chẳng hạn)
+		user.setEnabled(false);
 		userRepository.save(user);
 	}
 

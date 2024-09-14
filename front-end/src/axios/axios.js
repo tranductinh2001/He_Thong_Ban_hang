@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
     const { response } = error;
     console.log(response);
     if (response && (response.status === 401 || response.status === 403)) {
-      window.location.href = '/login';
+      // window.location.href = '/login';\
     }
     return Promise.reject(error);
   }

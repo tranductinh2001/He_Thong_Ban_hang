@@ -14,8 +14,8 @@ const API_ENDPOINTS = {
   PRODUCT_DETAIL: (productId) => `/products/${productId}`,
 
   //user
-  USER_DETAIL: (userId) => `/users/profile`,
-  UPDATE_USER: (id) => `/users/update`,
+  USER_DETAIL: `/users/profile`,
+  UPDATE_USER: `/users/update`,
 
   //authentication
   LOGIN: `auth/login`,

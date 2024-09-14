@@ -101,6 +101,7 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary="Đăng ký")
     public ResponseEntity<?> register(@Valid @RequestBody CreateUserRequest request){
+        System.out.println(" ĐA TA NHẬN ĐƯỢC TỪ FE"+request.toString());
         userService.register(request);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

@@ -99,9 +99,7 @@ const request = {
   },
   UserDetail: async (userId) => {
     try {
-      const response = await axiosInstance.get(
-        API_ENDPOINTS.USER_DETAIL(userId)
-      );
+      const response = await axiosInstance.get(API_ENDPOINTS.USER_DETAIL);
       return response;
     } catch (error) {
       console.error("Error fetching user detail data:", error);
@@ -110,7 +108,10 @@ const request = {
   },
   loginService: async (payload) => {
     try {
-      const response = await axiosInstance.post(API_ENDPOINTS.LOGIN, payload);
+      const response = await axiosInstance.post(API_ENDPOINTS.LOGIN, {
+        username: payload.email,
+        password: payload.password
+      });
       console.log("login: ", response);
       return response;
     } catch (error) {
@@ -164,10 +165,7 @@ const request = {
   },
   updateUser: async ({ data }) => {
     try {
-      const response = await axiosInstance.put(
-        API_ENDPOINTS.UPDATE_USER(data.id),
-        data
-      );
+      const response = await axiosInstance.put(API_ENDPOINTS.UPDATE_USER, data);
       return response;
     } catch (error) {
       console.error("Error fetching cart data:", error);
@@ -181,10 +179,7 @@ const request = {
           connect: [oderAddressId],
         },
       };
-      const response = await axiosInstance.put(
-        API_ENDPOINTS.UPDATE_USER(userId),
-        data
-      );
+      const response = await axiosInstance.put(API_ENDPOINTS.UPDATE_USER, data);
       return response;
     } catch (error) {
       console.error("Error fetching user detail data:", error);
@@ -199,6 +194,7 @@ const request = {
       );
       return response;
     } catch (error) {
+      console.error("Error fetching changePassword:", error);
       throw error;
     }
   },
@@ -527,13 +523,21 @@ const request = {
   },
   Register: async (data) => {
     try {
-      // console.log("request ", data);
-      const response = await axiosInstance.post(API_ENDPOINTS.RIGISTER, data);
+      console.log("request ", data);
+      const response = await axiosInstance.post(API_ENDPOINTS.RIGISTER, {
+        email: data.email,
+        password: data.password,
+        firstName: data.first_name, 
+        lastName: data.last_name, 
+        numberPhone: data.number_phone, 
+        address: data.address,
+        dob: data.dob
+      });
       return response.data;
     } catch (error) {
       console.error("Error when register:", error);
       throw error;
     }
-  },
+  }
 };
 export default request;
