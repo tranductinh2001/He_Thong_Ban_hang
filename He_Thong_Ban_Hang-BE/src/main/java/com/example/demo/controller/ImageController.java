@@ -1,28 +1,20 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Image;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.InternalServerException;
+import com.example.demo.service.ImageService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.example.demo.entity.Image;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.InternalServerException;
-import com.example.demo.service.ImageService;
-
-import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/image")
@@ -39,7 +31,6 @@ public class ImageController {
     @GetMapping("/")
     public ResponseEntity<?> getList(){
         List<Image> listImage = imageService.getListImage();
-
         return  ResponseEntity.ok(listImage);
     }
 

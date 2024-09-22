@@ -55,7 +55,7 @@ public class AuthController {
     @GetMapping("/testmysql")
     public ResponseEntity<String> testMySQLConnection() {
         try {
-            List<Map<String, Object>> result = jdbcTemplate.queryForList("SELECT * FROM user.user;");
+            List<Map<String, Object>> result = jdbcTemplate.queryForList("SELECT * FROM user;");
             if (!result.isEmpty()) {
                 return ResponseEntity.ok("Kết nối MySQL hoạt động!");
             } else {

@@ -1,20 +1,20 @@
+
 package com.example.demo.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.example.demo.entity.Product;
+import com.example.demo.entity.ServiceEntity;
+import com.example.demo.exception.NotFoundException;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.repository.ServiceRepository;
+import com.example.demo.request.CreateServiceRequest;
+import com.example.demo.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.ServiceEntity;
-import com.example.demo.entity.Tour;
-import com.example.demo.exception.NotFoundException;
-import com.example.demo.repository.ServiceRepository;
-import com.example.demo.repository.TourRepository;
-import com.example.demo.request.CreateServiceRequest;
-import com.example.demo.service.ServiceService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
@@ -23,7 +23,7 @@ public class ServiceServiceImpl implements ServiceService {
 	private ServiceRepository serviceRepository;
 
 	@Autowired
-	private TourRepository TourRepository;
+	private ProductRepository ProductRepository;
 
 	@Override
 	public List<ServiceEntity> getListService() {
@@ -54,12 +54,12 @@ public class ServiceServiceImpl implements ServiceService {
 	    if (body.getIdTour() != null && !body.getIdTour().isEmpty()) {
 	        for (Long IDTour : body.getIdTour()) {
 	            ServiceEntity service = new ServiceEntity();
-	            Tour tour = TourRepository.findById(IDTour)
+	            Product product = ProductRepository.findById(IDTour)
 	                    .orElseThrow(() -> new NotFoundException("Not Found tour With Id: " + IDTour));
 	            service.setDescription(body.getDescription());
 	            service.setName(body.getName());
 	            service.setPrice(body.getPrice());
-	            service.setTour(tour);
+	            service.setProduct(product);
 	            serviceList.add(service);
 	        }
 	    } else {
@@ -67,7 +67,7 @@ public class ServiceServiceImpl implements ServiceService {
 	        service.setDescription(body.getDescription());
 	        service.setName(body.getName());
 	        service.setPrice(body.getPrice());
-	        service.setTour(null);
+	        service.setProduct(null);
 	        serviceList.add(service);
 	    }	    
 	    // Lưu danh sách ServiceEntity vào cơ sở dữ liệu
@@ -82,12 +82,12 @@ public class ServiceServiceImpl implements ServiceService {
 		    if (body.getIdTour() != null && !body.getIdTour().isEmpty()) {
 		        for (Long IDTour : body.getIdTour()) {
 		            ServiceEntity service = serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found tour service Id: " + id));
-		            Tour tour = TourRepository.findById(IDTour)
+		            Product product = ProductRepository.findById(IDTour)
 		                    .orElseThrow(() -> new NotFoundException("Not Found tour With Id: " + IDTour));
 		            service.setDescription(body.getDescription());
 		            service.setName(body.getName());
 		            service.setPrice(body.getPrice());
-		            service.setTour(tour);
+		            service.setProduct(product);
 		            serviceList.add(service);
 		        }
 		    } else {
@@ -95,7 +95,7 @@ public class ServiceServiceImpl implements ServiceService {
 		        service.setDescription(body.getDescription());
 		        service.setName(body.getName());
 		        service.setPrice(body.getPrice());
-		        service.setTour(null);
+		        service.setProduct(null);
 		        serviceList.add(service);
 		    }	    
 		    // Lưu danh sách ServiceEntity vào cơ sở dữ liệu

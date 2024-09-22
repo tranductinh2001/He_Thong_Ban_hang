@@ -1,14 +1,13 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.Image;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.repository.ImageRepository;
 import com.example.demo.service.ImageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ImageServiceImpl implements ImageService {

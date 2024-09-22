@@ -1,14 +1,13 @@
 package com.example.demo.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.example.demo.entity.Product;
+import com.example.demo.entity.ServiceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.entity.ServiceEntity;
-import com.example.demo.entity.Tour;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<ServiceEntity,Long>{
@@ -21,5 +20,5 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity,Long>{
     
     Optional<ServiceEntity> findById(Long id);
     
-    List<ServiceEntity> findByTour(Tour tour);
+    List<ServiceEntity> findByTour(Product product);
 }
