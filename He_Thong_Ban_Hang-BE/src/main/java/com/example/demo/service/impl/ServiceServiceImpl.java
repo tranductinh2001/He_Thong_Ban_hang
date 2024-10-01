@@ -23,7 +23,7 @@ public class ServiceServiceImpl implements ServiceService {
 	private ServiceRepository serviceRepository;
 
 	@Autowired
-	private ProductRepository ProductRepository;
+	private ProductRepository productRepository;
 
 	@Override
 	public List<ServiceEntity> getListService() {
@@ -54,7 +54,7 @@ public class ServiceServiceImpl implements ServiceService {
 	    if (body.getIdTour() != null && !body.getIdTour().isEmpty()) {
 	        for (Long IDTour : body.getIdTour()) {
 	            ServiceEntity service = new ServiceEntity();
-	            Product product = ProductRepository.findById(IDTour)
+	            Product product = productRepository.findById(IDTour)
 	                    .orElseThrow(() -> new NotFoundException("Not Found tour With Id: " + IDTour));
 	            service.setDescription(body.getDescription());
 	            service.setName(body.getName());
@@ -82,7 +82,7 @@ public class ServiceServiceImpl implements ServiceService {
 		    if (body.getIdTour() != null && !body.getIdTour().isEmpty()) {
 		        for (Long IDTour : body.getIdTour()) {
 		            ServiceEntity service = serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found tour service Id: " + id));
-		            Product product = ProductRepository.findById(IDTour)
+		            Product product = productRepository.findById(IDTour)
 		                    .orElseThrow(() -> new NotFoundException("Not Found tour With Id: " + IDTour));
 		            service.setDescription(body.getDescription());
 		            service.setName(body.getName());

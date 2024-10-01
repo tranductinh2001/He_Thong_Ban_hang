@@ -22,7 +22,7 @@ public class Product {
     private Long id;
 
     @Column(name = "status", nullable = false)
-    private boolean status = true;
+    private boolean status;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -57,13 +57,13 @@ public class Product {
     private Double salePrice;
 
     @Column(name = "is_hot", nullable = false)
-    private boolean isHot = false;
+    private boolean isHot;
 
     @Column(name = "is_sale", nullable = false)
-    private boolean isSale = false;
+    private boolean isSale;
 
     @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false;
+    private boolean isDeleted;
 
     @Column(name = "updated_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

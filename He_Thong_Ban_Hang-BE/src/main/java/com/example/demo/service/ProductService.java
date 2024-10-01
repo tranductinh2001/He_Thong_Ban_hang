@@ -5,8 +5,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.example.demo.entity.Product;
+import com.example.demo.request.CreateProductRequest;
 import org.springframework.scheduling.annotation.Scheduled;
-public class ProductService {
+public interface ProductService {
+
+    List<Product> findProductByCategoryId(Long categoryId);
     List<Product> getListProduct();
 
     List<Product> getListProductByName(String name);
