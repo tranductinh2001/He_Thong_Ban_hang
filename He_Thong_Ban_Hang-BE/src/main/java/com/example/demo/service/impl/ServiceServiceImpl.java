@@ -1,4 +1,3 @@
-
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Product;
@@ -49,64 +48,66 @@ public class ServiceServiceImpl implements ServiceService {
 
 	@Override
 	public List<ServiceEntity> createService(CreateServiceRequest body) {
-	    List<ServiceEntity> serviceList = new ArrayList<>();
-	    
-	    if (body.getIdTour() != null && !body.getIdTour().isEmpty()) {
-	        for (Long IDTour : body.getIdTour()) {
-	            ServiceEntity service = new ServiceEntity();
-	            Product product = productRepository.findById(IDTour)
-	                    .orElseThrow(() -> new NotFoundException("Not Found tour With Id: " + IDTour));
-	            service.setDescription(body.getDescription());
-	            service.setName(body.getName());
-	            service.setPrice(body.getPrice());
-	            service.setProduct(product);
-	            serviceList.add(service);
-	        }
-	    } else {
-	        ServiceEntity service = new ServiceEntity();
-	        service.setDescription(body.getDescription());
-	        service.setName(body.getName());
-	        service.setPrice(body.getPrice());
-	        service.setProduct(null);
-	        serviceList.add(service);
-	    }	    
-	    // Lưu danh sách ServiceEntity vào cơ sở dữ liệu
-	    serviceRepository.saveAll(serviceList);
-	    return serviceList;
+		List<ServiceEntity> serviceList = new ArrayList<>();
+
+		if (body.getIdProduct() != null && !body.getIdProduct().isEmpty()) {
+			for (Long IDProduct : body.getIdProduct()) {
+				ServiceEntity service = new ServiceEntity();
+				Product product = productRepository.findById(IDProduct)
+						.orElseThrow(() -> new NotFoundException("Not Found product With Id: " + IDProduct));
+				service.setDescription(body.getDescription());
+				service.setName(body.getName());
+				service.setPrice(body.getPrice());
+				service.setProduct(product);
+				serviceList.add(service);
+			}
+		} else {
+			ServiceEntity service = new ServiceEntity();
+			service.setDescription(body.getDescription());
+			service.setName(body.getName());
+			service.setPrice(body.getPrice());
+			service.setProduct(null);
+			serviceList.add(service);
+		}
+		// Lưu danh sách ServiceEntity vào cơ sở dữ liệu
+		serviceRepository.saveAll(serviceList);
+		return serviceList;
 	}
 
 	@Override
 	public List<ServiceEntity> updateService(CreateServiceRequest body, Long id) {
-		 List<ServiceEntity> serviceList = new ArrayList<>();
-		    
-		    if (body.getIdTour() != null && !body.getIdTour().isEmpty()) {
-		        for (Long IDTour : body.getIdTour()) {
-		            ServiceEntity service = serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found tour service Id: " + id));
-		            Product product = productRepository.findById(IDTour)
-		                    .orElseThrow(() -> new NotFoundException("Not Found tour With Id: " + IDTour));
-		            service.setDescription(body.getDescription());
-		            service.setName(body.getName());
-		            service.setPrice(body.getPrice());
-		            service.setProduct(product);
-		            serviceList.add(service);
-		        }
-		    } else {
-		        ServiceEntity service = serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found tour service Id: " + id));
-		        service.setDescription(body.getDescription());
-		        service.setName(body.getName());
-		        service.setPrice(body.getPrice());
-		        service.setProduct(null);
-		        serviceList.add(service);
-		    }	    
-		    // Lưu danh sách ServiceEntity vào cơ sở dữ liệu
-		    serviceRepository.saveAll(serviceList);
-		    return serviceList;
+		List<ServiceEntity> serviceList = new ArrayList<>();
+
+		if (body.getIdProduct() != null && !body.getIdProduct().isEmpty()) { // Chỉnh sửa từ idTour thành idProduct
+			for (Long IDProduct : body.getIdProduct()) { // Chỉnh sửa từ IDTour thành IDProduct
+				ServiceEntity service = serviceRepository.findById(id)
+						.orElseThrow(() -> new NotFoundException("Not Found product service Id: " + id));
+				Product product = productRepository.findById(IDProduct)
+						.orElseThrow(() -> new NotFoundException("Not Found product With Id: " + IDProduct));
+				service.setDescription(body.getDescription());
+				service.setName(body.getName());
+				service.setPrice(body.getPrice());
+				service.setProduct(product);
+				serviceList.add(service);
+			}
+		} else {
+			ServiceEntity service = serviceRepository.findById(id)
+					.orElseThrow(() -> new NotFoundException("Not Found product service Id: " + id));
+			service.setDescription(body.getDescription());
+			service.setName(body.getName());
+			service.setPrice(body.getPrice());
+			service.setProduct(null);
+			serviceList.add(service);
+		}
+		// Lưu danh sách ServiceEntity vào cơ sở dữ liệu
+		serviceRepository.saveAll(serviceList);
+		return serviceList;
 	}
 
 	@Override
 	public void deleteService(Long id) {
-		ServiceEntity service = new ServiceEntity();
-		service = finById(id).orElseThrow(() -> new NotFoundException("Not Found service With Id: " + id));
+		ServiceEntity service = finById(id)
+				.orElseThrow(() -> new NotFoundException("Not Found service With Id: " + id));
 		serviceRepository.delete(service);
 	}
 }

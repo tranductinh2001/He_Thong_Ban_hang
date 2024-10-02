@@ -19,6 +19,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity,Long>{
     List<ServiceEntity> findAllById(Long id);
     
     Optional<ServiceEntity> findById(Long id);
-    
-    List<ServiceEntity> findByTour(Product product);
+
+    List<ServiceEntity> findByProduct(Product product);
 }

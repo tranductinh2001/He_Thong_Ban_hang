@@ -16,6 +16,6 @@ public class CreateServiceRequest {
     private String description;
 
     private long price;
-    
-    private List<Long> idTour;
+
+    private List<Long> idProduct;
 }

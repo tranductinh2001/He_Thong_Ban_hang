@@ -36,7 +36,7 @@ public class ReviewsServiceImpl implements ReviewsService {
     public Reviews updateReview(Reviews review, Long id) {
         Reviews existingReview = getReviewById(id)
                 .orElseThrow(() -> new NotFoundException("Review not found with id: " + id));
-        existingReview.setComment(review.getComment());
+        //existingReview.setComment(review.getComment());
         return reviewsRepository.save(existingReview);
     }
 

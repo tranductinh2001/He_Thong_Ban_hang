@@ -33,24 +33,28 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/")
+    @Operation(summary = "Lấy danh sách tất cả sản phẩm")
     public ResponseEntity<List<Product>> getAllProduct() {
         List<Product> products = productService.getListProduct();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/search/name")
+    @Operation(summary = "Tìm kiếm sản phẩm theo tên")
     public ResponseEntity<List<Product>> findAllProductByName(@RequestParam("keyword") String keyword) {
         List<Product> products = productService.getListProductByName(keyword);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/search/price")
+    @Operation(summary = "Tìm kiếm sản phẩm theo giá")
     public ResponseEntity<List<Product>> findAllProductByPrice(@RequestParam("keyword") Long keyword) {
         List<Product> products = productService.getListProductByPrice(keyword);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/productdetail")
+    @Operation(summary = "Lấy thông tin chi tiết sản phẩm theo ID")
     public ResponseEntity<Product> findProductById(@RequestParam("id") long id) {
         Optional<Product> productOptional = productService.getProductById(id);
         return productOptional.map(product -> ResponseEntity.ok(product))
@@ -58,31 +62,35 @@ public class ProductController {
     }
 
     @GetMapping("/category")
+    @Operation(summary = "Lấy danh sách sản phẩm theo danh mục")
     public ResponseEntity<List<Product>> findProductByCategoryId(@RequestParam("id") long id) {
         List<Product> products = productService.findProductByCategoryId(id);
         return ResponseEntity.ok(products);
     }
 
     @PostMapping("/create")
+    @Operation(summary = "Tạo mới một sản phẩm")
     public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequest body) {
         Product product = productService.createProduct(body);
         return ResponseEntity.ok(product);
     }
 
     @PutMapping("/update/{id}")
+    @Operation(summary = "Cập nhật thông tin sản phẩm")
     public ResponseEntity<Product> updateProduct(@RequestBody CreateProductRequest body, @PathVariable long id) {
         Product product = productService.updateProduct(body, id);
         return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/delete")
+    @Operation(summary = "Xóa sản phẩm theo ID")
     public ResponseEntity<?> deleteProduct(@RequestParam("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(new MessageResponse("Sản phẩm đã được xóa"));
     }
 
     @GetMapping("/count")
-    @Operation(summary = "Thống kê sản phẩm")
+    @Operation(summary = "Thống kê số lượng sản phẩm")
     public ResponseEntity<Long> countProducts() {
         Long count = productService.count();
         return ResponseEntity.ok(count);
@@ -96,6 +104,7 @@ public class ProductController {
     }
 
     @GetMapping("/statistics-day")
+    @Operation(summary = "Thống kê doanh thu theo ngày")
     public ResponseEntity<List<Map<String, Object>>> getDailyIncomeByMonthAndYear(
             @RequestParam("month") Long month,
             @RequestParam("year") Long year
@@ -105,6 +114,7 @@ public class ProductController {
     }
 
     @GetMapping("/statistics-year")
+    @Operation(summary = "Thống kê doanh thu theo tháng của năm")
     public ResponseEntity<List<Map<String, Object>>> getMonthlyIncomeByYear(
             @RequestParam("year") Long year
     ) {
