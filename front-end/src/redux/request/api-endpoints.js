@@ -1,21 +1,21 @@
 const API_ENDPOINTS = {
   //product endpoint
   GET_LIST_PRODUCTS: (currentPage, pageSize) =>
-    `/products?page=${currentPage}&pageSize=${pageSize}`,
-  SEARCH_FIVE_PRODUCTS: (keyWord, currentPage) =>
-    `/products/search?q=${keyWord}&pageSize=4&page=${currentPage}`,
+    `/product/pagination?currentPage=${currentPage}&pageSize=${pageSize}`,
+  SEARCH_PRODUCTS: (keyWord, currentPage) =>
+    `/product/search?q=${keyWord}&pageSize=4&page=${currentPage}`,
   SEARCH_LIST_PRODUCTS: (keyWord, currentPage, pageSize) =>
-    `/products/search?q=${keyWord}&pageSize=${pageSize}&page=${currentPage}`,
+    `/product/search?q=${keyWord}&pageSize=${pageSize}&page=${currentPage}`,
   LIST_SORT: (sort, currentPage, pageSize) =>
-    `products?page=${currentPage}&pageSize=${pageSize}&orderBy=${sort}`,
+    `product/sort?page=${currentPage}&pageSize=${pageSize}&orderBy=${sort}`,
   LIST_FILLTER: (title, sort, currentPage, pageSize) =>
-    `/products?page=${currentPage}&pageSize=${pageSize}&${title}=${sort}`,
-  LIST_SALE: (currentPage, pageSize)  => `/products?page=${currentPage}&pageSize=${pageSize}&sale=true`,
-  PRODUCT_DETAIL: (productId) => `/products/${productId}`,
+    `/product/filter?page=${currentPage}&pageSize=${pageSize}&${title}=${sort}`,
+  LIST_SALE: (currentPage, pageSize)  => `/product/sale?page=${currentPage}&pageSize=${pageSize}`,
+  PRODUCT_DETAIL: (productId) => `/product/${productId}`,
 
   //user
-  USER_DETAIL: `/users/profile`,
-  UPDATE_USER: `/users/update`,
+  USER_DETAIL: `/user/profile`,
+  UPDATE_USER: `/user/update`,
 
   //authentication
   LOGIN: `auth/login`,

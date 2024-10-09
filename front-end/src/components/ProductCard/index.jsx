@@ -28,7 +28,7 @@ const ProductCard = React.memo(function ProductCard({
   const addViewedProduct = () => {
     setViewedProduct(product);
     console.log(viewedProduct);
-    navigate(`/product/${product?._id}`);
+    navigate(`/product/${product?.id}`);
   };
   const redirectToLogin = useRedirectToLogin();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const ProductCard = React.memo(function ProductCard({
   let isSale = product?.is_sale;
   let islogIN = useSelector((state) => state.auth.isAuthenticated);
 
-  // console.log(product);
+  console.log("product list detail ",product);
   const imageUrl = product?.images[0] ? product?.images[0] : placeholder;
   // console.log(product);
   return (
@@ -56,7 +56,7 @@ const ProductCard = React.memo(function ProductCard({
             // onMouseEnter={() => setIsHovered(true)}
             // onMouseLeave={() => setIsHovered(false)}
             id="img-product"
-            src={imageUrl}
+            src={`data:image/${imageUrl.type};base64,${imageUrl.data}`} 
             className={`w-64 h-60 duration-500 rounded-s-3xl shadow-neutral-500 shadow-md transition-transform
             
             `}
@@ -81,7 +81,7 @@ const ProductCard = React.memo(function ProductCard({
         <div className="border-b"></div>
         <div className="flex flex-col">
           <span className="text-left text-orange-800 font-semibold">
-            {product?.brand?.toUpperCase()}
+            {product?.brand?.name.toUpperCase()}
           </span>
           <div className="text-base text-left truncate w-52 font-bold">
             {product?.name}

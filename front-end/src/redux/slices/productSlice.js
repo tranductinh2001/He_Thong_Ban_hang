@@ -73,6 +73,7 @@ export const fetchProductList = createAsyncThunk(
   "products/fetchProductList",
   async ({ currentPage, pageSize }, { rejectWithValue }) => {
     try {
+      //console.log("trang:  ", currentPage, pageSize);
       return await request.List(currentPage, pageSize);
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -167,68 +168,69 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProductListWithSortOrTitle.fulfilled, (state, action) => {
+        state.loading = false;
+      
         const title = state.activeFilter.title;
         switch (title) {
           case "New":
             state.newProductList = [
               ...state.newProductList,
-              ...action.payload.data,
+              ...action.payload.products,
             ];
-            // console.log("Mới Nhất ", state.newProductList);
             state.combinedProductList = [...state.newProductList];
             break;
           case "Sale":
             state.saleProductList = [
               ...state.saleProductList,
-              ...action.payload.data,
+              ...action.payload.products,
             ];
-            // console.log("Sale ", state.saleProductList);
             state.combinedProductList = [...state.saleProductList];
             break;
           case "Hot":
             state.hotProductList = [
               ...state.hotProductList,
-              ...action.payload.data,
+              ...action.payload.products,
             ];
-            // console.log("Hot ", state.hotProductList);
             state.combinedProductList = [...state.hotProductList];
             break;
           case "Giá Thấp":
             state.highPriceProductList = [
               ...state.highPriceProductList,
-              ...action.payload.data,
+              ...action.payload.products,
             ];
-            // console.log("Giá Thấp ", state.highPriceProductList);
             state.combinedProductList = [...state.highPriceProductList];
             break;
           case "Giá cao":
             state.expensiveProductList = [
               ...state.expensiveProductList,
-              ...action.payload.data,
+              ...action.payload.products,
             ];
-            // console.log("Giá cao ", state.expensiveProductList);
             state.combinedProductList = [...state.expensiveProductList];
             break;
           case "brand":
             state.productBrandList = [
               ...state.productBrandList,
-              ...action.payload.data,
+              ...action.payload.products,
             ];
             state.combinedProductList = [...state.productBrandList];
             break;
           case "category":
             state.productCategoryList = [
               ...state.productCategoryList,
-              ...action.payload.data,
+              ...action.payload.products,
             ];
             state.combinedProductList = [...state.productCategoryList];
             break;
+          default:
+            state.productList = [...state.productList, ...action.payload.products];
+            state.combinedProductList = [...state.productList];
         }
-        // console.log("state.combinedProductList , ", state.combinedProductList);
-        state.totalProductItems = action.payload?.meta?.pagination?.total;
-        state.pageSize = action.payload.meta?.pagination?.pageSize;
-        // console.log("payload ", action.payload);
+      
+        // Cập nhật các thông tin về tổng số item và số trang
+        state.totalProductItems = action.payload?.totalItems;
+        state.pageSize = action.payload?.totalPages;
       })
+       
       .addCase(fetchProductListWithSortOrTitle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -241,7 +243,7 @@ const productSlice = createSlice({
         state.loading = false;
         state.productListWithSearchbyPage = [
           ...state.productListWithSearchbyPage,
-          ...action.payload.data,
+          ...action.payload.products,
         ];
         // console.log("state.productListWithSearchbyPage ", action.payload.data);
         state.combinedProductList = [...state.productListWithSearchbyPage];
@@ -259,14 +261,15 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductList.fulfilled, (state, action) => {
         // console.log("Reset state check:", state.combinedProductList);
+        //console.log("acitoon.payload   ", action.payload.products)
         state.loading = false;
-        state.productList = [...state.productList, ...action.payload.data];
+        state.productList = [...state.productList, ...action.payload.products];
         // console.log("state.productListByPage , ", state.productListByPage);
         state.combinedProductList = [...state.productList];
-        // console.log("state.combinedProductList , ", state.combinedProductList);
-        state.totalProductItems = action.payload.meta?.pagination?.total;
-        state.pageSize = action.payload.meta.pagination.pageSize;
-        // console.log(action.payload)
+        //console.log("state.combinedProductList , ", state.combinedProductList);
+        state.totalProductItems = action.payload?.totalItems;
+        state.pageSize = action.payload?.totalPages;
+        
       })
       .addCase(fetchProductList.rejected, (state, action) => {
         state.loading = false;
@@ -290,17 +293,18 @@ const productSlice = createSlice({
       })
       .addCase(fetchSaleProductList.fulfilled, (state, action) => {
         state.loading = false;
+        // console.log(" ",action.payload);
         state.saleProductList = [
           ...state.saleProductList,
-          ...action.payload.data,
+          ...action.payload.products,
         ];
         // console.log("fetchSaleProductList:", state.saleProductList);
 
         // console.log("state.productListByPage , ", state.productListByPage);
-        state.totalProductItems = action.payload.meta?.pagination?.total;
-        state.pageSize = action.payload.meta.pagination.pageSize;
-        state.currentPage = action.payload.meta.pagination.page;
-        state.totalPage = action.payload.meta.pagination.totalPage;
+        state.totalProductItems = action.payload.totalItems;
+        state.pageSize = action.payload.totalItems;
+        state.currentPage = action.payload.currentPage;
+        state.totalPage = action.payload.totalPages;
         // console.log(action.payload)
       })
       .addCase(fetchSaleProductList.rejected, (state, action) => {

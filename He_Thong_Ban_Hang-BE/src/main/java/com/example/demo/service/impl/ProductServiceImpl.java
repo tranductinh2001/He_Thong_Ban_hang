@@ -7,6 +7,9 @@ import com.example.demo.request.CreateProductRequest;
 import com.example.demo.request.SizeRequest;
 import com.example.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +72,48 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Map<String, Object> filterProducts(String filterBy, String filterValue, int currentPage, int pageSize) {
+        Pageable paging = PageRequest.of(currentPage, pageSize);
+        Page<Product> pagedResult;
+
+        switch (filterBy) {
+            case "hot":
+                pagedResult = productRepository.findByIsHot(Boolean.parseBoolean(filterValue), paging);
+                break;
+            case "sale":
+                pagedResult = productRepository.findByIsSale(Boolean.parseBoolean(filterValue), paging);
+                break;
+            default:
+                pagedResult = Page.empty();
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", pagedResult.getContent());
+        response.put("currentPage", pagedResult.getNumber());
+        response.put("totalItems", pagedResult.getTotalElements());
+        response.put("totalPages", pagedResult.getTotalPages());
+
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> sortProducts(String sortField, String sortDirection, int currentPage, int pageSize) {
+        System.out.println("sortField, "+ sortField + "   ===== sortDirection,  " + sortDirection);
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField);
+        Pageable paging = PageRequest.of(currentPage, pageSize, sort);
+        Page<Product> pagedResult = productRepository.findAll(paging);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", pagedResult.getContent());
+        response.put("currentPage", pagedResult.getNumber());
+        response.put("totalItems", pagedResult.getTotalElements());
+        response.put("totalPages", pagedResult.getTotalPages());
+
+        return response;
+    }
+
+
+    @Override
     public Product createProduct(CreateProductRequest body) {
         Product product = new Product();
 
@@ -127,6 +172,64 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
         return product;
     }
+
+    @Override
+    public Map<String, Object> getProductsWithPagination(int currentPage, int pageSize) {
+        Pageable paging = PageRequest.of(currentPage, pageSize);
+        Page<Product> pagedResult = productRepository.findAll(paging);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", pagedResult.getContent());
+        response.put("currentPage", pagedResult.getNumber());
+        response.put("totalItems", pagedResult.getTotalElements());
+        response.put("totalPages", pagedResult.getTotalPages());
+
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getSaleProducts(int currentPage, int pageSize) {
+        Pageable paging = PageRequest.of(currentPage, pageSize);
+        Page<Product> pagedResult = productRepository.findByIsSaleTrue(paging);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", pagedResult.getContent());
+        response.put("currentPage", pagedResult.getNumber());
+        response.put("totalItems", pagedResult.getTotalElements());
+        response.put("totalPages", pagedResult.getTotalPages());
+
+        return response;
+    }
+    @Override
+    public Map<String, Object> getProductDetail(Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        Map<String, Object> response = new HashMap<>();
+
+        if (product.isPresent()) {
+            response.put("product", product.get());
+        } else {
+            response.put("message", "Product not found");
+        }
+
+        return response;
+    }
+
+
+    @Override
+    public Map<String, Object> searchProducts(String keyword, int currentPage, int pageSize) {
+        Pageable paging = PageRequest.of(currentPage, pageSize);
+        Page<Product> pagedResult = productRepository.searchByKeyword(keyword, paging);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", pagedResult.getContent());
+        response.put("currentPage", pagedResult.getNumber());
+        response.put("totalItems", pagedResult.getTotalElements());
+        response.put("totalPages", pagedResult.getTotalPages());
+
+        return response;
+    }
+
+
 
     @Override
     public Product updateProduct(CreateProductRequest body, Long id) {

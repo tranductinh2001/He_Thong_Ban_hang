@@ -2,25 +2,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../request";
 
 
-//get 5 product for search to keyword
-// export const fetchFiveProduct = createAsyncThunk(
-//   "products/fetchFiveProduct",
-//   async({keyWord},{rejectWithValue}) =>{
-//     try {
-//     //   console.log("keyword 2", keyWord)
-//       return await request.searchFiveProduct(keyWord);
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
-
 export const fetchFiveProduct = createAsyncThunk(
   "products/fetchFiveProduct",
   async({keyWord, currentPage},{rejectWithValue}) =>{
     try {
       console.log("keyword 2", keyWord, currentPage)
-      return await request.searchFiveProduct(keyWord , currentPage);
+      return await request.searchProduct(keyWord , currentPage);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -51,10 +38,11 @@ const searchSlice = createSlice({
       })
       .addCase(fetchFiveProduct.fulfilled, (state, action)=> {
         state.loading = false;
-        state.productListSearch = [...state.productListSearch, ...action.payload.data];
+        state.productListSearch = [...state.productListSearch, ...action.payload.products];
         console.log(action.payload)
-        state.totalProductItems = action.payload?.meta?.pagination?.total;
-        state.pageSize = action.payload.meta?.pagination?.pageSize;
+
+        state.totalProductItems = action.payload?.totalItems;
+        state.pageSize = action.payload?.totalPages;
       })
       .addCase(fetchFiveProduct.rejected, (state,action)=>{
         state.loading = false;

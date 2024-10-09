@@ -4,22 +4,23 @@ import errorHandler from "./errorHandler";
 const request = {
   List: async (currentPage, pageSize) => {
     try {
+      //console.log("trang request  ", currentPage, pageSize);
       const response = await axiosInstance.get(
         API_ENDPOINTS.GET_LIST_PRODUCTS(currentPage, pageSize)
       );
-      // console.log("Response data:", response);
+      //console.log("Response data: ", response.data.products);
       return response.data;
     } catch (error) {
       return errorHandler(error);
     }
   },
-  searchFiveProduct: async (keyWord, currentPage) => {
+  searchProduct: async (keyWord, currentPage) => {
     try {
       const response = await axiosInstance.get(
-        API_ENDPOINTS.SEARCH_FIVE_PRODUCTS(keyWord, currentPage)
+        API_ENDPOINTS.SEARCH_PRODUCTS(keyWord, currentPage)
       );
       console.log(response);
-      return response.data.data;
+      return response.data;
     } catch (error) {
       return errorHandler(error);
     }
@@ -30,7 +31,7 @@ const request = {
         API_ENDPOINTS.SEARCH_LIST_PRODUCTS(keyWord, currentPage, pageSize)
       );
       console.log("Response data:", response.data.data);
-      return response.data.data;
+      return response.data;
     } catch (error) {
       return errorHandler(error);
     }
@@ -46,13 +47,9 @@ const request = {
         title != "brand" &&
         title != "category"
       ) {
-        // console.log("1 ", sort);
-
         url += API_ENDPOINTS.LIST_SORT(sort, currentPage, pageSize);
-        // console.log(" ", url);
+         console.log("api 1 ", url);
       } else {
-        // console.log("2");
-
         if (title == "Hot") {
           title = "hot";
         } else if (title == "brand") {
@@ -63,11 +60,11 @@ const request = {
           title = "sale";
         }
         url += API_ENDPOINTS.LIST_FILLTER(title, sort, currentPage, pageSize);
-        // console.log("api: ", url);
+        // console.log("api 2: ", url,title, sort, currentPage, pageSize);
       }
       // console.log("api 2: ", url);
       const response = await axiosInstance.get(url);
-      // console.log("Response data:", response.data);
+       console.log("Response data:", response.data);
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -91,13 +88,14 @@ const request = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.PRODUCT_DETAIL(productId)
       );
+      console.log("product detail    ", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching product detail data:", error);
       throw error;
     }
   },
-  UserDetail: async (userId) => {
+  UserDetail: async () => {
     try {
       const response = await axiosInstance.get(API_ENDPOINTS.USER_DETAIL);
       return response;

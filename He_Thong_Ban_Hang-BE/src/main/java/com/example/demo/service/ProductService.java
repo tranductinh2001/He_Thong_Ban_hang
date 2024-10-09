@@ -38,4 +38,14 @@ public interface ProductService {
 
     @Scheduled(fixedRate = 86400000)
     void deleteExpiredTickets();
+
+    Map<String, Object> getProductsWithPagination(int currentPage, int pageSize);
+
+    Map<String, Object> searchProducts(String keyword, int currentPage, int pageSize);
+
+    Map<String, Object> getSaleProducts(int currentPage, int pageSize);
+    Map<String, Object> getProductDetail(Long productId);
+    Map<String, Object> filterProducts(String filterBy, String filterValue, int currentPage, int pageSize);
+    Map<String, Object> sortProducts(String sortField, String sortDirection, int currentPage, int pageSize);
+
 }

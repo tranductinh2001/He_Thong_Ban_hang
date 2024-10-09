@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +53,8 @@ public class UserServiceImpl implements UserService {
 		return code.toString();
 	}
 
+
+
 	public String getAuthenticationCodeForUser(String username) {
 		Optional<User> optionalUser = userRepository.findByUsername(username);
 		return optionalUser.map(User::getVerificationCode).orElse(null);
@@ -75,6 +80,24 @@ public class UserServiceImpl implements UserService {
 		} else {
 			saveAuthenticationCodeForUser(username);
 		}
+	}
+	@Override
+	public User getUserProfile() {
+		// Lấy thông tin xác thực từ SecurityContext
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		// Kiểm tra xem người dùng đã được xác thực hay chưa
+		if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+			throw new RuntimeException("User not authenticated");
+		}
+
+		// Lấy tên người dùng
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		String username = userDetails.getUsername();
+
+		// Tìm kiếm người dùng theo tên trong cơ sở dữ liệu
+		return userRepository.findByUsername(username)
+				.orElseThrow(() -> new RuntimeException("User not found"));
 	}
 
 	@Override

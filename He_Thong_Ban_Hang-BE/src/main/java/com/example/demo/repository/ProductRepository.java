@@ -1,9 +1,12 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -11,7 +14,13 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
+    Page<Product> findByIsHot(boolean isHot, Pageable pageable);
+    Page<Product> findByIsSale(boolean isSale, Pageable pageable);
+    Page<Product> findByCategoryName(String categoryName, Pageable pageable);
+    Page<Product> findByBrandName(String brandName, Pageable pageable);
+    Page<Product> findByIsSaleTrue(Pageable pageable);
+    @Query("SELECT p FROM Product p WHERE p.name LIKE %:keyword% OR p.description LIKE %:keyword%")
+    Page<Product> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     List<Product> findByCategoryId(Long categoryId);
 

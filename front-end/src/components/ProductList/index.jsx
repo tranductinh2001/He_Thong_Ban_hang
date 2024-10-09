@@ -21,7 +21,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   const totalProductItems = useSelector(
     (state) => state.products?.totalProductItems
   );
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   // console.log("productListByPage ", productListByPage);
   // Fetch products when filters or currentPage change
   useEffect(() => {

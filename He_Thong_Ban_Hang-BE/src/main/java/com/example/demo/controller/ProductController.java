@@ -31,6 +31,80 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @GetMapping("/sale")
+    @Operation(summary = "lấy danh sách sản phẩm sale có phân trang")
+    public ResponseEntity<Map<String, Object>> getSaleProducts(
+            @RequestParam("page") int currentPage,
+            @RequestParam("pageSize") int pageSize) {
+        Map<String, Object> response = productService.getSaleProducts(currentPage-1, pageSize);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/{productId}")
+    @Operation(summary = "chi tiết sản phẩm bằng id sản phẩm")
+    public ResponseEntity<Map<String, Object>> getProductDetail(@PathVariable("productId") Long productId) {
+        Map<String, Object> response = productService.getProductDetail(productId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/filter")
+    @Operation(summary = "lọc danh sách sản phẩm theo thuộc tính có phân trang")
+    public ResponseEntity<Map<String, Object>> filterProducts(
+            @RequestParam Map<String, String> allParams,
+            @RequestParam("page") int currentPage,
+            @RequestParam("pageSize") int pageSize) {
+
+        // Lọc các key không phải là page và pageSize để lấy điều kiện lọc
+        String filterBy = allParams.keySet().stream()
+                .filter(key -> !key.equals("page") && !key.equals("pageSize"))
+                .findFirst()
+                .orElse(null);
+        String filterValue = allParams.get(filterBy);
+
+        // Gọi service để xử lý lọc sản phẩm
+        Map<String, Object> response = productService.filterProducts(filterBy, filterValue, currentPage-1, pageSize);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/sort")
+    @Operation(summary = "sắp xếp danh sách sản phẩm theo thuộc tính có phân trang")
+    public ResponseEntity<Map<String, Object>> sortProducts(
+            @RequestParam("orderBy") String orderBy,
+            @RequestParam("page") int currentPage,
+            @RequestParam("pageSize") int pageSize) {
+
+        // Phân tách orderBy thành thuộc tính và hướng sắp xếp
+        String[] orderParams = orderBy.split(":");
+        String sortField = orderParams[0];
+        String sortDirection = orderParams[1].equals("1") ? "ASC" : "DESC";
+
+        // Gọi service để xử lý sắp xếp sản phẩm
+        Map<String, Object> response = productService.sortProducts(sortField, sortDirection, currentPage-1, pageSize);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+    @GetMapping("/search")
+    @Operation(summary = "search danh sách sản phẩm có phân trang")
+    public ResponseEntity<Map<String, Object>> searchProducts(
+            @RequestParam("q") String keyword,
+            @RequestParam("page") int currentPage,
+            @RequestParam("pageSize") int pageSize) {
+        Map<String, Object> response = productService.searchProducts(keyword, currentPage-1, pageSize);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/pagination")
+    @Operation(summary = "Lấy danh sách sản phẩm có phân trang")
+    public ResponseEntity<Map<String, Object>> getProductsWithPagination(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        Map<String, Object> response = productService.getProductsWithPagination(currentPage-1, pageSize);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/")
     @Operation(summary = "Lấy danh sách tất cả sản phẩm")
@@ -53,9 +127,9 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/productdetail")
+    @GetMapping("/product/{id}")
     @Operation(summary = "Lấy thông tin chi tiết sản phẩm theo ID")
-    public ResponseEntity<Product> findProductById(@RequestParam("id") long id) {
+    public ResponseEntity<Product> findProductById(@PathVariable("id") long id) {
         Optional<Product> productOptional = productService.getProductById(id);
         return productOptional.map(product -> ResponseEntity.ok(product))
                 .orElseGet(() -> ResponseEntity.notFound().build());

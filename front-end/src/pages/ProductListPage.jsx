@@ -6,8 +6,11 @@ import _Breadcrumb from "../components/Breadcrumb";
 // import ProductList from "../components/ProductList";
 import Loading from "../components/Loading";
 import { lazy, Suspense } from "react";
+import { useDispatch } from "react-redux";
+import { setActiveFilter } from "../redux/slices/productSlice";
 
 const ProductList = lazy(() => import("../components/ProductList"));
+
 const className =
   "hover:text-blue-500 hover:opacity-100 hover:font-semibold duration-200 border-b-2 hover:border-blue-500 border-transparent p-4";
 const activeClassName =
@@ -15,7 +18,7 @@ const activeClassName =
 const FilterOption = [
   {
     title: "New",
-    sort: "created_at:1",
+    sort: "createdAt:1",
   },
   {
     title: "Sale",
@@ -31,11 +34,12 @@ const FilterOption = [
   },
   {
     title: "Giá cao",
-    sort: "price:-1",
+    sort: "price:2",
   },
 ];
 
 export default function ProductPage() {
+  const dispatch = useDispatch();
   const [activeButton, setActiveButton] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const sortParam = searchParams.get("sort");
@@ -44,6 +48,7 @@ export default function ProductPage() {
   // console.log("aaa",sortParam + titleParam)
   const handleFilterChange = (item, index) => {
     //lưu id button
+    dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
     setActiveButton(index);
     setSearchParams(item);
   };

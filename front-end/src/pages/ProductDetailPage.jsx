@@ -112,22 +112,24 @@ const ProductDetailPage = () => {
 
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth?.currentUser);
-  const product = useSelector((state) => state.products?.productDetails);
+  const product = useSelector((state) => state.products?.productDetails?.product);
   const saleProducts = useSelector((state) => state.products?.saleProductList);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
   const currentPageListSale = useSelector(
     (state) => state.products?.currentPage
   );
+  //console.log("product   ",product);
   // console.log("SALE PRODUCTS", saleProducts);
   const [currentPage, setCurrentPage] = useState(1);
   const [allSaleProducts, setAllSaleProducts] = useState([]);
   const totalPageListSale = useSelector((state) => state.products?.totalPage);
   const loading = useSelector((state) => state.products?.loading);
-  const dataSource = product?.size_list?.map((item, index) => ({
+  const dataSource = product?.sizeList?.map((item, index) => ({
     ...item,
     key: `${index}`,
     count: 0,
   }));
+  console.log("SALE sizeList   ", dataSource);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
@@ -167,6 +169,7 @@ const ProductDetailPage = () => {
       });
     }
   }, [product]);
+  
   const handleQuantityChange = (RowItem, newCount) => {
     const key = RowItem.key;
     const existingItem = cart.find((item) => item.key === key);
@@ -211,7 +214,7 @@ const ProductDetailPage = () => {
     {
       title: "Sản phẩm",
       width: 120,
-      dataIndex: "size_name",
+      dataIndex: "sizeName",
       align: "center",
       key: "size",
     },
@@ -286,7 +289,7 @@ const ProductDetailPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Image
+              {/* <Image
                 rootClassName="w-4/5"
                 className="rounded-xl hidden sm:block"
                 src={product?.images[0]}
@@ -297,7 +300,7 @@ const ProductDetailPage = () => {
                 className="rounded-xl sm:hidden"
                 src={product?.images[0]}
                 alt=""
-              />
+              /> */}
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 200 }}
@@ -307,7 +310,7 @@ const ProductDetailPage = () => {
             >
               <span className="text-2xl font-semibold">{product?.name}</span>
               <span className="text-left text-orange-800 font-semibold">
-                {product?.brand?.toUpperCase()}
+                {/* {product?.brand?.toUpperCase()} */}
               </span>
               <div className="flex flex-row gap-1 items-center">
                 <Rate defaultValue={0} />{" "}
@@ -315,18 +318,18 @@ const ProductDetailPage = () => {
               </div>
               <span className="text-red-500 font-semibold text-lg">
                 {isAuthenticated ? (
-                  product?.is_sale ? (
+                  product?.sale ? (
                     <div>
                       <span className="line-through">
-                        {`Giá gốc: ${product?.price?.toLocaleString()}đ`}
+                      {`Giá gốc: ${product?.price?.toLocaleString() || 'N/A'}đ`}
                       </span>
                       <br />
                       <span className="text-green-500">
-                        {`Giá khuyến mãi: ${product?.sale_price?.toLocaleString()}đ`}
+                      {`Giá khuyến mãi: ${product?.salePrice?.toLocaleString() || 'N/A'}đ`}
                       </span>
                     </div>
                   ) : (
-                    `Giá gốc: ${product?.price?.toLocaleString()}đ`
+                    `Giá gốc: ${product?.price?.toLocaleString() || 'N/A'}đ`
                   )
                 ) : (
                   "Đăng nhập để xem giá"
@@ -417,12 +420,12 @@ const ProductDetailPage = () => {
                   key={item?._id || index}
                   className="flex flex-row items-start gap-2"
                 >
-                  <img className="w-20 h-auto" src={item?.images[0]} alt="" />
+                  {/* <img className="w-20 h-auto" src={item?.images[0]} alt="" /> */}
                   <div className="flex flex-col">
-                    <span className="text-slate-700">{item?.name}</span>
+                    <span className="text-slate-700">{item?.product?.name}</span>
                     <span className="text-red-500 text-lg font-semibold">
                       {isAuthenticated
-                        ? `Giá: ${item?.price.toLocaleString()}đ`
+                        ? `Giá: ${item?.product?.price?.toLocaleString() || 'N/A'}đ`
                         : "Đăng nhập để xem giá"}
                     </span>
                   </div>

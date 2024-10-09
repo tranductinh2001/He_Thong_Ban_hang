@@ -8,7 +8,7 @@ import com.example.demo.request.CreateUserRequest;
 import com.example.demo.request.UpdateProfileRequest;
 
 public interface UserService {
-	
+	User getUserProfile();
 	List<User> getListUserByVerificationCode(String code);
     
 	String getAuthenticationCodeForUser(String username);
