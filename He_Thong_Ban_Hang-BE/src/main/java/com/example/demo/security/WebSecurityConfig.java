@@ -24,14 +24,17 @@ import com.example.demo.security.jwt.AuthEntryPointJwt;
 import com.example.demo.security.jwt.AuthTokenFilter;
 import com.example.demo.security.jwt.JwtUtils;
 import com.example.demo.security.service.UserDetailsServiceImpl;
+import lombok.NonNull;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableMethodSecurity
 public class WebSecurityConfig {
-	
+
 	@Autowired
-	private JwtUtils JwtUtilss;
+	private JwtUtils jwtUtils;
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
@@ -63,19 +66,40 @@ public class WebSecurityConfig {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and().authorizeRequests()
-				.antMatchers("/api/user/**","/api/auth/**", "/api/tour/**", "/api/destinations/**", "/api/image/**", "/api/reviews/**","/api/ticket/**", "/api/service/**", "/swagger-ui.html", "/swagger-ui/**", "/api/auth/register/**").permitAll()
-				.antMatchers("/**").permitAll()
-				.anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+		http.cors().and().csrf().disable()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.authorizeRequests()
+				.antMatchers("/api/cart/**", "/api/user/**", "/api/auth/**", "/api/tour/**", "/api/destinations/**", "/api/image/**", "/api/reviews/**", "/api/ticket/**", "/api/service/**", "/swagger-ui.html", "/swagger-ui/**", "/api/auth/register/**")
+				.permitAll()
+				.antMatchers("/**")
+				.permitAll()
+				.anyRequest()
+				.authenticated()
+				.and()
+				.exceptionHandling()
+				.authenticationEntryPoint(unauthorizedHandler);
+
 		http.authenticationProvider(authenticationProvider());
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
 
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			@Override
+//			public void addCorsMappings(@NonNull CorsRegistry registry) {
+//				registry.addMapping("/**")
+//						.allowedOrigins("http://localhost:5173")  // Địa chỉ frontend
+//						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//						.allowedHeaders("*")
+//						.allowCredentials(true);  // Cho phép xác thực qua cookie, header
+//			}
+//		};
+//	}
 }

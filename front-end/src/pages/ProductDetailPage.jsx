@@ -109,7 +109,6 @@ const ProductDetailPage = () => {
     "viewedProducts",
     []
   );
-
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth?.currentUser);
   const product = useSelector((state) => state.products?.productDetails?.product);
@@ -129,7 +128,6 @@ const ProductDetailPage = () => {
     key: `${index}`,
     count: 0,
   }));
-  console.log("SALE sizeList   ", dataSource);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
@@ -159,7 +157,7 @@ const ProductDetailPage = () => {
     if (product) {
       setViewedProducts((prevViewedProducts) => {
         const isProductViewed = prevViewedProducts.some(
-          (p) => p?._id === product?._id
+          (p) => p?.id === product?.id
         );
         if (!isProductViewed) {
           return [...prevViewedProducts, product];
@@ -415,17 +413,17 @@ const ProductDetailPage = () => {
           </span>
           <div className=" flex flex-col overflow-auto gap-2 p-6">
             {viewedProducts.reverse().map((item, index) => (
-              <Link key={item?._id || index} to={`/product/${item?._id}`}>
+              <Link key={item?._id || index} to={`/product/${item?.id}`}>
                 <div
                   key={item?._id || index}
                   className="flex flex-row items-start gap-2"
                 >
                   {/* <img className="w-20 h-auto" src={item?.images[0]} alt="" /> */}
                   <div className="flex flex-col">
-                    <span className="text-slate-700">{item?.product?.name}</span>
+                    <span className="text-slate-700">{item?.name}</span>
                     <span className="text-red-500 text-lg font-semibold">
                       {isAuthenticated
-                        ? `Giá: ${item?.product?.price?.toLocaleString() || 'N/A'}đ`
+                        ? `Giá: ${item?.price?.toLocaleString() || 'N/A'}đ`
                         : "Đăng nhập để xem giá"}
                     </span>
                   </div>

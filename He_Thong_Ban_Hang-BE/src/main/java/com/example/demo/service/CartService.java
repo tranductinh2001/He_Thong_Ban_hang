@@ -15,4 +15,8 @@ public interface CartService {
     Cart updateCart(Cart cart, Long id);
 
     void deleteCart(Long id);
+
+    Cart getCartByUserId(Long userId) throws Exception;
+    Cart updateCart(Long userId, Cart newCart) throws Exception;
+    Cart clearCart(Long cartId) throws Exception;
 }

@@ -27,7 +27,7 @@ const ProductCard = React.memo(function ProductCard({
   );
   const addViewedProduct = () => {
     setViewedProduct(product);
-    console.log(viewedProduct);
+    // console.log(viewedProduct);
     navigate(`/product/${product?.id}`);
   };
   const redirectToLogin = useRedirectToLogin();
@@ -37,7 +37,7 @@ const ProductCard = React.memo(function ProductCard({
   let isSale = product?.is_sale;
   let islogIN = useSelector((state) => state.auth.isAuthenticated);
 
-  console.log("product list detail ",product);
+  // console.log("product list detail ",product);
   const imageUrl = product?.images[0] ? product?.images[0] : placeholder;
   // console.log(product);
   return (
