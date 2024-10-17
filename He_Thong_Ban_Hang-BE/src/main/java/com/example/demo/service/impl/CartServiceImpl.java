@@ -53,7 +53,7 @@ public class CartServiceImpl implements CartService {
             userRepository.save(user); // Lưu thông tin user với giỏ hàng mới
             cartRepository.save(cart); // Lưu giỏ hàng mới vào cơ sở dữ liệu
         }
-
+System.out.println("cart của user nè "+ cart);
         // Trả về giỏ hàng của người dùng
         return cart;
     }
@@ -96,24 +96,29 @@ public class CartServiceImpl implements CartService {
         // Cập nhật giỏ hàng với thông tin mới
         currentCart.setTotalOfProduct(newCart.getTotalOfProduct());
         currentCart.setTotalOfPrice(newCart.getTotalOfPrice());
-        // Xử lý danh sách items
-        List<CartItem> itemsToUpdate = new ArrayList<>();
+
+        // Cập nhật từng phần tử trong danh sách items thay vì thay thế toàn bộ danh sách
+        List<CartItem> currentItems = currentCart.getItems();
+        currentItems.clear(); // Xóa các items hiện có, nhưng giữ lại tham chiếu danh sách
+
         for (CartItem item : newCart.getItems()) {
             // Nếu sản phẩm chưa được lưu, hãy kiểm tra hoặc lưu nó
             Product product = item.getProduct();
             if (product.getId() == null) {
                 throw new RuntimeException("Product must be saved before adding to cart");
             }
-            // Thêm item đã có sản phẩm vào danh sách itemsToUpdate
-            itemsToUpdate.add(item);
+            // Liên kết lại CartItem với giỏ hàng hiện tại
+            item.setCart(currentCart);
+            currentItems.add(item); // Thêm item vào danh sách hiện có
         }
-        currentCart.setItems(itemsToUpdate);
 
         // Lưu giỏ hàng và cập nhật người dùng
-        userRepository.save(user);
         cartRepository.save(currentCart);
+        userRepository.save(user);
+
         return currentCart;
     }
+
 
     @Override
     public Cart clearCart(Long cartId) throws Exception {
