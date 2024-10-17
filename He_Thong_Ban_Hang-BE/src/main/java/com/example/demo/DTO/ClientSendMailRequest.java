@@ -16,6 +16,6 @@ public class ClientSendMailRequest {
     private String yourEmail;
     private String time;
     private String spectialRequest;
-    private List<CartItem> listCart;  
+//    private List<CartItem> listCart;
     private long total;
 }

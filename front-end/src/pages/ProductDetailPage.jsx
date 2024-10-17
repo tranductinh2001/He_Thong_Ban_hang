@@ -170,6 +170,7 @@ const ProductDetailPage = () => {
   
   const handleQuantityChange = (RowItem, newCount) => {
     const key = RowItem.key;
+    console.log("rowitem   ", RowItem.sizeName);
     const existingItem = cart.find((item) => item.key === key);
 
     if (existingItem) {
@@ -180,7 +181,7 @@ const ProductDetailPage = () => {
                 ...item,
                 product: product,
                 count: newCount,
-                size: RowItem.size_name,
+                size: RowItem.sizeName,
               }
             : item
         )
@@ -191,7 +192,7 @@ const ProductDetailPage = () => {
         key,
         count: newCount,
         product: product,
-        size: RowItem.size_name,
+        size: RowItem.sizeName,
       };
       const updatedCart = [...cart, newItem].filter((item) => item.count > 0);
       setCart(updatedCart);
@@ -200,7 +201,8 @@ const ProductDetailPage = () => {
 
   const addToCart = () => {
     if (cart && cart?.length > 0) {
-      dispatch(addManyToCart({ userId: currentUser?._id, products: cart }));
+      console.log("cart   ", cart);
+      dispatch(addManyToCart({ userId: currentUser?.id, products: cart }));
       showDrawer();
       // console.log("cart: ", cart);
     } else {

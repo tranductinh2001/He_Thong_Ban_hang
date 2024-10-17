@@ -89,17 +89,5 @@ public class WebSecurityConfig {
 		return http.build();
 	}
 
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(@NonNull CorsRegistry registry) {
-//				registry.addMapping("/**")
-//						.allowedOrigins("http://localhost:5173")  // Địa chỉ frontend
-//						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-//						.allowedHeaders("*")
-//						.allowCredentials(true);  // Cho phép xác thực qua cookie, header
-//			}
-//		};
-//	}
+
 }

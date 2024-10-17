@@ -1,6 +1,6 @@
 import axiosInstance from "../../axios/axios";
 import API_ENDPOINTS from "./api-endpoints";
-import errorHandler from "./errorHandler";
+import errorHandler from "./handleRequests/errorHandler";
 const request = {
   List: async (currentPage, pageSize) => {
     try {
@@ -344,7 +344,7 @@ const request = {
         API_ENDPOINTS.GET_CART_BY_ID_USER()
       );
 
-      // console.log("user cart response", userCartResponse.data);
+       console.log("user cart response", userCartResponse.data);
       let userCart = userCartResponse?.data || { products: [], total: 0 };
       // Create a copy of the current cart products
       const updatedCartProducts = [...userCart.items];

@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.CartDTO;
 import com.example.demo.entity.Cart;
 import com.example.demo.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,20 +19,25 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @GetMapping("/")
-    public ResponseEntity<Cart> getCartByUserId(@RequestParam("userId") Long userId) {
+    @GetMapping("/my-cart")
+    public ResponseEntity<?> getCartByUser() {
         try {
-            Cart cart = cartService.getCartByUserId(userId);
-            return ResponseEntity.ok(cart);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null);
+            Cart cart = cartService.getCartByUser();
+
+            // Chuyển đổi sang DTO
+            CartDTO cartDTO = new CartDTO(cart);
+System.out.println("oek xong chua cart ve nè  "+ cartDTO);
+            return ResponseEntity.ok(cartDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateCart(@RequestParam("userId") Long userId, @RequestBody Cart cart) {
+    public ResponseEntity<?> updateCart(@RequestBody Cart cart) {
         try {
-            Cart updatedCart = cartService.updateCart(userId, cart);
+            System.out.println("cart nè   "+ cart);
+            Cart updatedCart = cartService.updateCart(cart);
             return ResponseEntity.ok(updatedCart);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error updating cart: " + e.getMessage());

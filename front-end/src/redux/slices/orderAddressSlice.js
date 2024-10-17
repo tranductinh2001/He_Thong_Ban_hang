@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../request";
+import orderRequests from "../request/orderRequests";
 
 export const fetchCreateOrderAddress = createAsyncThunk(
   "orderAddress/fetchCreateOrderAddress",
   async (order_address, { rejectWithValue }) => {
     try {
-      const response = await request.createOrderAddress(order_address);
+      const response = await orderRequests.createOrderAddress(order_address);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -17,7 +18,7 @@ export const setDefaultOrderAddress = createAsyncThunk(
   "orderAddress/setDefaultOrderAddress",
   async (order_address_id, { rejectWithValue }) => {
     try {
-      const response = await request.SetDefaultOrderAddress(order_address_id);
+      const response = await orderRequests.SetDefaultOrderAddress(order_address_id);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);

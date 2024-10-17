@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
-import { request } from "../request";
+// import { request } from "../request";
+import authRequests from "../request/authRequests";
+
 export const login = createAsyncThunk(
   "auth/login",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await request.loginService(payload);
+      const response = await authRequests.loginService(payload);
       const { jwt, user } = response.data;
       localStorage.setItem("jwt", jwt?.value);
       // localStorage.setItem("refresh_token", jwt?.refresh_token);
@@ -21,7 +23,7 @@ export const register = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       // console.log("creating dispatch", data);
-      const response = await request.Register(data);
+      const response = await authRequests.Register(data);
       return response;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -34,7 +36,7 @@ export const changePassword = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       // console.log("create async thunk", data);
-      const response = await request.changePassword(data);
+      const response = await authRequests.changePassword(data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.reponse.data);
@@ -52,7 +54,7 @@ export const fetchUserDetail = createAsyncThunk(
         if (decodedToken.exp < currentTime) {
           throw new Error("Token expired");
         }
-        const response = await request.UserDetail(decodedToken.id);
+        const response = await authRequests.UserDetail(decodedToken.id);
         return response.data;
       } else {
         throw new Error("No token found");

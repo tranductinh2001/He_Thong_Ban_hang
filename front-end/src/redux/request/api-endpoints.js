@@ -29,9 +29,9 @@ const API_ENDPOINTS = {
     `/order-address/set-default/${order_address_id}`,
 
   // cart
-  GET_CART_BY_ID_USER: () => `/cart`,
-  ADD_TO_CART: () => `/cart/update`,
-  UPDATE_CART: () => `/cart/update`,
+  GET_CART_BY_ID_USER: `/cart/my-cart`,
+  // ADD_TO_CART: () => `/cart/update`,
+  UPDATE_CART: `/cart/update`,
   REMOVE_FROM_CART: () => `/cart/update`,
 
   //order

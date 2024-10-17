@@ -1,38 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { request } from "../request";
-
-//lấy all product, fillter theo sortParam và titleParam, pagination
-// export const fetchProductList = createAsyncThunk(
-//   "products/fetchProductList",
-//   async (
-//     { sortParam, titleParam, searchParam, currentPage, pageSize },
-//     { rejectWithValue }
-//   ) => {
-//     try {
-//       // console.log("fetchProductList ", currentPage, pageSize);
-//       if (sortParam || titleParam) {
-//         // console.log("fetchProductList có sortParam hoặc titleParam");
-//         return await request.ListSort({
-//           sort: sortParam,
-//           title: titleParam,
-//           currentPage,
-//           pageSize,
-//         });
-//       } else if (searchParam) {
-//         return await request.listProductSearch({
-//           keyWord: searchParam,
-//           currentPage,
-//           pageSize,
-//         });
-//       } else {
-//         // console.log("fetchProductList không có sortParam hoặc titleParam");
-//         return await request.List(currentPage, pageSize);
-//       }
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
-// );
+// import { request } from "../productRequests";
+// import { productRequests } from "../request/productRequests"
+import productRequests  from "../request/productRequests.js"
 
 export const fetchProductListWithSortOrTitle = createAsyncThunk(
   "products/fetchProductListWithSortOrTitle",
@@ -42,7 +11,7 @@ export const fetchProductListWithSortOrTitle = createAsyncThunk(
   ) => {
     try {
       // console.log(" ------ ", sortParam, titleParam);
-      return await request.ListSort({
+      return await productRequests.ListSort({
         sort: sortParam,
         title: titleParam,
         currentPage,
@@ -58,7 +27,7 @@ export const fetchProductListWithSearch = createAsyncThunk(
   "products/fetchProductListWithSearch",
   async ({ searchParam, currentPage, pageSize }, { rejectWithValue }) => {
     try {
-      return await request.listProductSearch({
+      return await productRequests.listProductSearch({
         keyWord: searchParam,
         currentPage,
         pageSize,
@@ -74,7 +43,7 @@ export const fetchProductList = createAsyncThunk(
   async ({ currentPage, pageSize }, { rejectWithValue }) => {
     try {
       //console.log("trang:  ", currentPage, pageSize);
-      return await request.List(currentPage, pageSize);
+      return await productRequests.List(currentPage, pageSize);
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -86,7 +55,7 @@ export const fetchProductDetail = createAsyncThunk(
   "products/fetchProductDetail",
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await request.ProductDetail(productId);
+      const response = await productRequests.ProductDetail(productId);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -99,7 +68,7 @@ export const fetchSaleProductList = createAsyncThunk(
   "products/fetchSaleProductList",
   async ({ currentPage, pageSize }, { rejectWithValue }) => {
     try {
-      const response = await request.ListSaleProduct(currentPage, pageSize);
+      const response = await productRequests.ListSaleProduct(currentPage, pageSize);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);

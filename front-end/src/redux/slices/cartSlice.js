@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { request } from "../request";
+import   cartRequests  from "../request/cartRequests";
 
 export const fetchCartData = createAsyncThunk(
   "cart/fetchCartData",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await request.Cart(userId);
+      const response = await cartRequests.Cart(userId);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -16,7 +16,7 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ userId, product }, { rejectWithValue }) => {
     try {
-      const response = await request.AddToCart(userId, product);
+      const response = await cartRequests.AddToCart(userId, product);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -28,7 +28,7 @@ export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ userId, product }, { rejectWithValue }) => {
     try {
-      const response = await request.RemoveFromCart(userId, product);
+      const response = await cartRequests.RemoveFromCart(userId, product);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -40,7 +40,7 @@ export const addManyToCart = createAsyncThunk(
   "cart/addManyToCart",
   async ({ userId, products }, { rejectWithValue }) => {
     try {
-      const response = await request.AddManyToCart(userId, products);
+      const response = await cartRequests.AddManyToCart(userId, products);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -52,7 +52,7 @@ export const deleteFromCart = createAsyncThunk(
   "cart/deleteFromCart",
   async ({ userId, cartItem }, { rejectWithValue }) => {
     try {
-      const response = await request.DeleteFromCart(userId, cartItem);
+      const response = await cartRequests.DeleteFromCart(userId, cartItem);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
