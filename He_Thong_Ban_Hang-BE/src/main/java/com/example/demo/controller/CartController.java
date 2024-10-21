@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.DTO.CartDTO;
-import com.example.demo.entity.Cart;
 import com.example.demo.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,7 @@ public class CartController {
     @GetMapping("/my-cart")
     public ResponseEntity<?> getCartByUser() {
         try {
-            Cart cart = cartService.getCartByUser();
-
-            // Chuyển đổi sang DTO
-            CartDTO cartDTO = new CartDTO(cart);
-System.out.println("oek xong chua cart ve nè  "+ cartDTO);
+            CartDTO cartDTO = cartService.getCartDtoByUser(); // Chuyển sang DTO
             return ResponseEntity.ok(cartDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -34,11 +29,10 @@ System.out.println("oek xong chua cart ve nè  "+ cartDTO);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateCart(@RequestBody Cart cart) {
+    public ResponseEntity<?> updateCart(@RequestBody CartDTO cartDTO) {
         try {
-            System.out.println("cart nè   "+ cart);
-            Cart updatedCart = cartService.updateCart(cart);
-            return ResponseEntity.ok(updatedCart);
+            CartDTO updatedCartDTO = cartService.updateCart(cartDTO); // Nhận DTO
+            return ResponseEntity.ok(updatedCartDTO);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error updating cart: " + e.getMessage());
         }
@@ -47,7 +41,7 @@ System.out.println("oek xong chua cart ve nè  "+ cartDTO);
     @PostMapping("/clear")
     public ResponseEntity<?> clearCart(@RequestParam("cartId") Long cartId) {
         try {
-            Cart clearedCart = cartService.clearCart(cartId);
+            cartService.clearCart(cartId); // Không cần trả về DTO cho clear
             return ResponseEntity.ok("Cart cleared successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error clearing cart: " + e.getMessage());
@@ -56,16 +50,16 @@ System.out.println("oek xong chua cart ve nè  "+ cartDTO);
 
     @GetMapping("/all")
     @Operation(summary = "Lấy tất cả giỏ hàng")
-    public ResponseEntity<List<Cart>> getAllCarts() {
-        List<Cart> carts = cartService.getAllCarts();
-        return ResponseEntity.ok(carts);
+    public ResponseEntity<List<CartDTO>> getAllCarts() {
+        List<CartDTO> cartDTOs = cartService.getAllCartDtos(); // Chuyển sang DTO
+        return ResponseEntity.ok(cartDTOs);
     }
 
     @PostMapping("/create")
     @Operation(summary = "Tạo mới giỏ hàng")
-    public ResponseEntity<Cart> createCart(@RequestBody Cart cart) {
-        Cart createdCart = cartService.createCart(cart);
-        return ResponseEntity.ok(createdCart);
+    public ResponseEntity<CartDTO> createCart(@RequestBody CartDTO cartDTO) {
+        CartDTO createdCartDTO = cartService.createCart(cartDTO); // Nhận DTO và trả về DTO
+        return ResponseEntity.ok(createdCartDTO);
     }
 
     @DeleteMapping("/delete/{id}")

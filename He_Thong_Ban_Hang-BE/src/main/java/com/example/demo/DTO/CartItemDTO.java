@@ -12,16 +12,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemDTO {
+    private Long id;
     private String size;
-    private int count;
     private ProductDTO product;
+    private int count;
     private Date createdAt;
-
-    public CartItemDTO(CartItem cartItem) {
-        this.size = cartItem.getSize();
-        this.count = cartItem.getCount();
-        this.product = new ProductDTO(cartItem.getProduct());
-        this.createdAt = cartItem.getCreatedAt();
-
-    }
 }

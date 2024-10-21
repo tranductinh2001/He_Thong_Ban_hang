@@ -16,13 +16,4 @@ public class CartDTO {
     private int totalOfProduct;
     private double totalOfPrice;
     private List<CartItemDTO> items;
-
-    public CartDTO(Cart cart) {
-        this.id = cart.getId();
-        this.totalOfProduct = cart.getTotalOfProduct();
-        this.totalOfPrice = cart.getTotalOfPrice();
-        this.items = cart.getItems().stream()
-                .map(CartItemDTO::new)
-                .collect(Collectors.toList());
-    }
 }
