@@ -56,15 +56,18 @@ const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 function App() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
+  // console.log("user hiện tại   ", currentUser);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   //số lượng sản phẩm có trong giỏ hàng
   const products = useSelector((state) => state.cart.products);
+
   useEffect(() => {
     dispatch(fetchUserDetail());
     if (currentUser) {
-      dispatch(fetchCartData(currentUser?.id));
+      dispatch(fetchCartData());
     }
   }, [dispatch, currentUser?._id]);
+
   return (
     <BrowserRouter>
       <Suspense fallback={<Loading />}>

@@ -3,9 +3,11 @@ import   cartRequests  from "../request/cartRequests";
 
 export const fetchCartData = createAsyncThunk(
   "cart/fetchCartData",
-  async (userId, { rejectWithValue }) => {
+  async (_,{ rejectWithValue }) => {
     try {
-      const response = await cartRequests.Cart(userId);
+      console.log("b");
+      const response = await cartRequests.GetCartByUser();
+      console.log("data của cart trong cartslide    ", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -16,7 +18,7 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ userId, product }, { rejectWithValue }) => {
     try {
-      const response = await cartRequests.AddToCart(userId, product);
+      const response = await cartRequests.AddToCart(product);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -28,7 +30,7 @@ export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ userId, product }, { rejectWithValue }) => {
     try {
-      const response = await cartRequests.RemoveFromCart(userId, product);
+      const response = await cartRequests.RemoveFromCart(product);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -38,9 +40,9 @@ export const removeFromCart = createAsyncThunk(
 
 export const addManyToCart = createAsyncThunk(
   "cart/addManyToCart",
-  async ({ userId, products }, { rejectWithValue }) => {
+  async ({ products }, { rejectWithValue }) => {
     try {
-      const response = await cartRequests.AddManyToCart(userId, products);
+      const response = await cartRequests.AddManyToCart(products);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);

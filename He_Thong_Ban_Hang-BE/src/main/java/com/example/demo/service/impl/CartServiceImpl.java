@@ -44,91 +44,67 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDTO getCartDtoByUser() {
-        // Lấy thông tin xác thực từ SecurityContext
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
-            throw new RuntimeException("User not authenticated");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
+        String username = getCurrentUsername();
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Cart cart = user.getCart();
         if (cart == null) {
-            cart = new Cart();
-            user.setCart(cart);
-            userRepository.save(user);
-            cartRepository.save(cart);
+//            cart = new Cart();
+//            user.setCart(cart);
+//            userRepository.save(user);
+//            cartRepository.save(cart);
+            return null;
         }
 
         return modelMapper.map(cart, CartDTO.class);
     }
 
+
     @Override
     public CartDTO updateCart(CartDTO cartDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Lấy username của người dùng
+        String username = getCurrentUsername();
 
-        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
-            throw new RuntimeException("User not authenticated");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-
+        // Lấy user từ database và kiểm tra sự tồn tại
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Lấy cart hiện tại của user
         Cart currentCart = user.getCart();
         if (currentCart == null) {
-            throw new RuntimeException("Cart not found for the user");
+            currentCart = new Cart();
         }
 
-        // Lấy danh sách các CartItem hiện tại
-        List<CartItem> currentItems = currentCart.getItems();
+        // Cập nhật các trường cơ bản của cart từ DTO
+        currentCart.setTotalOfPrice(cartDTO.getTotalOfPrice());
+        currentCart.setTotalOfProduct(cartDTO.getTotalOfProduct());
+        user.setCart(currentCart);  // Liên kết cart với user
 
-        // Cập nhật danh sách CartItem từ DTO
-        List<CartItemDTO> newItemsDTO = cartDTO.getItems();
-
-        // Xử lý thêm hoặc cập nhật CartItem
-        for (CartItemDTO newItemDTO : newItemsDTO) {
-            boolean found = false;
-
-            // Kiểm tra xem CartItem đã tồn tại chưa, nếu có thì cập nhật
-            for (CartItem currentItem : currentItems) {
-                if (currentItem.getId() != null && currentItem.getId().equals(newItemDTO.getId())) {
-                    modelMapper.map(newItemDTO, currentItem);
-                    found = true;
-                    break;
-                }
-            }
-
-            // Nếu CartItem không tồn tại, tạo mới và thêm vào danh sách
-            if (!found) {
-                CartItem newItem = modelMapper.map(newItemDTO, CartItem.class);
-                newItem.setCart(currentCart); // Thiết lập liên kết với Cart
-                currentItems.add(newItem);
-            }
+        // Ghi đè toàn bộ danh sách items bằng danh sách mới từ DTO
+        currentCart.getItems().clear();  // Xóa các items hiện tại
+        for (CartItemDTO newItemDTO : cartDTO.getItems()) {
+            CartItem newItem = modelMapper.map(newItemDTO, CartItem.class);
+            newItem.setCart(currentCart); // Liên kết lại với Cart hiện tại
+            newItem.setCreatedAt(new Date());
+            currentCart.getItems().add(newItem);
         }
 
-        // Xử lý xóa các CartItem không còn trong danh sách DTO
-        currentItems.removeIf(item -> item.getId() != null && newItemsDTO.stream()
-                .noneMatch(newItemDTO -> newItemDTO.getId().equals(item.getId())));
-
-        // Lưu cart và user
+        // Lưu lại cart đã cập nhật
         cartRepository.save(currentCart);
-        userRepository.save(user);
 
         return modelMapper.map(currentCart, CartDTO.class);
     }
 
-
-
-
-
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+            throw new RuntimeException("User not authenticated");
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userDetails.getUsername();
+    }
 
 
     @Override

@@ -2,13 +2,14 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.request.ChangePasswordRequest;
 import com.example.demo.request.CreateUserRequest;
 import com.example.demo.request.UpdateProfileRequest;
 
 public interface UserService {
-	User getUserProfile();
+	UserDTO getUserProfile();
 	List<User> getListUserByVerificationCode(String code);
     
 	String getAuthenticationCodeForUser(String username);

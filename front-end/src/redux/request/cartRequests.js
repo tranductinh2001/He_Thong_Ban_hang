@@ -2,21 +2,22 @@ import axiosInstance from "../../axios/axios";
 import API_ENDPOINTS from "./api-endpoints";
 
 const cartRequests = {
-  Cart: async (userId) => {
+  GetCartByUser: async () => {
     try {
       const response = await axiosInstance.get(
-        API_ENDPOINTS.GET_CART_BY_ID_USER(userId)
+        API_ENDPOINTS.GET_CART_BY_ID_USER
       );
+      console.log("dữ liệu từ fe trả về khi gọi all cart từ user   ", response);
       return response;
     } catch (error) {
       console.error("Error fetching cart data:", error);
       throw error;
     }
   },
-  AddToCart: async (userId, cartItem) => {
+  AddToCart: async (cartItem) => {
     try {
       const userCart = await axiosInstance.get(
-        API_ENDPOINTS.GET_CART_BY_ID_USER(userId)
+        API_ENDPOINTS.GET_CART_BY_ID_USER
       );
 
       let existingProduct = userCart?.data?.items.find((item) => {
@@ -54,7 +55,7 @@ const cartRequests = {
       }, 0);
 
       const response = await axiosInstance.put(
-        API_ENDPOINTS.UPDATE_CART(userId),
+        API_ENDPOINTS.UPDATE_CART,
         {
           items: updatedProducts,
           total_of_price: updatedTotal,
@@ -67,10 +68,10 @@ const cartRequests = {
       throw error;
     }
   },
-  RemoveFromCart: async (userId, cartItem) => {
+  RemoveFromCart: async (cartItem) => {
     try {
       const userCart = await axiosInstance.get(
-        API_ENDPOINTS.GET_CART_BY_ID_USER(userId)
+        API_ENDPOINTS.GET_CART_BY_ID_USER
       );
 
       let existingProduct = userCart?.data?.items.find((item) => {
@@ -108,7 +109,7 @@ const cartRequests = {
       }, 0);
 
       const response = await axiosInstance.put(
-        API_ENDPOINTS.UPDATE_CART(userId),
+        API_ENDPOINTS.UPDATE_CART,
         {
           items: updatedProducts,
           total_of_price: updatedTotal,
@@ -121,8 +122,8 @@ const cartRequests = {
       throw error;
     }
   },
-  AddManyToCart: async (userId, products) => {
-    console.log("adđ product   ", products);
+  AddManyToCart: async (products) => {
+    // console.log("adđ product   ", products);
     try {
       const productsTotal = products.reduce((total, item) => {
         const price = item.product.sale
@@ -131,48 +132,49 @@ const cartRequests = {
         const count = item.count;
         return total + price * count;
       }, 0);
-
+// console.log("product total  ", productsTotal);
       const userCartResponse = await axiosInstance.get(
         API_ENDPOINTS.GET_CART_BY_ID_USER
       );
-
-      let userCart = userCartResponse?.data || { items: [], total: 0 };
+// console.log("cart từ user hiện tại ", userCartResponse);
+      let userCart = userCartResponse?.data || { items: [], total: 0 , totalOfPrice: 0};
       const updatedCartProducts = [...userCart.items];
+
+// console.log("user cart sau khi phân tích từ sponse ", userCart);
 
       products.forEach((productItem) => {
         const existingItemIndex = updatedCartProducts.findIndex(
           (cartItem) => cartItem.size === productItem.size
         );
-        console.log("exissting  ", existingItemIndex);
+        // console.log("exissting  ", existingItemIndex);
         if (existingItemIndex !== -1) {
           updatedCartProducts[existingItemIndex].count += productItem.count;
-          console.log("1");
+          // console.log("1");
         } else {
           updatedCartProducts.push(productItem);
-          console.log("2");
+          // console.log("2");
           
         }
       });
-// console.log(" user cần adđ cart  ", userCartResponse , " userCart   ", userCart, "   updatedCartProducts   ", updatedCartProducts);
-      const updatedCartTotal = userCart.total_of_price + productsTotal;
+      const updatedCartTotal = userCart.totalOfPrice + productsTotal;
       const numberOfProduct = updatedCartProducts.reduce(
         (accumulator, product) => {
           return accumulator + product.count;
         },
         0
       );
-      const a = {
-        items: updatedCartProducts,
-        total_of_product: numberOfProduct,
-        total_of_price: updatedCartTotal,
-      }
-console.log("data batch cart all:   ",a);
+      // const a = {
+      //   items: updatedCartProducts,
+      //   totalOfProduct: numberOfProduct,
+      //   totalOfPrice: updatedCartTotal,
+      // }
+// console.log("data batch cart all:   ",a);
       const response = await axiosInstance.put(
         API_ENDPOINTS.UPDATE_CART,
         {
           items: updatedCartProducts,
-          total_of_product: numberOfProduct,
-          total_of_price: updatedCartTotal,
+          totalOfProduct: numberOfProduct,
+          totalOfPrice: updatedCartTotal,
         }
       );
       return response.data;

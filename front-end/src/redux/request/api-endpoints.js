@@ -32,7 +32,7 @@ const API_ENDPOINTS = {
   GET_CART_BY_ID_USER: `/cart/my-cart`,
   // ADD_TO_CART: () => `/cart/update`,
   UPDATE_CART: `/cart/update`,
-  REMOVE_FROM_CART: () => `/cart/update`,
+  REMOVE_FROM_CART: `/cart/update`,
 
   //order
   GET_ORDERS: `/order`,

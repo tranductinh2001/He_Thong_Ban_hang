@@ -111,7 +111,7 @@ export default function CartPage() {
   useEffect(() => {
     if (currentUser && isAuthenticated) {
       dispatch(fetchOrderAddress());
-      dispatch(fetchCartData(userId));
+      dispatch(fetchCartData());
     }
   }, [currentUser]);
 

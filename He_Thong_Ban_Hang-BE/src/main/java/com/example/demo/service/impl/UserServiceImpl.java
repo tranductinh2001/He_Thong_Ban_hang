@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.example.demo.DTO.UserDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	public static String generateCode() {
 		Random random = new Random();
@@ -82,22 +87,21 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	@Override
-	public User getUserProfile() {
-		// Lấy thông tin xác thực từ SecurityContext
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	public UserDTO getUserProfile() {
+		String username = getCurrentUsername();
+		User user = userRepository.findByUsername(username)
+				.orElseThrow(() -> new RuntimeException("User not found"));
 
-		// Kiểm tra xem người dùng đã được xác thực hay chưa
+		return modelMapper.map(user, UserDTO.class);
+	}
+
+	private String getCurrentUsername() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
 			throw new RuntimeException("User not authenticated");
 		}
-
-		// Lấy tên người dùng
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		String username = userDetails.getUsername();
-
-		// Tìm kiếm người dùng theo tên trong cơ sở dữ liệu
-		return userRepository.findByUsername(username)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+		return userDetails.getUsername();
 	}
 
 	@Override

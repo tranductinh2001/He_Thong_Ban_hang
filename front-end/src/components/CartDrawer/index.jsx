@@ -33,6 +33,7 @@ export default function CartDrawer({ open, onClose, size }) {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth?.currentUser?.id);
   const cartData = useSelector((state) => state.cart?.products);
+  console.log("cart item nè   ", cartData);
   //tổng giá tiền sản phẩm của giỏ hàng
   const total = useSelector((state) => state.cart.total);
   const handleAddToCart = (userId, product) => {

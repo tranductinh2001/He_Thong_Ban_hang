@@ -89,6 +89,7 @@ export default function Header() {
   const location = useLocation();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // console.log("test đang nhập từ user và authentication   ", currentUser, isAuthenticated);
   const number_of_product = useSelector(
     (state) => state.cart?.number_of_product
   );

@@ -170,7 +170,7 @@ const ProductDetailPage = () => {
   
   const handleQuantityChange = (RowItem, newCount) => {
     const key = RowItem.key;
-    console.log("rowitem   ", RowItem.sizeName);
+    // console.log("rowitem   ", RowItem.sizeName);
     const existingItem = cart.find((item) => item.key === key);
 
     if (existingItem) {
@@ -201,8 +201,8 @@ const ProductDetailPage = () => {
 
   const addToCart = () => {
     if (cart && cart?.length > 0) {
-      console.log("cart   ", cart);
-      dispatch(addManyToCart({ userId: currentUser?.id, products: cart }));
+      // console.log("cart   ", cart);
+      dispatch(addManyToCart({ products: cart }));
       showDrawer();
       // console.log("cart: ", cart);
     } else {

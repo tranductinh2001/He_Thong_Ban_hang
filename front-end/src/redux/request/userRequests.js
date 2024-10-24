@@ -23,7 +23,15 @@ const userRequests = {
     } catch (error) {
       return errorHandler(error);
     }
-  }
+  },UserDetail: async () => {
+    try {
+      const response = await axiosInstance.get(API_ENDPOINTS.USER_DETAIL);
+      return response;
+    } catch (error) {
+      console.error("Error fetching user detail data:", error);
+      throw error;
+    }
+  },
 };
 
 export default userRequests;

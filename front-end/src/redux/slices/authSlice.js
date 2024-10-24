@@ -54,7 +54,7 @@ export const fetchUserDetail = createAsyncThunk(
         if (decodedToken.exp < currentTime) {
           throw new Error("Token expired");
         }
-        const response = await authRequests.UserDetail(decodedToken.id);
+        const response = await authRequests.UserDetail();
         return response.data;
       } else {
         throw new Error("No token found");
@@ -100,7 +100,7 @@ const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.isLoading = false;
       state.currentUser = action.payload;
-      state.jwt = action.payload.jwt?.access_token;
+      state.jwt = action.payload.jwt?.value;
       state.isAuthenticated = true;
     });
     builder.addCase(login.rejected, (state, action) => {
@@ -131,10 +131,11 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     });
     builder.addCase(fetchUserDetail.rejected, (state, action) => {
+      console.log("vào     builder.addCase(fetchUserDetail.rejected, (state, action) ");
       state.isLoading = false;
       state.jwt = null;
       state.isAuthenticated = false;
-      localStorage.removeItem("jwt");
+      //localStorage.removeItem("jwt");
     });
     builder.addCase(register.pending, (state) => {
       state.isLoading = true;

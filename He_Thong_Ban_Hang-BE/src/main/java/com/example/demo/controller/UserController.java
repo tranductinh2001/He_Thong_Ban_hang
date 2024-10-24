@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,7 @@ public class UserController {
     public ResponseEntity<?> getUserProfile() {
         try {
             // Gọi UserService để lấy thông tin người dùng
-            User user = userService.getUserProfile();
+            UserDTO user = userService.getUserProfile();
 
             return ResponseEntity.ok(user);  // Trả về thông tin người dùng
         } catch (Exception e) {

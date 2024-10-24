@@ -13,23 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-//	@Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private long id;
-//
-//    private String customerName;
-//
-//    private Date bookingDate;
-//
-//    private String status;
-//
-//    @ManyToMany
-//    @JoinColumn(name="tour_id")
-//    private List<Tour> tours;
-//
-//    @ManyToOne
-//    @JoinColumn(name="user_id")
-//    private User user;
+
 @Entity
 @Table(name = "orders")
 public class Order {
