@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import CartDrawer from "../components/CartDrawer";
 import ProductCard from "../components/ProductCard";
-import { addManyToCart } from "../redux/slices/cartSlice";
+import { addManyToCart, fetchCartData } from "../redux/slices/cartSlice";
 import useSessionStorage from "../custom hooks/useSessionStorage";
 import {
   fetchProductDetail,
@@ -118,7 +118,7 @@ const ProductDetailPage = () => {
     (state) => state.products?.currentPage
   );
   //console.log("product   ",product);
-  // console.log("SALE PRODUCTS", saleProducts);
+  // console.log("SALE PRODUCTS");
   const [currentPage, setCurrentPage] = useState(1);
   const [allSaleProducts, setAllSaleProducts] = useState([]);
   const totalPageListSale = useSelector((state) => state.products?.totalPage);
@@ -203,7 +203,10 @@ const ProductDetailPage = () => {
     if (cart && cart?.length > 0) {
       // console.log("cart   ", cart);
       dispatch(addManyToCart({ products: cart }));
+      // dispatch(fetchCartData());
       showDrawer();
+      // dispatch(fetchCartData());
+
       // console.log("cart: ", cart);
     } else {
       error();

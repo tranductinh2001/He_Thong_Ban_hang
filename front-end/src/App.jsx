@@ -56,17 +56,18 @@ const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 function App() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const cartByCurrentUser = useSelector((state) => state.cart.products)
   // console.log("user hiện tại   ", currentUser);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   //số lượng sản phẩm có trong giỏ hàng
   const products = useSelector((state) => state.cart.products);
-
+// console.log("cartByCurrentUser nè    ", cartByCurrentUser) 
   useEffect(() => {
     dispatch(fetchUserDetail());
     if (currentUser) {
       dispatch(fetchCartData());
     }
-  }, [dispatch, currentUser?._id]);
+  }, [dispatch, currentUser?.id]);
 
   return (
     <BrowserRouter>

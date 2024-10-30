@@ -86,10 +86,10 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartData.fulfilled, (state, action) => {
         state.loading = false;
-        state.total = action.payload?.total_of_price;
+        state.total = action.payload?.totalOfPrice;
         state.products = action.payload?.items;
-        state.number_of_product = action.payload?.total_of_product;
-        // console.log(action.payload);
+        state.number_of_product = action.payload?.totalOfProduct;
+        console.log("slide call data   ",action.payload);
       })
       .addCase(fetchCartData.rejected, (state, action) => {
         state.loading = false;
@@ -101,9 +101,9 @@ const cartSlice = createSlice({
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.total = action.payload?.cart?.total_of_price;
+        state.total = action.payload?.cart?.totalOfPrice;
         state.products = action.payload?.cart?.items;
-        state.number_of_product = action.payload?.cart?.total_of_product;
+        state.number_of_product = action.payload?.cart?.totalOfProduct;
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
@@ -116,9 +116,9 @@ const cartSlice = createSlice({
       .addCase(removeFromCart.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.total = action.payload?.cart?.total_of_price;
+        state.total = action.payload?.cart?.totalOfPrice;
         state.products = action.payload?.cart?.items;
-        state.number_of_product = action.payload?.cart?.total_of_product;
+        state.number_of_product = action.payload?.cart?.totalOfProduct;
       })
       .addCase(removeFromCart.rejected, (state, action) => {
         state.loading = false;
@@ -130,9 +130,9 @@ const cartSlice = createSlice({
       })
       .addCase(addManyToCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.total = action.payload?.cart?.total_of_price;
+        state.total = action.payload?.cart?.totalOfPrice;
         state.products = action.payload?.cart?.items;
-        state.number_of_product = action.payload?.cart?.total_of_product;
+        state.number_of_product = action.payload?.cart?.totalOfProduct;
       })
       .addCase(addManyToCart.rejected, (state, action) => {
         state.loading = false;
@@ -146,7 +146,7 @@ const cartSlice = createSlice({
         state.loading = false;
         state.total = action.payload?.cart?.total_of_price;
         state.products = action.payload?.cart?.items;
-        state.number_of_product = action.payload?.cart?.total_of_product;
+        state.number_of_product = action.payload?.cart?.totalOfProduct;
       })
       .addCase(deleteFromCart.rejected, (state, action) => {
         state.loading = false;

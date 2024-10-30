@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import {
   addToCart,
   deleteFromCart,
+  fetchCartData,
   removeFromCart,
 } from "../../redux/slices/cartSlice";
 import CartItem from "../CartItem";
@@ -35,6 +36,7 @@ export default function CartDrawer({ open, onClose, size }) {
   const cartData = useSelector((state) => state.cart?.products);
   console.log("cart item nè   ", cartData);
   //tổng giá tiền sản phẩm của giỏ hàng
+  // dispatch(fetchCartData())
   const total = useSelector((state) => state.cart.total);
   const handleAddToCart = (userId, product) => {
     dispatch(addToCart({ userId, product }));
