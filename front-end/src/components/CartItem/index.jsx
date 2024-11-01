@@ -19,6 +19,7 @@ export const QuantityEditor = ({
   }, [value]);
 
   const increment = () => {
+    console.log("cộng trong cart product detail")
     if (currentValue < max) {
       const newValue = currentValue + 1;
       setCurrentValue(newValue);
@@ -27,6 +28,7 @@ export const QuantityEditor = ({
   };
 
   const decrement = () => {
+    console.log("trừ trong cart product detail")
     if (currentValue > min) {
       const newValue = currentValue - 1;
       setCurrentValue(newValue);
@@ -53,6 +55,7 @@ export const QuantityEditor = ({
         onClick={increment}
         disabled={currentValue >= max}
       />
+      
     </Space>
   );
 };
@@ -101,6 +104,7 @@ const CartItem = ({
     (item) => item.size_name === size
   );
   const handleIncrement = (newValue) => {
+    console.log("cộng trong cart item")
     if (newValue <= foundItem.quantity) {
       setQuantity(newValue);
       addToCart(cartItem, newValue);
@@ -108,11 +112,13 @@ const CartItem = ({
   };
 
   const handleDecrement = (newValue) => {
+    console.log("trừ trong cart item")
     if (newValue >= 1) {
       setQuantity(newValue);
       removeFromCart(cartItem, newValue);
     }
   };
+
   const handleDeleteCartItem = () => {
     deleteFromCart(cartItem);
   };

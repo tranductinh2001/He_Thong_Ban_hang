@@ -34,17 +34,19 @@ export default function CartDrawer({ open, onClose, size }) {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth?.currentUser?.id);
   const cartData = useSelector((state) => state.cart?.products);
-  console.log("cart item nè   ", cartData);
   //tổng giá tiền sản phẩm của giỏ hàng
   // dispatch(fetchCartData())
   const total = useSelector((state) => state.cart.total);
   const handleAddToCart = (userId, product) => {
+    console.log("cộng")
     dispatch(addToCart({ userId, product }));
   };
   const handleRemoveFromCart = (userId, product) => {
+    console.log("trừ")
     dispatch(removeFromCart({ userId, product }));
   };
   const handleDeleteFromCart = (userId, cartItem) => {
+    console.log("xóa cart")
     dispatch(deleteFromCart({ userId, cartItem }));
   };
   return (

@@ -445,7 +445,7 @@ const ProductDetailPage = () => {
         <Carousel
           responsive={carouselResponsiveSetting}
           ref={carouselRef}
-          beforeChange={handleBeforeChange}
+          // beforeChange={handleBeforeChange}
           className="w-full h-auto pb-3 bg-white"
           autoplay
           arrows

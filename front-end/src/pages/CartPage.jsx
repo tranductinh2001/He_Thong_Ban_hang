@@ -39,13 +39,15 @@ export default function CartPage() {
   // tổng số lượng sản phẩm có trong giỏ hàng (tính cả size)
   const totalProduct = useSelector((state) => state.cart?.number_of_product);
   // xử lý thêm sản phẩm vào giỏ hàng trên strapi
-  const handleAddToCart = (userId, product) => {
+  const handleAddToCart = (userId, product) => {    
+    console.log("object")
     dispatch(addToCart({ userId, product }));
   };
   const handleRemoveFromCart = (userId, product) => {
+    console.log("object")
     dispatch(removeFromCart({ userId, product }));
   };
-  const handleDeleteFromCart = (userId, cartItem) => {
+  const handleDeleteFromCart = (userId, cartItem) => {    console.log("object")
     dispatch(deleteFromCart({ userId, cartItem }));
   };
   const handleChange = (e) => {
@@ -234,7 +236,9 @@ export default function CartPage() {
                   cartItem={cartItem}
                   size={cartItem.size}
                   productQuantity={cartItem.count}
-                  addToCart={(cartItem) => handleAddToCart(userId, cartItem)}
+                  addToCart={(cartItem) => 
+                    handleAddToCart(userId, cartItem)
+                  }
                   removeFromCart={(cartItem) =>
                     handleRemoveFromCart(userId, cartItem)
                   }
