@@ -19,7 +19,7 @@ export const QuantityEditor = ({
   }, [value]);
 
   const increment = () => {
-    console.log("cộng trong cart product detail")
+    console.log("cộng trong cart item")
     if (currentValue < max) {
       const newValue = currentValue + 1;
       setCurrentValue(newValue);
@@ -28,7 +28,7 @@ export const QuantityEditor = ({
   };
 
   const decrement = () => {
-    console.log("trừ trong cart product detail")
+    console.log("trừ trong cart item")
     if (currentValue > min) {
       const newValue = currentValue - 1;
       setCurrentValue(newValue);
@@ -99,12 +99,13 @@ const CartItem = ({
   removeFromCart,
   deleteFromCart,
 }) => {
+  console.log("cart item trong param nè   ", cartItem);
   const [quantity, setQuantity] = useState(productQuantity);
-  const foundItem = cartItem?.product?.size_list?.find(
-    (item) => item.size_name === size
+  const foundItem = cartItem?.product?.sizeList?.find(
+    (item) => item.sizeName === size
   );
   const handleIncrement = (newValue) => {
-    console.log("cộng trong cart item")
+    console.log("cộng trong cart CartItem")
     if (newValue <= foundItem.quantity) {
       setQuantity(newValue);
       addToCart(cartItem, newValue);
@@ -112,7 +113,7 @@ const CartItem = ({
   };
 
   const handleDecrement = (newValue) => {
-    console.log("trừ trong cart item")
+    console.log("trừ trong cart CartItem")
     if (newValue >= 1) {
       setQuantity(newValue);
       removeFromCart(cartItem, newValue);
