@@ -27,7 +27,7 @@ export default function CartPage() {
     number_phone: "",
     email: "",
   });
-  const userId = useSelector((state) => state.auth?.currentUser?._id);
+  const userId = useSelector((state) => state.auth?.currentUser?.id);
   const cartData = useSelector((state) => state.cart?.products);
   //tổng tiền của giỏ hàng
   const default_address = useSelector(
@@ -36,19 +36,21 @@ export default function CartPage() {
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
   //tổng giá tiền sản phẩm của giỏ hàng
   const total = useSelector((state) => state.cart?.total);
+  console.log("total   ", total);
   // tổng số lượng sản phẩm có trong giỏ hàng (tính cả size)
   const totalProduct = useSelector((state) => state.cart?.number_of_product);
   // xử lý thêm sản phẩm vào giỏ hàng trên strapi
-  const handleAddToCart = (userId, product) => {    
-    console.log("object")
-    dispatch(addToCart({ userId, product }));
+  const handleAddToCart = (product) => {    
+    // console.log("đã vào được call api này với data   ", product);
+    dispatch(addToCart({ product }));
   };
-  const handleRemoveFromCart = (userId, product) => {
-    console.log("object")
-    dispatch(removeFromCart({ userId, product }));
+  const handleRemoveFromCart = (product) => {
+    // console.log("đã vào được call api này với data   ", product);
+    dispatch(removeFromCart({ product }));
   };
-  const handleDeleteFromCart = (userId, cartItem) => {    console.log("object")
-    dispatch(deleteFromCart({ userId, cartItem }));
+  const handleDeleteFromCart = (cartItem) => {   
+    // console.log("đã vào được call api này với data   ", cartItem);
+    dispatch(deleteFromCart({ cartItem }));
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -237,13 +239,13 @@ export default function CartPage() {
                   size={cartItem.size}
                   productQuantity={cartItem.count}
                   addToCart={(cartItem) => 
-                    handleAddToCart(userId, cartItem)
+                    handleAddToCart(cartItem)
                   }
                   removeFromCart={(cartItem) =>
-                    handleRemoveFromCart(userId, cartItem)
+                    handleRemoveFromCart(cartItem)
                   }
                   deleteFromCart={(cartItem) =>
-                    handleDeleteFromCart(userId, cartItem)
+                    handleDeleteFromCart(cartItem)
                   }
                 />
               ))}

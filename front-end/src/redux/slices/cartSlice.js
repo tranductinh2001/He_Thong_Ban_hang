@@ -16,8 +16,9 @@ export const fetchCartData = createAsyncThunk(
 );
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ userId, product }, { rejectWithValue }) => {
+  async ({ product }, { rejectWithValue }) => {
     try {
+      console.log("addToCart     ", product);
       const response = await cartRequests.AddToCart(product);
       return response;
     } catch (error) {
@@ -28,8 +29,9 @@ export const addToCart = createAsyncThunk(
 
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
-  async ({ userId, product }, { rejectWithValue }) => {
+  async ({ product }, { rejectWithValue }) => {
     try {
+      console.log("removeFromCart    ", product);
       const response = await cartRequests.RemoveFromCart(product);
       return response;
     } catch (error) {
@@ -42,6 +44,7 @@ export const addManyToCart = createAsyncThunk(
   "cart/addManyToCart",
   async ({ products }, { rejectWithValue }) => {
     try {
+      console.log("addManyToCart     ", products);
       const response = await cartRequests.AddManyToCart(products);
       return response;
     } catch (error) {
@@ -52,9 +55,10 @@ export const addManyToCart = createAsyncThunk(
 
 export const deleteFromCart = createAsyncThunk(
   "cart/deleteFromCart",
-  async ({ userId, cartItem }, { rejectWithValue }) => {
+  async ({ cartItem }, { rejectWithValue }) => {
     try {
-      const response = await cartRequests.DeleteFromCart(userId, cartItem);
+      console.log("deleteFromCart   ", cartItem);
+      const response = await cartRequests.DeleteFromCart(cartItem);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -144,7 +148,7 @@ const cartSlice = createSlice({
       })
       .addCase(deleteFromCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.total = action.payload?.total_of_price;
+        state.total = action.payload?.totalOfPrice;
         state.products = action.payload?.items;
         state.number_of_product = action.payload?.totalOfProduct;
       })
