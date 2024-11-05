@@ -10,7 +10,7 @@ import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
 // import OdersForm from "./components/Form/OdersForm";
 // import PersonalInformationForm from "./components/Form/PersonalInformationForm";
 // import CartLayout from "./layout/CartLayout";
-import Layout from "./layout/Layout";
+import LayoutClient from "./layout/LayoutClient";
 // import ScrollToTop from "./components/ScrollToTop";
 // import CartPage from "./pages/CartPage";
 // import ContactPage from "./pages/ContactPage";
@@ -26,6 +26,9 @@ import Layout from "./layout/Layout";
 // import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 // import PaymentCancelPage from "./pages/PaymentCancelPage";
 import Loading from "./components/Loading";
+import LayoutAdmin from "./layout/LayoutAmin";
+import { Dashboard } from "@mui/icons-material";
+import DashboardPage from "./pages/admin/DashboardPage";
 // Lazy load components
 const AddressForm = lazy(() => import("./components/Form/AddressForm"));
 const ChangePasswordForm = lazy(() =>
@@ -73,7 +76,7 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<Loading />}>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/" element={<LayoutClient />}>
             <Route index element={<HomePage />} />
             <Route path="products" element={<ProductListPage />} />
             <Route
@@ -102,6 +105,9 @@ function App() {
                 <Route path="orders" element={<OrdersForm />} />
               </Route>
             </Route>
+          </Route>
+          <Route path="admin" element={<LayoutAdmin />}>
+              <Route path="dashsboard" element={<DashboardPage />}/>
           </Route>
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="payment-cancel" element={<PaymentCancelPage />} />

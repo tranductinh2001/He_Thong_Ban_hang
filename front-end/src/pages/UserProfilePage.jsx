@@ -4,6 +4,7 @@ import {
   faLockOpen,
   faNewspaper,
   faUser,
+  faUserShield,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider } from "antd";
@@ -18,6 +19,7 @@ const iconMap = {
   "lock-open": faLockOpen,
   "cart-shopping": faCartShopping,
   "arrow-right-from-bracket": faArrowRightFromBracket,
+  "admin" : faUserShield
 };
 const optionProfile = [
   {
@@ -41,10 +43,16 @@ const optionProfile = [
     path: "orders",
   },
   {
+    icon: "dashsboard",
+    title: "Admin",
+    path: "admin",
+  },
+  {
     icon: "arrow-right-from-bracket",
     title: "Đăng xuất",
     path: "logout",
   },
+  
 ];
 
 export default function UserProfilePage() {
