@@ -8,6 +8,7 @@ const productRequests = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.GET_LIST_PRODUCTS(currentPage, pageSize)
       );
+      console.log("kkk", response)
       return response.data;
     } catch (error) {
       return errorHandler(error);

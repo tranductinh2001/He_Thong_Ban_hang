@@ -1,35 +1,15 @@
+import LayoutClient from "./layout/LayoutClient";
 import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { fetchUserDetail } from "./redux/slices/authSlice";
 import { fetchCartData } from "./redux/slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
-
-// import AddresForm from "./components/Form/AddressForm";
-// import ChangPasswordForm from "./components/Form/ChangePasswordForm";
-// import OdersForm from "./components/Form/OdersForm";
-// import PersonalInformationForm from "./components/Form/PersonalInformationForm";
-// import CartLayout from "./layout/CartLayout";
-import LayoutClient from "./layout/LayoutClient";
-// import ScrollToTop from "./components/ScrollToTop";
-// import CartPage from "./pages/CartPage";
-// import ContactPage from "./pages/ContactPage";
-// import HomePage from "./pages/HomePage";
-// import LoginPage from "./pages/LoginPage";
-// import NotFoundPage from "./pages/NotFoundPage";
-// import ProductDetailPage from "./pages/ProductDetailPage";
-// import ProductListPage from "./pages/ProductListPage";
-// import SearchPage from "./pages/SearchPage";
-// import UserProfilePage from "./pages/UserProfilePage";
-// import CategoryPage from "./pages/CategoryPage";
-// import RequireAuth from "./utils/requireAuth";
-// import PaymentSuccessPage from "./pages/PaymentSuccessPage";
-// import PaymentCancelPage from "./pages/PaymentCancelPage";
 import Loading from "./components/Loading";
-import LayoutAdmin from "./layout/LayoutAmin";
-import { Dashboard } from "@mui/icons-material";
-import DashboardPage from "./pages/admin/DashboardPage";
-// Lazy load components
+import { CSpinner, useColorModes } from "@coreui/react";
+import DefaultLayout from "./srcAdmin/layout/DefaultLayout";
+import './srcAdmin/scss/style.scss'
+
+// Lazy load các component
 const AddressForm = lazy(() => import("./components/Form/AddressForm"));
 const ChangePasswordForm = lazy(() =>
   import("./components/Form/ChangePasswordForm")
@@ -39,7 +19,6 @@ const PersonalInformationForm = lazy(() =>
   import("./components/Form/PersonalInformationForm")
 );
 const CartLayout = lazy(() => import("./layout/CartLayout"));
-// const Layout = lazy(() => import("./layout/Layout"));
 const ScrollToTop = lazy(() => import("./components/ScrollToTop"));
 const CartPage = lazy(() => import("./pages/CartPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
@@ -57,14 +36,31 @@ const PaymentCancelPage = lazy(() => import("./pages/PaymentCancelPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 
 function App() {
+  //config admin
+  const { isColorModeSet, setColorMode } = useColorModes(
+    "coreui-free-react-admin-template-theme"
+  );
+  const storedTheme = useSelector((state) => state.theme);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.href.split("?")[1]);
+    const theme =
+      urlParams.get("theme") &&
+      urlParams.get("theme").match(/^[A-Za-z0-9\s]+/)[0];
+    if (theme) {
+      setColorMode(theme);
+    }
+
+    if (isColorModeSet()) {
+      return;
+    }
+
+    setColorMode(storedTheme);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
-  const cartByCurrentUser = useSelector((state) => state.cart.products)
-  // console.log("user hiện tại   ", currentUser);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  //số lượng sản phẩm có trong giỏ hàng
-  const products = useSelector((state) => state.cart.products);
-// console.log("cartByCurrentUser nè    ", cartByCurrentUser) 
+
   useEffect(() => {
     dispatch(fetchUserDetail());
     if (currentUser) {
@@ -76,6 +72,7 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<Loading />}>
         <Routes>
+          {/* Client Routes */}
           <Route path="/" element={<LayoutClient />}>
             <Route index element={<HomePage />} />
             <Route path="products" element={<ProductListPage />} />
@@ -106,9 +103,6 @@ function App() {
               </Route>
             </Route>
           </Route>
-          <Route path="admin" element={<LayoutAdmin />}>
-              <Route path="dashsboard" element={<DashboardPage />}/>
-          </Route>
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="payment-cancel" element={<PaymentCancelPage />} />
           <Route path="login" element={<LoginPage />} />
@@ -117,6 +111,9 @@ function App() {
             <Route index element={<CartPage />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin/*" element={<DefaultLayout />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
