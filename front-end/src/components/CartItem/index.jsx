@@ -157,7 +157,7 @@ const CartItem = ({
             </span>
           </span>
         )}
-        {!cartItem?.product?.is_sale ? (
+        {!cartItem?.product?.sale ? (
           <span className="font-semibold text-red-500">
             {cartItem?.product?.price?.toLocaleString()}đ
           </span>
@@ -167,7 +167,7 @@ const CartItem = ({
               {cartItem?.product?.price?.toLocaleString()}đ
             </span>
             <span className="font-semibold text-green-500">
-              {cartItem?.product?.sale_price?.toLocaleString()}đ
+              {cartItem?.product?.salePrice?.toLocaleString()}đ
             </span>
           </>
         )}

@@ -28,11 +28,11 @@ export default function PaymentSuccessPage() {
       render: (price) => `${price.unit_amount?.toLocaleString()}$`, // Format giá trị price
     },
   ];
-  useEffect(() => {
-    if (sessionId) {
-      dispatch(checkoutSession(sessionId));
-    } else navigate("/");
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (sessionId) {
+  //     dispatch(checkoutSession(sessionId));
+  //   } else navigate("/");
+  // }, [dispatch]);
   return (
     <>
       {isLoading && (

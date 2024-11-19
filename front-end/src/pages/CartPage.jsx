@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import EmptyCart from "../components/EmptyCart";
+import Model from "../components/Model";
 import {
   addToCart,
   deleteFromCart,
@@ -13,12 +14,36 @@ import {
 } from "../redux/slices/cartSlice";
 import { fetchOrderAddress } from "../redux/slices/orderAddressSlice";
 import { createCheckoutSession, createOrder } from "../redux/slices/orderSlice";
+import { WebSocketProvider, useWebSocket } from "../WebSocket/WebSocketContext";
+
 const { TextArea } = Input;
 
 export default function CartPage() {
+  const { receivedData } = useWebSocket();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  useEffect(() => {
+    if (receivedData) {
+      // Tách dữ liệu từ đối tượng
+      const messageKey = Object.keys(receivedData)[0]; // Lấy key đầu tiên
+      const messageValue = receivedData[messageKey]; // Lấy giá trị tương ứng
+
+      setModalMessage(messageValue);
+      if (modalMessage && modalMessage.trim() !== "") {
+        setIsModalVisible(true); // Hiển thị modal
+      }
+    }
+  }, [receivedData]);
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth?.currentUser);
+  // console.log(currentUser)
   const [orderForm, setOrderForm] = useState({
     total_of_price: 0,
     order_address: {},
@@ -26,6 +51,7 @@ export default function CartPage() {
     notes: "",
     number_phone: "",
     email: "",
+    name: "",
   });
   const userId = useSelector((state) => state.auth?.currentUser?.id);
   const cartData = useSelector((state) => state.cart?.products);
@@ -33,14 +59,16 @@ export default function CartPage() {
   const default_address = useSelector(
     (state) => state.orderAddress?.defaultOrderAddress
   );
+  // console.log(default_address)
+
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
   //tổng giá tiền sản phẩm của giỏ hàng
   const total = useSelector((state) => state.cart?.total);
-  console.log("total   ", total);
+  // console.log("total   ", total);
   // tổng số lượng sản phẩm có trong giỏ hàng (tính cả size)
   const totalProduct = useSelector((state) => state.cart?.number_of_product);
   // xử lý thêm sản phẩm vào giỏ hàng trên strapi
-  const handleAddToCart = (product) => {    
+  const handleAddToCart = (product) => {
     // console.log("đã vào được call api này với data   ", product);
     dispatch(addToCart({ product }));
   };
@@ -48,7 +76,7 @@ export default function CartPage() {
     // console.log("đã vào được call api này với data   ", product);
     dispatch(removeFromCart({ product }));
   };
-  const handleDeleteFromCart = (cartItem) => {   
+  const handleDeleteFromCart = (cartItem) => {
     // console.log("đã vào được call api này với data   ", cartItem);
     dispatch(deleteFromCart({ cartItem }));
   };
@@ -62,10 +90,11 @@ export default function CartPage() {
 
   //kiểm tra số lượng sản phẩm trước khi thanh toán (số lương sp có vượt quá tồn kho hay ko)
   const checkQuantityCartItem = () => {
+    // console.log(cartData)
     return cartData.every((cartItem) =>
-      cartItem.product?.size_list.some(
+      cartItem.product?.sizeList.some(
         (sizeItem) =>
-          cartItem.size === sizeItem.size_name &&
+          cartItem.size === sizeItem.sizeName &&
           cartItem.count <= sizeItem.quantity
       )
     );
@@ -73,27 +102,29 @@ export default function CartPage() {
   //xử lý nút đặt hàng
   const handleOrder = () => {
     if (checkQuantityCartItem()) {
-      console.log(orderForm);
-      console.log(cartData);
-      console.log("order address", default_address);
-      console.log("total price", total);
+      setIsModalVisible(true); // Hiển thị modal
+      // console.log(orderForm);
+      // console.log(cartData);
+      // console.log("order address", default_address);
+      // console.log("total price", total);
       const order = {
         email: orderForm.email,
-        number_phone: orderForm.number_phone,
+        numberPhone: orderForm.number_phone,
         notes: orderForm.notes || "",
-        order_address: default_address,
+        orderAddress: default_address ?? currentUser?.address,
         cart: cartData,
-        total_of_price: total,
+        totalOfPrice: total,
+        name: orderForm.name,
       };
-
+      console.log("data oderr nè:   ", order);
       // dispatch(createOrder(order));
       dispatch(createCheckoutSession(order));
-      if (message) {
+      if (messageError) {
         api.warning({
-          message: "Thông báo",
+          messageError: "Thông báo",
           description: (
             <div>
-              {message}
+              {messageError}
               <br />
               <Link className="underline text-blue-600" to={prevPaymentUrl}>
                 Đơn hàng chưa thanh toán
@@ -106,7 +137,7 @@ export default function CartPage() {
     } else alert("Số lượng sản phẩm trong giỏ hạn vượt quá sản phẩm tồn kho");
   };
 
-  const message = useSelector((state) => state.order?.error);
+  const messageError = useSelector((state) => state.order?.error);
   //link thanh toán đơn hàng trước đó đang có trạng thái pending
   const prevPaymentUrl = useSelector((state) => state.order?.prevPaymentUrl);
   //link chuyển hướng đến stripe
@@ -122,8 +153,9 @@ export default function CartPage() {
   useEffect(() => {
     if (currentUser) {
       setOrderForm({
-        number_phone: currentUser?.number_phone,
+        number_phone: currentUser?.numberPhone,
         email: currentUser?.email,
+        // order_address: currentUser?.
       });
     }
   }, [currentUser]);
@@ -175,6 +207,16 @@ export default function CartPage() {
               </div>
 
               <div className="flex sm:flex-row flex-col gap-3 text-xs">
+                <div className="flex flex-col gap-2">
+                  <span className="text-sm">Tên</span>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={orderForm?.name}
+                    className="rounded-full pr-20"
+                    onChange={handleChange}
+                  />
+                </div>
                 <div className="flex flex-col gap-2">
                   <span className="text-sm">Số điện thoại</span>
                   <Input
@@ -238,15 +280,9 @@ export default function CartPage() {
                   cartItem={cartItem}
                   size={cartItem.size}
                   productQuantity={cartItem.count}
-                  addToCart={(cartItem) => 
-                    handleAddToCart(cartItem)
-                  }
-                  removeFromCart={(cartItem) =>
-                    handleRemoveFromCart(cartItem)
-                  }
-                  deleteFromCart={(cartItem) =>
-                    handleDeleteFromCart(cartItem)
-                  }
+                  addToCart={(cartItem) => handleAddToCart(cartItem)}
+                  removeFromCart={(cartItem) => handleRemoveFromCart(cartItem)}
+                  deleteFromCart={(cartItem) => handleDeleteFromCart(cartItem)}
                 />
               ))}
               {/* tổng tiền */}
@@ -287,6 +323,12 @@ export default function CartPage() {
               </Button>
             </div>
           </div>
+          <Model
+            title="Thông báo" // Tiêu đề của modal
+            message={modalMessage} // Nội dung thông báo
+            isVisible={isModalVisible} // Trạng thái hiển thị
+            onClose={closeModal} // Đóng modal
+          />{" "}
         </>
       )}
     </>

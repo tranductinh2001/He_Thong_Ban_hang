@@ -5,6 +5,7 @@ import errorHandler from "./handleRequests/errorHandler";
 const productRequests = {
   List: async (currentPage, pageSize) => {
     try {
+      console.log("productRequests     currentPage   ", currentPage, "pageSize   ",pageSize)
       const response = await axiosInstance.get(
         API_ENDPOINTS.GET_LIST_PRODUCTS(currentPage, pageSize)
       );
@@ -26,9 +27,11 @@ const productRequests = {
   },
   listProductSearch: async ({ keyWord, currentPage, pageSize }) => {
     try {
+      // console.log("reqest search", keyWord, currentPage, pageSize)
       const response = await axiosInstance.get(
         API_ENDPOINTS.SEARCH_LIST_PRODUCTS(keyWord, currentPage, pageSize)
       );
+      // console.log("reqest search", response.data)
       return response.data;
     } catch (error) {
       return errorHandler(error);

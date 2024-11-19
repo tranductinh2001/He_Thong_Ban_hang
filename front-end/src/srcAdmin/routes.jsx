@@ -2,6 +2,9 @@ import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
+//product
+const ProductManager = React.lazy(() => import('./views/ProductManager/ProductManager'))
+
 // Base
 const Tabs = React.lazy(() => import('./views/base/tabs/Tabs'))
 const Tables = React.lazy(() => import('./views/base/tables/Tables'))
@@ -28,6 +31,8 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const routes = [
 
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
+
+  { path: '/product', name: 'Product', element: ProductManager },
 
   { path: '/base/tabs', name: 'Tabs', element: Tabs },
   { path: '/base/tables', name: 'Tables', element: Tables },

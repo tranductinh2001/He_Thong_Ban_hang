@@ -18,6 +18,7 @@ const searchSlice = createSlice({
   name: "Search",
   initialState: {
     productListSearch:[],
+    productListSearchCombie:[],
     loading: false,
     error: null,
     pageSize: 6,

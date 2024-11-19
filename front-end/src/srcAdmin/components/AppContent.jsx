@@ -6,9 +6,8 @@ import { CContainer, CSpinner } from '@coreui/react'
 import routes from '../routes'
 
 const AppContent = () => {
-  console.log("vào app content")
   return (
-    <CContainer className="px-4" lg>
+    <CContainer className="px-4 max-w-7xl" lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {

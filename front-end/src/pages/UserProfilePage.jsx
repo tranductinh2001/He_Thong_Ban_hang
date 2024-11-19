@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect,useMemo  } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, NavLink } from "react-router-dom";
 import { logout } from "../redux/slices/authSlice";
@@ -21,7 +21,7 @@ const iconMap = {
   "arrow-right-from-bracket": faArrowRightFromBracket,
   "admin" : faUserShield
 };
-const optionProfile = [
+const baseOptionProfile = [
   {
     icon: "user",
     title: "Thông tin tài khoản",
@@ -43,11 +43,6 @@ const optionProfile = [
     path: "orders",
   },
   {
-    icon: "dashsboard",
-    title: "Admin",
-    path: "admin",
-  },
-  {
     icon: "arrow-right-from-bracket",
     title: "Đăng xuất",
     path: "logout",
@@ -58,12 +53,26 @@ const optionProfile = [
 export default function UserProfilePage() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user?.user);
+  const currentUsers = useSelector((state) => state.auth?.currentUser);
+  const isAdmin = currentUsers?.roles?.some(role => role.name === 'ROLE_ADMIN');
+  const optionProfile = useMemo(() => {
+    const options = [...baseOptionProfile];
+    if (isAdmin) {
+      options.push({
+        icon: "admin",
+        title: "Admin",
+        path: "/admin",
+      });
+    }
+    return options;
+  }, [isAdmin]);
+  
   const handleLogout = () => {
     dispatch(logout());
   };
   useEffect(() => {
     dispatch(fetchUserDetail());
-  }, []);
+  }, [dispatch]);
   return (
     <div className="bg-slate-50 w-full">
       <div className="flex flex-col sm:flex-row justify-center gap-2 p-12">

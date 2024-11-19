@@ -28,7 +28,13 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Components',
+    name: 'Manager',
+  },
+  {
+    component: CNavItem,
+    name: 'Product',
+    to: '/admin/product',
+    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
   {
     component: CNavGroup,

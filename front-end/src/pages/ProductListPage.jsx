@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import _Breadcrumb from "../components/Breadcrumb";
-// import ProductList from "../components/ProductList";
 import Loading from "../components/Loading";
 import { lazy, Suspense } from "react";
 import { useDispatch } from "react-redux";
@@ -39,16 +38,17 @@ const FilterOption = [
 ];
 
 export default function ProductPage() {
+  // console.log("======== ProductPage   ")
   const dispatch = useDispatch();
   const [activeButton, setActiveButton] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const sortParam = searchParams.get("sort");
   const titleParam = searchParams.get("title");
   const search = searchParams.get("search");
-  // console.log("aaa",sortParam + titleParam)
+  // console.log("search   ",search)
   const handleFilterChange = (item, index) => {
     //lưu id button
-    dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
+    // dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
     setActiveButton(index);
     setSearchParams(item);
   };

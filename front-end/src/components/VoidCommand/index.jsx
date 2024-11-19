@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+
+import {
+  setActiveFilter,
+  setActiveListProduct,
+} from "../../redux/slices/productSlice";
 const VoiceCommand = ({ isVoiceEnabled }) => {
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState(null);
@@ -90,7 +95,10 @@ const VoiceCommand = ({ isVoiceEnabled }) => {
 
   const handleNavigation = (keyword) => {
     if (keyword?.includes("tìm kiếm")) {
-      const keywordSearch = keyword.replace("tìm kiếm", "").trim();
+      const keywordSearch = keyword
+        .replace("tìm kiếm", "")
+        .trim()
+        .replace(/\.$/, ""); // Loại bỏ dấu "." cuối cùng nếu có
       console.log("Keyword Search:", keywordSearch);
       navigate(`/products?search=${keywordSearch}`);
     } else {

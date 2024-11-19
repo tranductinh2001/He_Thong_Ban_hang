@@ -80,10 +80,11 @@ const orderRequests = {
   },
   CreateCheckoutSession: async (order) => {
     try {
-      console.log("request js", order);
+      // console.log("request js", order);
       const response = await axiosInstance.post(
         API_ENDPOINTS.CREATE_CHECKOUT_SESSION,
-        order
+        order,
+        { timeout: 10000 }
       );
       return response.data;
     } catch (error) {

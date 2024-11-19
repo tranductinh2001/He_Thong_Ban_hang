@@ -17,13 +17,13 @@ export default function SearchBar({ keyWord }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
-  const [keyWordSearch, setKeyWordSearch] = useState(keyWord);
+  const [keyWordSearch, setKeyWordSearch] = useState("");
   const [keyWordSearchListProducts, setKeyWordSearchListProducts] =
-    useState(keyWord);
+    useState("");
   const productList = useSelector((state) => state.Search?.productListSearch);
   const loading = useSelector((state) => state.Search?.loading);
   const error = useSelector((state) => state.Search?.error);
-  const pageSize = useSelector((state) => state.products?.pageSize) || 4;
+  const pageSize = useSelector((state) => state.Search?.pageSize) || 4;
   const useDebounceSearchTerm = useDebounce(keyWordSearch, 300);
 
   const [hasMore, setHasMore] = useState(true);
@@ -38,19 +38,19 @@ export default function SearchBar({ keyWord }) {
     navigate(`/products?search=${value}`);
   };
 
-  useEffect(() => {
-    if (keyWordSearchListProducts) {
-      dispatch(
-        fetchProductList({
-          sortParam: "",
-          titleParam: "",
-          keyWordSearchListProducts,
-          currentPage: 1,
-          pageSize,
-        })
-      );
-    }
-  }, [dispatch, keyWordSearchListProducts, pageSize]);
+  // useEffect(() => {
+  //   if (keyWordSearchListProducts) {
+  //     dispatch(
+  //       fetchProductList({
+  //         sortParam: "",
+  //         titleParam: "",
+  //         keyWordSearchListProducts,
+  //         currentPage: 1,
+  //         pageSize,
+  //       })
+  //     );
+  //   }
+  // }, [dispatch, keyWordSearchListProducts, pageSize]);
 
   const hamdleOnChange = (value) => {
     setIsOpenDropDown(true);

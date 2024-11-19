@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../request";
+import orderRequests from "../request/orderRequests";
 const initialState = {
   orders: [],
   session_detail: null,
@@ -13,7 +14,7 @@ export const createCheckoutSession = createAsyncThunk(
   "order/createCheckoutSession",
   async (order, { rejectWithValue }) => {
     try {
-      const response = await request.CreateCheckoutSession(order);
+      const response = await orderRequests.CreateCheckoutSession(order);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -25,7 +26,7 @@ export const checkoutSession = createAsyncThunk(
   "order/checkoutSession",
   async (session_id, { rejectWithValue }) => {
     try {
-      const response = await request.CheckoutSession(session_id);
+      const response = await orderRequests.CheckoutSession(session_id);
       // console.log("checkout session ", response);
       return response;
     } catch (error) {
@@ -38,7 +39,7 @@ export const fetchOrders = createAsyncThunk(
   "order/fetchOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await request.GetOrders();
+      const response = await orderRequests.GetOrders();
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -49,7 +50,7 @@ export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (order, { rejectWithValue }) => {
     try {
-      const response = await request.CreateOrder(order);
+      const response = await orderRequests.CreateOrder(order);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);

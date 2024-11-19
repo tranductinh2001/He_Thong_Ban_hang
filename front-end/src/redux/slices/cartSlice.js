@@ -5,9 +5,7 @@ export const fetchCartData = createAsyncThunk(
   "cart/fetchCartData",
   async (_,{ rejectWithValue }) => {
     try {
-      console.log("b");
       const response = await cartRequests.GetCartByUser();
-      console.log("data của cart trong cartslide    ", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -93,7 +91,6 @@ const cartSlice = createSlice({
         state.total = action.payload?.totalOfPrice;
         state.products = action.payload?.items;
         state.number_of_product = action.payload?.totalOfProduct;
-        console.log("slide call data   ",action.payload);
       })
       .addCase(fetchCartData.rejected, (state, action) => {
         state.loading = false;

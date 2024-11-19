@@ -7,8 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "./components/Loading";
 import { CSpinner, useColorModes } from "@coreui/react";
 import DefaultLayout from "./srcAdmin/layout/DefaultLayout";
-import './srcAdmin/scss/style.scss'
-
+import "./srcAdmin/scss/style.scss";
+import { WebSocketProvider } from "./WebSocket/WebSocketContext";
+import ProtectedRoute from "./custom hooks/ProtectedRoute";
 // Lazy load các component
 const AddressForm = lazy(() => import("./components/Form/AddressForm"));
 const ChangePasswordForm = lazy(() =>
@@ -33,9 +34,13 @@ const CategoryPage = lazy(() => import("./pages/CategoryPage"));
 const RequireAuth = lazy(() => import("./utils/requireAuth"));
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
 const PaymentCancelPage = lazy(() => import("./pages/PaymentCancelPage"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 
 function App() {
+  //config web socket topic
+  const SendMaiTtopics = ["/topic/gmail/send"];
+
   //config admin
   const { isColorModeSet, setColorMode } = useColorModes(
     "coreui-free-react-admin-template-theme"
@@ -71,50 +76,68 @@ function App() {
   return (
     <BrowserRouter>
       <Suspense fallback={<Loading />}>
-        <Routes>
-          {/* Client Routes */}
-          <Route path="/" element={<LayoutClient />}>
-            <Route index element={<HomePage />} />
-            <Route path="products" element={<ProductListPage />} />
-            <Route
-              path="product/:productId"
-              element={
-                <ScrollToTop>
-                  <ProductDetailPage />
-                </ScrollToTop>
-              }
-            />
-            <Route path="categories" element={<CategoryPage />} />
-            <Route path="search" element={<SearchPage />} />
-            <Route path="contact" element={<ContactPage />} />
-            <Route element={<RequireAuth />}>
-              <Route path="profile" element={<UserProfilePage />}>
-                <Route index element={<Navigate to="account-info" replace />} />
-                <Route
-                  path="account-info"
-                  element={<PersonalInformationForm />}
-                />
-                <Route path="address-book" element={<AddressForm />} />
-                <Route
-                  path="change-password"
-                  element={<ChangePasswordForm />}
-                />
-                <Route path="orders" element={<OrdersForm />} />
+        <WebSocketProvider topics={SendMaiTtopics}>
+          <Routes>
+            {/* Client Routes */}
+            <Route path="/" element={<LayoutClient />}>
+              <Route index element={<HomePage />} />
+              <Route path="products" element={<ProductListPage />} />
+              <Route
+                path="product/:productId"
+                element={
+                  <ScrollToTop>
+                    <ProductDetailPage />
+                  </ScrollToTop>
+                }
+              />
+              <Route path="categories" element={<CategoryPage />} />
+              <Route path="search" element={<SearchPage />} />
+              <Route path="contact" element={<ContactPage />} />
+              <Route element={<RequireAuth />}>
+                <Route path="profile" element={<UserProfilePage />}>
+                  <Route
+                    index
+                    element={<Navigate to="account-info" replace />}
+                  />
+                  <Route
+                    path="account-info"
+                    element={<PersonalInformationForm />}
+                  />
+                  <Route path="address-book" element={<AddressForm />} />
+                  <Route
+                    path="change-password"
+                    element={<ChangePasswordForm />}
+                  />
+                  <Route path="orders" element={<OrdersForm />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
-          <Route path="payment-success" element={<PaymentSuccessPage />} />
-          <Route path="payment-cancel" element={<PaymentCancelPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="cart" element={<CartLayout />}>
-            <Route index element={<CartPage />} />
-          </Route>
-          <Route path="*" element={<NotFoundPage />} />
+            <Route path="payment-success" element={<PaymentSuccessPage />} />
+            <Route path="payment-cancel" element={<PaymentCancelPage />} />
+            <Route path="payment/:code" element={<CheckoutPage />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin/*" element={<DefaultLayout />} />
-        </Routes>
+            <Route path="login" element={<LoginPage />} />
+
+            <Route index element={<CartPage />} />
+
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="cart" element={<CartLayout />}>
+              <Route index element={<CartPage />} />
+            </Route>
+            <Route path="*" element={<NotFoundPage />} />
+
+            {/* Admin Routes */}
+            {/* <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute>
+                <DefaultLayout />
+              </ProtectedRoute>
+            }
+          /> */}
+            <Route path="/admin/*" element={<DefaultLayout />} />
+          </Routes>
+        </WebSocketProvider>
       </Suspense>
     </BrowserRouter>
   );

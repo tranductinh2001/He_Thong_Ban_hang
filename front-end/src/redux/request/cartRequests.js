@@ -7,7 +7,6 @@ const cartRequests = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.GET_CART_BY_ID_USER
       );
-      console.log("dữ liệu từ fe trả về khi gọi all cart từ user   ", response);
       return response;
     } catch (error) {
       console.error("Error fetching cart data:", error);

@@ -7,10 +7,13 @@ import {
   fetchProductListWithSearch,
   fetchProductListWithSortOrTitle,
   setActiveFilter,
+  setActiveListProduct,
 } from "../../redux/slices/productSlice";
 import ProductCard from "../ProductCard/";
 
 function ProductList({ sortParam, titleParam, searchParam }) {
+  // console.log("ProductList -==========");
+
   const dispatch = useDispatch();
   const productListByPage = useSelector(
     (state) => state.products?.combinedProductList
@@ -25,42 +28,26 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   // console.log("productListByPage ", productListByPage);
   // Fetch products when filters or currentPage change
   useEffect(() => {
-    // Reset currentPage and fetch products when filters change
     setCurrentPage(1);
     dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
+    dispatch(setActiveListProduct());
     getProductList(1);
-    // console.log("object");
   }, [sortParam, titleParam, searchParam]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     // Reset state
-  //     dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
-
-  //     // Wait for state to reset
-  //     await new Promise((resolve) => setTimeout(resolve, 500));
-
-  //     // Fetch products
-  //     getProductList(1);
-  //   };
-
-  //   fetchData();
-  // }, [sortParam, titleParam, searchParam]);
-
-  // useEffect(() => {
-  //   dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
-  // }, [location]);
-
   useEffect(() => {
+    // console.log("   product list     loading còn không nèF");
     if (productListByPage.length >= totalProductItems) {
+      // console.log("  false  ");
       setHasMore(false);
     } else {
+      // console.log("  true  ");
       setHasMore(true);
     }
   }, [totalProductItems, productListByPage.length]);
 
   const fetchMoreData = () => {
-    if (productListByPage.length < totalProductItems) {
+    dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
+    if (productListByPage.length <= totalProductItems) {
       setCurrentPage((prevPage) => {
         const nextPage = prevPage + 1;
         getProductList(nextPage);
@@ -100,6 +87,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         );
       }
     } else if (searchParam) {
+      // console.log("fetchProductListWithSearch  -====");
       dispatch(
         fetchProductListWithSearch({
           searchParam,
@@ -108,6 +96,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         })
       );
     } else {
+      console.log("fetchProductList");
       dispatch(
         fetchProductList({
           sortParam: "",

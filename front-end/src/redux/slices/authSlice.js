@@ -98,6 +98,7 @@ const authSlice = createSlice({
       state.errorMessages = "";
     });
     builder.addCase(login.fulfilled, (state, action) => {
+      console.log(" auth ",action.payload)
       state.isLoading = false;
       state.currentUser = action.payload;
       state.jwt = action.payload.jwt?.value;
