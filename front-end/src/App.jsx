@@ -5,10 +5,9 @@ import { fetchUserDetail } from "./redux/slices/authSlice";
 import { fetchCartData } from "./redux/slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./components/Loading";
-import { CSpinner, useColorModes } from "@coreui/react";
+import { useColorModes } from "@coreui/react";
 import DefaultLayout from "./srcAdmin/layout/DefaultLayout";
 import "./srcAdmin/scss/style.scss";
-import ProtectedRoute from "./custom hooks/ProtectedRoute";
 // Lazy load các component
 const AddressForm = lazy(() => import("./components/Form/AddressForm"));
 const ChangePasswordForm = lazy(() =>
@@ -63,10 +62,10 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchUserDetail());
-    if (currentUser) {
+    if (currentUser && currentUser.id) {
       dispatch(fetchCartData());
     }
-  }, [dispatch, currentUser?.id]);
+  }, []);
 
   return (
     <BrowserRouter>

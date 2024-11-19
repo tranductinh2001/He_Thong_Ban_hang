@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: 'http://localhost:8080/api',
   timeout: 3000,
   headers: {
     "Content-Type": "application/json",
@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
     console.log(response);
     if (response && (response.status === 401 || response.status === 403)) {
       // window.location.href = '/login';\
-      
+
     }
     return Promise.reject(error);
   }

@@ -1,11 +1,9 @@
 import { Button, Drawer } from "antd";
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   addToCart,
   deleteFromCart,
-  fetchCartData,
   removeFromCart,
 } from "../../redux/slices/cartSlice";
 import CartItem from "../CartItem";
@@ -14,7 +12,7 @@ import EmptyCart from "../EmptyCart";
 
 const DrawerFooter = () => {
   return (
-    <div className="flex flex-row gap-2 items-center justify-center">
+    <div className="flex flex-row items-center justify-center gap-2">
       <Link to="/products" className="w-full">
         <Button size="large" type="primary" className="w-full">
           Chọn thêm
@@ -30,23 +28,19 @@ const DrawerFooter = () => {
 };
 
 export default function CartDrawer({ open, onClose, size }) {
-  // const products = useSelector((state) => state.cart.products);
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth?.currentUser?.id);
   const cartData = useSelector((state) => state.cart?.products);
-  //tổng giá tiền sản phẩm của giỏ hàng
-  // dispatch(fetchCartData())
-  const total = useSelector((state) => state.cart.total);
   const handleAddToCart = (userId, product) => {
-    console.log("cộng")
+    console.log("cộng");
     dispatch(addToCart({ userId, product }));
   };
   const handleRemoveFromCart = (userId, product) => {
-    console.log("trừ")
+    console.log("trừ");
     dispatch(removeFromCart({ userId, product }));
   };
   const handleDeleteFromCart = (userId, cartItem) => {
-    console.log("xóa cart")
+    console.log("xóa cart");
     dispatch(deleteFromCart({ userId, cartItem }));
   };
   return (
@@ -60,7 +54,7 @@ export default function CartDrawer({ open, onClose, size }) {
         size={size}
       >
         {/* Product Area */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mt-10">
           <div className="flex flex-col items-center gap-2">
             {cartData?.length > 0 ? (
               cartData.map((cartItem, index) => (

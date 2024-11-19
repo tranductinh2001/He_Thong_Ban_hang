@@ -55,7 +55,7 @@ export default function FloatMenuButton() {
       ref={containerRef}
     >
       <motion.div
-        className={`cursor-pointer fixed top-1/2 -left-1 duration-200 opacity-20 hover:opacity-100 ${
+        className={`cursor-pointer fixed top-1/2 -left-1 duration-200 opacity-20 hover:opacity-100 bg-sky-500 p-2 rounded-full ${
           isShowed ? "rotate-180" : "rotate-0"
         }`}
       >
@@ -69,7 +69,7 @@ export default function FloatMenuButton() {
           opacity: isShowed ? 1 : 0, // Fade out when hidden
         }}
         transition={{ duration: 0.3 }} // Duration of the animation
-        className="fixed top-1/2 bottom-1/2 left-6 flex justify-center gap-2 flex-col"
+        className="fixed flex flex-col justify-center gap-2 top-1/2 bottom-1/2 left-6"
       >
         <div className="flex flex-col gap-2">
           <motion.div

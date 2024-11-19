@@ -1,9 +1,8 @@
 import { FloatButton } from "antd";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import _Breadcrumb from "../components/Breadcrumb";
-// import ProductList from "../components/ProductList";
 import Loading from "../components/Loading";
 import { lazy, Suspense } from "react";
 import { useDispatch } from "react-redux";
@@ -12,9 +11,10 @@ import { setActiveFilter } from "../redux/slices/productSlice";
 const ProductList = lazy(() => import("../components/ProductList"));
 
 const className =
-  "hover:text-blue-500 hover:opacity-100 hover:font-semibold duration-200 border-b-2 hover:border-blue-500 border-transparent p-4";
+  "py-3 duration-200 border-b-2 border-transparent hover:text-blue-500 hover:opacity-100 hover:font-semibold hover:border-blue-500";
 const activeClassName =
-  "text-blue-500 opacity-100 font-semibold duration-200 border-b-2 border-blue-500 p-4";
+  "text-blue-500 opacity-100 font-semibold duration-200 border-b-2 border-blue-500 py-3";
+
 const FilterOption = [
   {
     title: "New",
@@ -60,8 +60,8 @@ export default function ProductPage() {
       transition={{ duration: 0.2 }}
     >
       <_Breadcrumb title={"Sản phẩm"}></_Breadcrumb>
-      <div className="flex sm:gap-10 border-b text-xs sm:text-base">
-        <span className="p-4 hidden sm:block">Sắp xếp theo</span>
+      <div className="sticky flex gap-5 text-xs border-b md:gap-10 sm:text-base">
+        <span className="hidden py-3 ml-1 sm:block">Sắp xếp theo</span>
         {FilterOption.map((item, index) => {
           return (
             <button

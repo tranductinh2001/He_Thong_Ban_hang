@@ -1,41 +1,48 @@
 import { Image } from "antd";
-import React from "react";
 import { Link } from "react-router-dom";
 
 export default function CategoryPage() {
-
   return (
     <div className="flex flex-col">
-      <div className="bg-blue-500 text-white p-2 text-lg">
+      <div className="p-2 text-lg text-white bg-gray-500 rounded-t-lg">
         QUẦN ÁO BÓNG ĐÁ THƯƠNG HIỆU
       </div>
-      <div className="flex sm:flex-row flex-col p-2 gap-2">
-        <Link to={"/products?title=brand&sort=nike"} className="flex flex-col items-center">
+      <div className="flex flex-col gap-2 p-2 sm:flex-row">
+        <Link
+          to={"/products?title=brand&sort=nike"}
+          className="flex flex-col items-center"
+        >
           <Image
             width={250}
             height={250}
             src="https://logos-world.net/wp-content/uploads/2020/04/Nike-Logo.png"
+            className="object-contain"
           />
           NIKE
         </Link>
-        <Link to={`/products?title=brand&sort=adidas`} className="flex flex-col items-center">
+        <Link
+          to={`/products?title=brand&sort=adidas`}
+          className="flex flex-col items-center"
+        >
           <Image
             width={250}
             height={250}
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/2560px-Adidas_Logo.svg.png"
+            className="object-contain"
           />
           ADIDAS
         </Link>
       </div>
-      <div className="bg-blue-500 text-white p-2 text-lg">
+      <div className="p-2 text-lg text-white bg-gray-500 rounded-t-lg">
         QUẦN ÁO BÓNG ĐÁ CÂU LẠC BỘ, ĐỘI TUYỂN
       </div>
-      <div className="sm:flex-row flex-col flex">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <Link className="flex flex-col items-center">
           <Image
             width={250}
             height={250}
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZENlgnByqGFByv3_gy87iSyeUQX7uLmbnHw&s"
+            className="object-contain"
           />
           MANCHESTER UNITED
         </Link>
@@ -44,6 +51,7 @@ export default function CategoryPage() {
             width={250}
             height={250}
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbnXMytTr9yV_Sp3cQvZkYxWAqsJeoIlQvAQ&s"
+            className="object-contain"
           />
           REAL MARID
         </Link>

@@ -46,7 +46,7 @@ const navLinks = [
 const NavigationLink = ({ Icon, title, to, count, onClick }) => {
   return (
     <div
-      className="cursor-pointer flex flex-col hover:text-blue-500 items-center p-2"
+      className="flex flex-col items-center justify-center p-2 cursor-pointer hover:text-blue-500"
       onClick={onClick}
     >
       {title === "Giỏ hàng" ? (
@@ -54,12 +54,12 @@ const NavigationLink = ({ Icon, title, to, count, onClick }) => {
           <Badge showZero count={count ? count : 0}>
             <Icon size={25} />
           </Badge>
-          <span className="text-xs ">{title}</span>
+          <span className="text-xs text-center">{title}</span>
         </>
       ) : (
-        <Link to={to} className="flex flex-col items-center">
+        <Link to={to} className="flex flex-col items-center justify-center">
           <Icon size={25} />
-          <span className="text-xs">{title}</span>
+          <span className="text-xs text-center">{title}</span>
         </Link>
       )}
     </div>
@@ -95,7 +95,7 @@ export default function BottomNavigation({ className }) {
   //   if (currentUser) dispatch(fetchCartData(currentUser?._id));
   // }, [dispatch, currentUser]);
   return (
-    <div className="border-t border-black p-1 fixed bottom-0 z-50 left-0 right-0 flex flex-row justify-between overflow-hidden bg-white gap-2 sm:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-row justify-between gap-2 p-1 overflow-hidden bg-white border-t border-black sm:hidden">
       {navLinks.map((item, index) => {
         return (
           <NavigationLink
