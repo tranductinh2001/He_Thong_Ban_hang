@@ -11,10 +11,10 @@ import com.example.demo.request.UpdateProfileRequest;
 public interface UserService {
 	UserDTO getUserProfile();
 	List<User> getListUserByVerificationCode(String code);
-    
+	User findByUsername(String username);
 	String getAuthenticationCodeForUser(String username);
 	
-	void saveAuthenticationCodeForUser(String username);
+	void saveAuthenticationCodeForUser();
 	
     void register(CreateUserRequest request);
 

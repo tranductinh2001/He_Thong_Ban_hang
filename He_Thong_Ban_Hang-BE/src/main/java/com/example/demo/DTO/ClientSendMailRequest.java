@@ -2,7 +2,6 @@ package com.example.demo.DTO;
 
 import java.util.List;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientSendMailRequest {
-    private String yourName;
-    private String yourUsername;
-    private String yourEmail;
-    private String time;
-    private String spectialRequest;
-//    private List<CartItem> listCart;
-    private long total;
+    private String email;           // Email người dùng
+    private String notes;           // Ghi chú đặc biệt
+    private String numberPhone;     // Số điện thoại
+    private String orderAddress;    // Địa chỉ đặt hàng
+    private List<CartItemDTO> cart; // Danh sách sản phẩm trong giỏ hàng
+    private long totalOfPrice;
+private  String name;
+
 }

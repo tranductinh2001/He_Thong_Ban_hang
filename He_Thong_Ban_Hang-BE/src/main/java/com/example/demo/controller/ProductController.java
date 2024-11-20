@@ -39,6 +39,7 @@ public class ProductController {
         Map<String, Object> response = productService.getSaleProducts(currentPage-1, pageSize);
         return ResponseEntity.ok(response);
     }
+    
     @GetMapping("/{productId}")
     @Operation(summary = "chi tiết sản phẩm bằng id sản phẩm")
     public ResponseEntity<Map<String, Object>> getProductDetail(@PathVariable("productId") Long productId) {

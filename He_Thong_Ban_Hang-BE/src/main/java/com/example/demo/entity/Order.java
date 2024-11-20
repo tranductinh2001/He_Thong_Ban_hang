@@ -48,9 +48,6 @@ public class Order {
     @Column(name = "notes")
     private String notes = "";
 
-    @Column(name = "payment_url")
-    private String paymentUrl;
-
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt = new Date();
@@ -60,8 +57,11 @@ public class Order {
     private Date expiresAt;
 
     @ManyToMany
-    @JoinColumn(name = "tour_id")
+    @JoinColumn(name = "Product_id")
     private List<Product> product;
+
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

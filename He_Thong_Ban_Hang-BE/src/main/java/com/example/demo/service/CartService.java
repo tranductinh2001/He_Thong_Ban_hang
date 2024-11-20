@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartService {
+    Cart getCartByUser(Long userId);
 
     List<CartDTO> getAllCartDtos();  // Trả về danh sách CartDTO
 

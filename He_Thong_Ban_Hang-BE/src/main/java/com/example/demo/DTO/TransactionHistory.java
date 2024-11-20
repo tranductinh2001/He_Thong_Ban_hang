@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 public class TransactionHistory {
     private String id;
     private String record_id;
-    private String username;		//tên người gửi
-    private String user;			//sdt người nhận
+    private String username;
+    private String user;
     private String commandInd;
-    private String tranId;			//mã giao dịch
-    private String clientTime;		//thời gian
-    private String ackTime;			
+    private String tranId;
+    private String clientTime;
+    private String ackTime;
     private String tranType;
-    private String partnerId;		//sdt người gửi
-    private String partnerName;		//tên người gửi
-    private String amount;			//số tiền
-    private String comment;			//nội dung
-    private String status;			
-    private String desc;			//trang thái chuỗi (thành công, thất bại)
+    private String partnerId;
+    private String partnerName;
+    private String amount;
+    private String comment;
+    private String status;
+    private String desc;
     private String originalAmount;
     private String receiverType;
     private String extras;

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,21 +59,22 @@ public class UserServiceImpl implements UserService {
 		return code.toString();
 	}
 
-
-
 	public String getAuthenticationCodeForUser(String username) {
 		Optional<User> optionalUser = userRepository.findByUsername(username);
 		return optionalUser.map(User::getVerificationCode).orElse(null);
 	}
 
-	public void saveAuthenticationCodeForUser(String username) {
+	public void saveAuthenticationCodeForUser() {
 		String code = generateCode();
 		List<User> users = userRepository.getListUserByVerificationCode(code);
 		for (int i = 0; i < users.size(); i++) {
 			System.out.print("users     " + users.toString());
 		}
 		if (!((users.size()) >= 1)) {
-			User user = getUserByUsername(username);
+			String username = getCurrentUsername();
+			User user = userRepository.findByUsername(username)
+					.orElseThrow(() -> new RuntimeException("User not found"));
+
 			if (user != null) {
 				user.setVerificationCode(code);
 				userRepository.save(user);
@@ -83,7 +85,7 @@ public class UserServiceImpl implements UserService {
 				userRepository.save(newUser);
 			}
 		} else {
-			saveAuthenticationCodeForUser(username);
+			saveAuthenticationCodeForUser();
 		}
 	}
 	@Override
@@ -102,6 +104,20 @@ public class UserServiceImpl implements UserService {
 		}
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		return userDetails.getUsername();
+	}
+
+	@Override
+	public User findByUsername(String username) {
+		if (username == null || username.trim().isEmpty()) {
+			throw new IllegalArgumentException("Username không được để trống hoặc null.");
+		}
+
+		Optional<User> userOptional = userRepository.findByUsername(username);
+		if (userOptional.isPresent()) {
+			return userOptional.get();
+		} else {
+			throw new UsernameNotFoundException("Không tìm thấy người dùng với username: " + username);
+		}
 	}
 
 	@Override

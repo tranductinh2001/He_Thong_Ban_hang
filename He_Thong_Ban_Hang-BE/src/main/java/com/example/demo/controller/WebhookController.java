@@ -1,253 +1,266 @@
 package com.example.demo.controller;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
-import com.example.demo.DTO.CartItem;
+import com.example.demo.DTO.CartItemDTO;
 import com.example.demo.DTO.ClientSendMailRequest;
 import com.example.demo.DTO.TransactionHistory;
-import com.example.demo.entity.Tour;
-import com.example.demo.entity.User;
-import com.example.demo.request.CreateBookingsRequest;
-import com.example.demo.request.CreateStatisticsRequest;
-import com.example.demo.request.CreateTicketRequest;
-import com.example.demo.service.BookingsService;
-import com.example.demo.service.StatisticsService;
-import com.example.demo.service.TicketService;
-import com.example.demo.service.TourService;
+import com.example.demo.entity.*;
+import com.example.demo.service.CartService;
+import com.example.demo.service.OrderService;
+import com.example.demo.service.ProductService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
-import cache.CacheManager;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 public class WebhookController {
 
-	@Autowired
-	private UserService userservice;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private TourService tourService;
+    @Autowired
+    private OrderService orderService;
 
-	@Autowired
-	private BookingsService bookingsService;
+    @Autowired
+    private ProductService productService;  // Inject ProductService
 
-	@Autowired
-	private StatisticsService statisticsservice;
-	
-	@Autowired
-	private TicketService ticketservice;
+    private final SimpMessagingTemplate messagingTemplate;
 
-	private final SimpMessagingTemplate messagingTemplate;
+    private static final String VALID_SIGNATURE = "7ad215375bed512f790cd2ba621abdd097f7a3f176174a753677132bd6ae2ab3";
 
-	public WebhookController(SimpMessagingTemplate messagingTemplate) {
-		this.messagingTemplate = messagingTemplate;
-	}
+    private String customerName;
+    private String totalAmount;
+    private String specialRequest;
+    private String orderAddress;
 
-	private CacheManager cachemanager;
+    private List<Optional<Product>> listProduct = new ArrayList<>();
+    private Long QuantityOfPeople = 0L;  // Declare QuantityOfPeople
 
-	ArrayList<Tour> listTour = new ArrayList<>();
+    @Autowired
+    public WebhookController(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
 
-	private String CustomerName;
-	private String totalAmount;
-	private String SpectialRequest;
-	private Long QuantityOfPeople;
-	private Long setSoldToursCount;
+    @PostMapping("/api/webhook")
+    public ResponseEntity<String> handleWebhook(@RequestBody String requestBody) throws JsonProcessingException {
+        System.out.println("Webhook đã hoạt động");
+        System.out.println("Dữ liệu nhận được từ webhook: " + requestBody);
 
-	private static final String VALID_SIGNATURE = "7ad215375bed512f790cd2ba621abdd097f7a3f176174a753677132bd6ae2ab3";
+        // Sử dụng ObjectMapper để chuyển đổi dữ liệu JSON thành đối tượng Java
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(requestBody);
 
-	@PostMapping("/api/webhook")
-	public ResponseEntity<String> handleWebhook(@RequestBody String requestBody) throws JsonProcessingException {
-		System.out.print("webhook đã hoạt động  ");
-		getTransactionHistory();
-		return ResponseEntity.ok("Dữ liệu Webhook đã được xử lý thành công");
-	}
+        // Lấy và in ra các trường trong dữ liệu JSON
+        String signature = rootNode.path("signature").asText();
+        String phone = rootNode.path("phone").asText();
+        String tranId = rootNode.path("tranId").asText();
+        long ackTime = rootNode.path("ackTime").asLong();
+        String partnerId = rootNode.path("partnerId").asText();
+        String partnerName = rootNode.path("partnerName").asText();
+        int amount = rootNode.path("amount").asInt();
+        String comment = rootNode.path("comment").asText();
+        int check = rootNode.path("check").asInt();
 
-	@PostMapping("/getTransactionHistory")
-	public ResponseEntity<String> getTransactionHistory() {
-		final String uri = "https://momosv3.apimienphi.com/api/getTransHistory";
+        System.out.println("signature: " + signature);
+        System.out.println("phone: " + phone);
+        System.out.println("tranId: " + tranId);
+        System.out.println("ackTime: " + ackTime);
+        System.out.println("partnerId: " + partnerId);
+        System.out.println("partnerName: " + partnerName);
+        System.out.println("amount: " + amount);
+        System.out.println("comment: " + comment);
+        System.out.println("check: " + check);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json");
+        List<User> users = userService.getListUserByVerificationCode(comment);
+        if (!users.isEmpty()) {
+            User firstUser = users.get(0);
 
-		String accessToken = "wce1Ok4RxV5I71LEHIA9KO3TwFektmkHIGwjg1JX5AEOiyolMd";
-		String phone = "0982104744";
-		int limit = 1;
-		int offset = 0;
+            // Kiểm tra điều kiện thanh toán thành công
+            if (firstUser.getVerificationCode().equals(comment) && amount == 5001) {
+                // Tạo và lưu đơn hàng
+                Order order = orderService.getOrderByVerificationCode(comment);
+                order.setStatus(OrderStatus.PAID); // Trạng thái thanh toán thành công
+                order.setCreatedAt(new Date());
+                order.setExpiresAt(new Date());
+                orderService.createOrder(order);
 
-		String requestBody = "{\"access_token\": \"" + accessToken + "\", \"phone\": \"" + phone + "\", \"limit\": "
-				+ limit + ", \"offset\": " + offset + "}";
+                String message = "Đơn hàng của bạn đã được thanh toán thành công!";
+                messagingTemplate.convertAndSend("/topic/payment", message);
+                System.out.println("Thanh toán thành công cho user: " + firstUser.getUsername());
+            } else {
+                // Trường hợp thanh toán không hợp lệ
+                Order order = new Order();
+                order.setTotalOfPrice(amount);
+                order.setNumberPhone(phone);
+                order.setEmail(firstUser.getEmail());
+                order.setStatus(OrderStatus.CANCELED); // Trạng thái thất bại
+                order.setDeleted(false);
+                order.setOrderAddress(comment);
+                order.setNotes("Thanh toán không thành công");
+                order.setCreatedAt(new Date());
 
-		HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+                orderService.createOrder(order);
 
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, request, String.class);
+                String message = "Thanh toán không thành công, vui lòng kiểm tra lại!";
+                messagingTemplate.convertAndSend("/topic/payment", message);
+                System.out.println("Thanh toán không thành công cho user: " + firstUser.getUsername());
+            }
+        } else {
+            // Trường hợp không tìm thấy người dùng
+            String message = "Không tìm thấy người dùng với mã xác nhận này!";
+            messagingTemplate.convertAndSend("/topic/payment", message);
+            System.out.println("Không tìm thấy người dùng với mã xác nhận: " + comment);
+        }
 
-		if (response.getStatusCode() == HttpStatus.OK) {
-			String responseBody = response.getBody();
-			System.out.print("Dữ liệu lịch sử giao dịch: " + trimJson(responseBody) + "\n");
+        return ResponseEntity.ok("Dữ liệu Webhook đã được xử lý thành công");
+    }
 
-			try {
-				ObjectMapper mapper = new ObjectMapper();
-				TransactionHistory[] transactions = mapper.readValue(trimJson(responseBody),
-						TransactionHistory[].class);
+//    @PostMapping("/getTransactionHistory")
+//    public ResponseEntity<String> getTransactionHistory() {
+//        final String uri = "https://momosv3.apimienphi.com/api/getTransHistory";
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//        String accessToken = "70a7dab3322f9ceb958152a77930670a425f398f1099488a971eb69a1e39a2f5";
+//        String phone = "0365854631";
+//        int limit = 1;
+//        int offset = 0;
+//
+//        String requestBody = String.format("{\"access_token\": \"%s\", \"phone\": \"%s\", \"limit\": %d, \"offset\": %d}",
+//                accessToken, phone, limit, offset);
+//
+//        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        try {
+//            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, request, String.class);
+//
+//            if (response.getStatusCode() == HttpStatus.OK) {
+//                String responseBody = response.getBody();
+//
+//                if (responseBody == null || responseBody.isEmpty()) {
+//                    return ResponseEntity.badRequest().body("Phản hồi không chứa dữ liệu.");
+//                }
+//
+//                ObjectMapper mapper = new ObjectMapper();
+//
+//                // Kiểm tra nếu API trả về lỗi
+//                JsonNode rootNode = mapper.readTree(responseBody);
+//                if (rootNode.has("error") && rootNode.get("error").asInt() != 0) {
+//                    String errorMessage = rootNode.get("msg").asText();
+//                    return ResponseEntity.badRequest().body("API trả về lỗi: " + errorMessage);
+//                }
+//
+//                // Giải tuần tự hóa dữ liệu 'data' thành mảng TransactionHistory[]
+//                JsonNode dataNode = rootNode.get("data");
+//                if (dataNode.isArray()) {
+//                    TransactionHistory[] transactions = mapper.readValue(dataNode.toString(), TransactionHistory[].class);
+//
+//                    return ResponseEntity.ok("Dữ liệu lịch sử giao dịch đã được xử lý thành công.");
+//                } else {
+//                    return ResponseEntity.badRequest().body("Dữ liệu không hợp lệ: Không có mảng 'data'.");
+//                }
+//            } else {
+//                return ResponseEntity.status(response.getStatusCode()).body("Lỗi khi gọi API: " + response.getStatusCode());
+//            }
+//        } catch (HttpClientErrorException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(e.getStatusCode()).body("Lỗi HTTP: " + e.getMessage());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.badRequest().body("Lỗi khi xử lý JSON: " + e.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.internalServerError().body("Đã xảy ra lỗi không mong muốn: " + e.getMessage());
+//        }
+//    }
+//
 
-				List<User> users = new ArrayList();
-
-				// Xử lý các giao dịch đã được chuyển đổi thành các đối tượng Java
-				for (TransactionHistory transaction : transactions) {
-					System.out.println("ID: " + transaction.getId());
-					System.out.println("TranID: " + transaction.getTranId()); // mã giao dịch
-					System.out.println("Amount: " + transaction.getAmount()); // số tiền
-					System.out.println("getComment: " + transaction.getComment()); // nội dung giao dịch
-					// ...
-					users = userservice.getListUserByVerificationCode(transaction.getComment());
-					if (!(users.size() > 1)) {
-						User firstUser = users.get(0);
-
-						System.out.println("totalAmount:  số tiền cần phải chuyển khi đã trừ" + totalAmount);
-
-						if (firstUser.getVerificationCode().equals(transaction.getComment())
-								&& transaction.getAmount().equals(totalAmount)) {
-//						if (firstUser.getVerificationCode().equals(transaction.getComment())) {
-							// xử lý khi thanh toán thành công với tiền và nội dung giao dịch
-							String message = "Đơn hàng của bạn đã được thanh toán thành công!";
-							messagingTemplate.convertAndSend("/topic/payment", message);
-							System.out.println("  thực hiện cho user đặt hàng thành công  ");
-							// thực hiện cho user đặt hàng thành công
-
-							// tạo và lưu vào bookings
-							CreateBookingsRequest createBookingsrq = new CreateBookingsRequest();
-							createBookingsrq.setCustomerName(CustomerName);
-							Instant currentInstant = Instant.now();
-							Date currentDate = Date.from(currentInstant);
-							createBookingsrq.setBookingDate(currentDate); // cài đặt ngày giờ hệ thống
-							createBookingsrq.setStatus(message);
-							createBookingsrq.setTours(listTour);
-							createBookingsrq.setUser(firstUser);
-							bookingsService.createBookings(createBookingsrq);
 
 
-							// tạo ticket cho người dùng khi thanh toán thành công
+    @PostMapping("/sendMail")
+    public String PigdtaMail(@RequestBody ClientSendMailRequest sdi) {
 
+        // Lấy tổng số tiền từ yêu cầu gửi mail
+        System.out.println("sdi.getTotal() số tiền chuyển gốc: " + sdi.getTotalOfPrice());
+        totalAmount = String.valueOf(sdi.getTotalOfPrice()); // 6000k
+        System.out.println("totalAmount: số tiền cần phải thanh toán khi đã trừ: " + totalAmount);
 
-// Lấy ngày lâu nhất của tour trong giỏ hàng để đặt giá trị hết hạn cho ticket
-							Optional<Instant> maxEndDateOptional = listTour.stream()
-									.filter(tour -> tour.getEndDate() != null)
-									.map(tour -> tour.getEndDate().toInstant())
-									.max(Instant::compareTo);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+            throw new RuntimeException("User not authenticated");
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-							Instant maxEndDate = maxEndDateOptional.orElse(null);
+        // Lấy tên khách hàng và yêu cầu đặc biệt
+        customerName = userDetails.getUsername();
+        specialRequest = sdi.getNotes();
+        orderAddress = sdi.getOrderAddress();
+        // Danh sách các CartItemDTO trong yêu cầu
+        List<CartItemDTO> carts = sdi.getCart();
 
-							ZoneId zoneId = ZoneId.of("Asia/Ho_Chi_Minh");
-							Date endDateTicket = maxEndDateOptional.map(i -> Date.from(i.atZone(zoneId).toInstant())).orElse(null);
+        // Reset danh sách các sản phẩm và tổng số lượng
+        listProduct.clear();
+        QuantityOfPeople = 0L;
 
-							System.out.println("endDateTicket     " + endDateTicket);
-							System.out.println("maxEndDate     " + maxEndDate);
+        // Kiểm tra giỏ hàng không rỗng
+        if (carts == null || carts.isEmpty()) {
+            return "Giỏ hàng trống";
+        }
 
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // Duyệt qua từng CartItemDTO
+        for (CartItemDTO cartDTO : carts) {
+            Long id = cartDTO.getProduct().getId(); // Lấy ID của sản phẩm từ CartItemDTO
 
-							System.out.println("Formatted endDateTicket: " + sdf.format(endDateTicket));
+            // Lấy thông tin sản phẩm từ service, sử dụng Product entity thay vì ProductDTO
+            Optional<Product> product = productService.getProductById(id);
+            if (product != null) {
+                listProduct.add(product);  // Thêm Product vào danh sách listProduct
 
+                // Lấy số lượng sản phẩm trong giỏ
+                int count = cartDTO.getCount();  // if it returns an int
+                Long quantity = Long.valueOf(count);  // Convert int to Long
 
-							CreateTicketRequest tickets = new CreateTicketRequest();
-							tickets.setName("vé du kịch của: " + CustomerName);
-							tickets.setDescription("yêu cầu đặc biệt của quý khách: "+ SpectialRequest);
-							tickets.setStartDate(currentDate);
-							if (endDateTicket != null) {
-								System.out.println("  đã vào endDateTicket ");
-								Date endDate = sdf.parse(sdf.format(endDateTicket));
-								System.out.println("  đã vào endDate "+ endDate);
-								tickets.setEndDate(endDate);
-							} else {
-								// Xử lý khi không có tour nào thỏa mãn điều kiện
-							}
-							tickets.setStatus("hoàn thành");
-							tickets.setParticipantsCount(QuantityOfPeople);
-							tickets.setUser(firstUser);
-							ticketservice.createTicket(tickets);
+                QuantityOfPeople += quantity;  // Cộng dồn số lượng vào tổng số
 
-							// tạo statistics cho hệ thống
-							CreateStatisticsRequest statistics = new CreateStatisticsRequest();
-							statistics.setTime(currentDate);
-							statistics.setRevenue(Long.parseLong(totalAmount));  //thời gian update
-							statistics.setSoldToursCount(listTour.size());
+                // In thông tin chi tiết của CartItemDTO
+                String productName = product.map(Product::getName).orElse("Sản phẩm không tìm thấy");
+                System.out.println("Tên sản phẩm: " + productName);
+                System.out.println("Số lượng: " + quantity);
+                System.out.println("Kích cỡ: " + cartDTO.getSize()); // Lấy kích cỡ từ SizeDTO
 
-							statistics.setDescription(message);
-							statisticsservice.createStatistics(statistics);
-						}
-					}
-				}
+            } else {
+                // Xử lý khi không tìm thấy sản phẩm
+                System.out.println("Product with ID " + id + " not found.");
+            }
+        }
 
-				return ResponseEntity.ok("Dữ liệu lịch sử giao dịch đã được xử lý");
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.badRequest().body("Lỗi khi xử lý dữ liệu");
-			}
-		} else {
-			return ResponseEntity.status(response.getStatusCode()).body("Lỗi khi lấy lịch sử giao dịch");
-		}
-	}
+        System.out.println("Tổng số lượng sản phẩm trong giỏ hàng: " + QuantityOfPeople);
+        return "Thông tin giỏ hàng đã được xử lý thành công!";
+    }
 
-	// cắt chuỗi cho dễ dàng xử lý string ObjectMapper
-	public static String trimJson(String jsonString) {
-		int startIndex = jsonString.indexOf("[");
-		int lastIndex = jsonString.lastIndexOf("]") + 1;
+    public static String trimJson(String jsonString) {
+        int startIndex = jsonString.indexOf("[");
+        int lastIndex = jsonString.lastIndexOf("]") + 1;
 
-		if (startIndex != -1 && lastIndex != -1 && startIndex < lastIndex) {
-			return jsonString.substring(startIndex, lastIndex);
-		}
+        if (startIndex != -1 && lastIndex != -1 && startIndex < lastIndex) {
+            return jsonString.substring(startIndex, lastIndex);
+        }
 
-		return "";
-	}
-
-	public String PigdtaMail(ClientSendMailRequest sdi) {
-
-		System.out.println("sdi.getTotal() số tiền chuyển gốc:  " + sdi.getTotal());
-		totalAmount = String.valueOf(sdi.getTotal() ); // 6000k
-		System.out.println("totalAmount:  số tiền cần phải thanh toán khi đã trừ: " + totalAmount);
-
-		CustomerName = sdi.getYourName();
-		SpectialRequest = sdi.getSpectialRequest();
-
-		List<CartItem> carts = sdi.getListCart();
-
-		for (CartItem cart : carts) {
-			Long id = cart.getId();
-			Optional<Tour> tourOptional = tourService.getTourById(id);
-			if (tourOptional.isPresent()) {
-				Tour tour = tourOptional.get(); // Trích xuất Tour từ Optional
-				listTour.add(tour);
-				Long Quantity = cart.getQuantity();
-				if (this.QuantityOfPeople == null) {
-					// Nếu là null, gán giá trị mặc định hoặc giá trị khác
-					this.QuantityOfPeople = 0L; // Ví dụ: Gán giá trị mặc định là 0
-				}
-				QuantityOfPeople += Quantity * tour.getParticipantsCount();
-
-			} else {
-				// Xử lý trường hợp không tìm thấy Tour với id tương ứng
-			}
-		}
-
-		return "";
-	}
+        return "";
+    }
 }

@@ -12,7 +12,7 @@ import com.example.demo.DTO.ClientSendMailRequest;
 import com.example.demo.service.ClientService;
 
 @RestController
-@RequestMapping("api/client")
+@RequestMapping("api/payment")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class EmailController {
 
@@ -20,7 +20,7 @@ public class EmailController {
 	private ClientService clientService;
 
 
-	@PostMapping(value = "/booking/create")
+	@PostMapping(value = "/create-checkout-session")
 	public ResponseEntity<Boolean> create(@RequestBody ClientSendMailRequest sdi) {
 		return ResponseEntity.ok(clientService.create(sdi));
 	}
