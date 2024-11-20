@@ -174,7 +174,7 @@ export default function CartPage() {
       ) : (
         <>
           {isLoading && (
-            <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-500 bg-opacity-50">
               <div role="status">
                 <svg
                   aria-hidden="true"
@@ -196,34 +196,22 @@ export default function CartPage() {
               </div>
             </div>
           )}
-          <div className="flex flex-col sm:flex-row gap-2 p-5">
+          <div className="flex flex-col gap-2 p-2 sm:flex-row md:p-4">
             {/* thông tin vận chuyển */}
-            <div className="flex flex-col gap-5 basis-1/2 h-full">
-              <div>
-                <span className="text-xl text-neutral-700 font-semibold">
+            <div className="flex flex-col h-full gap-2 basis-1/2">
+              <div className="p-2 mb-2 bg-gray-300 rounded-t-lg">
+                <span className="text-xl font-semibold text-neutral-700">
                   THÔNG TIN VẬN CHUYỂN
                 </span>
-                <Divider />
               </div>
-
-              <div className="flex sm:flex-row flex-col gap-3 text-xs">
-                <div className="flex flex-col gap-2">
-                  <span className="text-sm">Tên</span>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={orderForm?.name}
-                    className="rounded-full pr-20"
-                    onChange={handleChange}
-                  />
-                </div>
+              <div className="flex flex-col gap-3 text-xs sm:flex-row">
                 <div className="flex flex-col gap-2">
                   <span className="text-sm">Số điện thoại</span>
                   <Input
                     id="number_phone"
                     name="number_phone"
                     value={orderForm?.number_phone}
-                    className="rounded-full pr-20"
+                    className="pr-20 rounded-full"
                     onChange={handleChange}
                   />
                 </div>
@@ -233,23 +221,27 @@ export default function CartPage() {
                     id="number_phone"
                     name="email"
                     value={orderForm?.email}
-                    className="rounded-full pr-20"
+                    className="pr-20 rounded-full"
                     onChange={handleChange}
                   />
                 </div>
               </div>
               {/* Địa chỉ  */}
               <div className="flex flex-col gap-2 text-xs">
-                <div className="flex flex-row gap-2">
-                  <span>Địa chỉ</span>
-                  {/* <Link to="" className="text-blue-600">
+                <span className="text-sm">Địa chỉ</span>
+                <TextArea
+                  name="address"
+                  allowClear
+                  className="rounded-lg"
+                  onChange={handleChange}
+                />
+                {/* <Link to="" className="text-blue-600">
                     Địa chỉ khác
                   </Link> */}
-                </div>
-                <span className="font-semibold text-lg">
+                <span className="text-lg font-semibold">
                   {default_address?.name}
                 </span>
-                <p className="text-gray-500 text-base">
+                <p className="text-base text-gray-500">
                   {default_address?.address}
                 </p>
               </div>
@@ -267,12 +259,11 @@ export default function CartPage() {
             {/* divider */}
             {/* giỏ hàng */}
             {contextHolder}
-            <div className=" basis-1/2 flex flex-col sm:border-l border-l-0 border-gray-300 pl-3">
-              <div>
-                <span className="text-xl text-neutral-700 font-semibold">
+            <div className="flex flex-col pl-3 border-l-0 border-gray-300 basis-1/2 sm:border-l">
+              <div className="p-2 mb-2 bg-gray-300 rounded-t-lg">
+                <span className="text-xl font-semibold text-neutral-700">
                   GIỎ HÀNG
                 </span>
-                <Divider />
               </div>
               {cartData?.map((cartItem, index) => (
                 <CartItem
@@ -309,7 +300,7 @@ export default function CartPage() {
                       fontWeight: [800, 500],
                     }}
                     transition={{ duration: 0.3 }}
-                    className="text-red-500 text-lg font-semibold"
+                    className="text-lg font-semibold text-red-500"
                   >
                     {total?.toLocaleString()}đ
                   </motion.span>

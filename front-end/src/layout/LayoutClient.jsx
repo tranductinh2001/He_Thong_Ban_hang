@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Outlet } from "react-router-dom";
+
 import Header from "../components/Header";
 import _Menu from "../components/Menu";
 import Loading from "../components/Loading";
@@ -11,11 +12,10 @@ import FloatMenuButton from "../components/FloatMenuButton";
 
 export default function LayoutClient() {
   return (
-    <div className="h-full w-full flex flex-col scroll-smooth">
+    <div className="flex flex-col w-full h-full scroll-smooth">
       <Header />
       <ResponsiveHeader />
-      <_Menu />
-      <div className="p-2">
+      <div className="min-h-screen p-2">
         <Suspense fallback={<Loading />}>
           <Outlet />
         </Suspense>

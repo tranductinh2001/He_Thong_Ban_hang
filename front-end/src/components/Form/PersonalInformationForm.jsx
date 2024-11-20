@@ -65,135 +65,130 @@ export default function PersonalInformationForm() {
   };
 
   return (
-    <>
-      <form
-        className="flex flex-col p-4 sm:w-3/5 w-full"
-        onSubmit={handleSubmit}
-      >
-        <h1 className="text-xl font-semibold mb-4">THÔNG TIN TÀI KHOẢN</h1>
-        {isLoadingUpdate ? (
-          <>
-            <Button type="primary" loading className="ml-2">
-              Đang cập nhật tài khoản.
-            </Button>
-          </>
-        ) : (
-          <>
-            {visible ? (
-              <Alert
-                message="Cập nhật tài khoản thành công"
-                description="tài khoản của bạn đã được thay đổi thành công vui lòng kiểm tra thông tin tài khoản."
-                type="success"
-                showIcon
-                t
-              />
-            ) : (
-              <>
-                {isErrorUpdate ? (
-                  <Alert
-                    message="Cập nhật tài khoản thất bại"
-                    description="vui lòng thao tác cập nhật lại tài khoản."
-                    type="error"
-                    showIcon
-                  />
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
-          </>
-        )}
+    <form className="flex flex-col w-full p-4" onSubmit={handleSubmit}>
+      <h1 className="mb-4 text-xl font-semibold">THÔNG TIN TÀI KHOẢN</h1>
+      {isLoadingUpdate ? (
+        <>
+          <Button type="primary" loading className="ml-2">
+            Đang cập nhật tài khoản.
+          </Button>
+        </>
+      ) : (
+        <>
+          {visible ? (
+            <Alert
+              message="Cập nhật tài khoản thành công"
+              description="tài khoản của bạn đã được thay đổi thành công vui lòng kiểm tra thông tin tài khoản."
+              type="success"
+              showIcon
+              t
+            />
+          ) : (
+            <>
+              {isErrorUpdate ? (
+                <Alert
+                  message="Cập nhật tài khoản thất bại"
+                  description="vui lòng thao tác cập nhật lại tài khoản."
+                  type="error"
+                  showIcon
+                />
+              ) : (
+                <></>
+              )}
+            </>
+          )}
+        </>
+      )}
 
-        <br />
-        <div className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
-          <div className="flex flex-col">
-            <label htmlFor="first_name" className="mb-2 font-semibold text-sm">
-              Họ và chữ lót
-            </label>
-            <input
-              type="text"
-              id="first_name"
-              name="first_name"
-              className="border p-2 font-semibold text-sm rounded"
-              placeholder={formData.first_name}
-              value={formData.first_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="flex flex-col sm:mt-0 mt-4">
-            <label htmlFor="last_name" className="mb-2 font-semibold text-sm">
-              Tên
-            </label>
-            <input
-              type="text"
-              id="last_name"
-              name="last_name"
-              className="border p-2 font-semibold text-sm rounded"
-              value={formData.last_name}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="number_phone" className="mb-2 font-semibold text-sm">
-            Số điện thoại
+      <br />
+      <div className="flex flex-col items-center justify-start mb-4 sm:flex-row sm:space-x-4">
+        <div className="flex flex-col">
+          <label htmlFor="first_name" className="mb-2 text-sm font-semibold">
+            Họ và chữ lót
           </label>
           <input
             type="text"
-            id="number_phone"
-            name="number_phone"
-            className="border p-2 font-semibold text-sm rounded"
-            value={formData.number_phone}
+            id="first_name"
+            name="first_name"
+            className="p-2 text-sm font-semibold border rounded"
+            placeholder={formData.first_name}
+            value={formData.first_name}
             onChange={handleChange}
           />
         </div>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="email" className="mb-2 font-semibold text-sm">
-            Email
+        <div className="flex flex-col">
+          <label htmlFor="last_name" className="mb-2 text-sm font-semibold">
+            Tên
           </label>
           <input
             type="text"
-            id="email"
-            name="email"
-            className="border p-2 font-semibold text-sm rounded"
-            value={formData.email}
-            onChange={handleChange}
-            disabled={true}
-          />
-        </div>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="birthday" className="mb-2 font-semibold text-sm">
-            Ngày sinh
-          </label>
-          <input
-            type="date"
-            id="dob"
-            name="dob"
-            className="border p-2 rounded"
-            value={formData.dob}
+            id="last_name"
+            name="last_name"
+            className="p-2 text-sm font-semibold border rounded"
+            value={formData.last_name}
             onChange={handleChange}
           />
         </div>
-        <div className="flex flex-col mb-4">
-          <label htmlFor="address" className="mb-2 font-semibold text-sm">
-            Địa chỉ
-          </label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            className="border p-2 font-semibold text-sm rounded"
-            value={formData.address}
-            onChange={handleChange}
-          />
-        </div>
-        <button
-          type="submit"
-          className="flex items-center justify-center align-self bg-blue-500 text-white w-32 h-11 rounded-xl p-3 border-2 font-semibold text-sm border-blue-500 hover:bg-white hover:text-blue-600 duration-300"
-        >
-          Cập nhật
-        </button>
-      </form>
-    </>
+      </div>
+      <div className="flex flex-col mb-4">
+        <label htmlFor="number_phone" className="mb-2 text-sm font-semibold">
+          Số điện thoại
+        </label>
+        <input
+          type="text"
+          id="number_phone"
+          name="number_phone"
+          className="p-2 text-sm font-semibold border rounded"
+          value={formData.number_phone}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="flex flex-col mb-4">
+        <label htmlFor="email" className="mb-2 text-sm font-semibold">
+          Email
+        </label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          className="p-2 text-sm font-semibold border rounded"
+          value={formData.email}
+          onChange={handleChange}
+          disabled={true}
+        />
+      </div>
+      <div className="flex flex-col mb-4">
+        <label htmlFor="birthday" className="mb-2 text-sm font-semibold">
+          Ngày sinh
+        </label>
+        <input
+          type="date"
+          id="dob"
+          name="dob"
+          className="p-2 border rounded"
+          value={formData.dob}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="flex flex-col mb-4">
+        <label htmlFor="address" className="mb-2 text-sm font-semibold">
+          Địa chỉ
+        </label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          className="p-2 text-sm font-semibold border rounded"
+          value={formData.address}
+          onChange={handleChange}
+        />
+      </div>
+      <button
+        type="submit"
+        className="flex items-center justify-center w-32 p-3 text-sm font-semibold text-white duration-300 bg-blue-500 border-2 border-blue-500 align-self h-11 rounded-xl hover:bg-white hover:text-blue-600"
+      >
+        Cập nhật
+      </button>
+    </form>
   );
 }

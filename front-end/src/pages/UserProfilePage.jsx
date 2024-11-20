@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Divider } from "antd";
-import React, { useEffect,useMemo  } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, NavLink } from "react-router-dom";
 import { logout } from "../redux/slices/authSlice";
@@ -19,7 +19,7 @@ const iconMap = {
   "lock-open": faLockOpen,
   "cart-shopping": faCartShopping,
   "arrow-right-from-bracket": faArrowRightFromBracket,
-  "admin" : faUserShield
+  admin: faUserShield,
 };
 const baseOptionProfile = [
   {
@@ -47,14 +47,15 @@ const baseOptionProfile = [
     title: "Đăng xuất",
     path: "logout",
   },
-  
 ];
 
 export default function UserProfilePage() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user?.user);
   const currentUsers = useSelector((state) => state.auth?.currentUser);
-  const isAdmin = currentUsers?.roles?.some(role => role.name === 'ROLE_ADMIN');
+  const isAdmin = currentUsers?.roles?.some(
+    (role) => role.name === "ROLE_ADMIN"
+  );
   const optionProfile = useMemo(() => {
     const options = [...baseOptionProfile];
     if (isAdmin) {
@@ -66,7 +67,7 @@ export default function UserProfilePage() {
     }
     return options;
   }, [isAdmin]);
-  
+
   const handleLogout = () => {
     dispatch(logout());
   };
@@ -74,63 +75,61 @@ export default function UserProfilePage() {
     dispatch(fetchUserDetail());
   }, [dispatch]);
   return (
-    <div className="bg-slate-50 w-full">
-      <div className="flex flex-col sm:flex-row justify-center gap-2 p-12">
-        {/* left side */}
-        <div className="flex flex-col bg-white p-5 sm:w-1/4 sm:h-3/4 w-full rounded-lg shadow-xl">
-          <div className="flex flex-col text-center text-neutral-500 w-full">
-            <span className="uppercase font-semibold">
-              {currentUser?.username}
-            </span>
-            <span>{`${currentUser?.first_name || ""} ${
-              currentUser?.last_name || ""
-            }`}</span>
-            <span className="text-base">{currentUser?.email}</span>
-          </div>
-          <Divider />
+    <div className="grid justify-center w-full grid-cols-1 gap-2 p-2 md:grid-cols-4">
+      {/* left side */}
+      <div className="flex flex-col w-full h-full col-span-1 p-5 bg-white rounded-lg shadow-xl">
+        <div className="flex flex-col w-full text-center text-neutral-500">
+          <span className="font-semibold uppercase">
+            {currentUser?.username}
+          </span>
+          <span>{`${currentUser?.first_name || ""} ${
+            currentUser?.last_name || ""
+          }`}</span>
+          <span className="text-base">{currentUser?.email}</span>
+        </div>
+        <Divider />
 
-          <div className="flex flex-col space-y-2">
-            {optionProfile.map((item, index) => {
-              if (item.path === "logout") {
-                return (
-                  <div
-                    key={index}
-                    onClick={handleLogout}
-                    className="text-black hover:text-white hover:bg-blue-400 hover:font-semibold p-2 rounded-lg cursor-pointer"
-                  >
-                    <div className="flex flex-row gap-4 items-center">
-                      <FontAwesomeIcon icon={iconMap[item.icon]} />
-                      <span>{item.title}</span>
-                      <Link to={`/`}></Link>
-                    </div>
-                  </div>
-                );
-              }
+        <div className="flex flex-col space-y-2">
+          {optionProfile.map((item, index) => {
+            if (item.path === "logout") {
               return (
-                <NavLink
+                <div
                   key={index}
-                  to={item.path}
-                  className={({ isActive, isPending }) =>
-                    isPending
-                      ? "text-black hover:text-white hover:bg-blue-400 hover:font-semibold p-2 rounded-lg duration-300"
-                      : isActive
-                      ? " text-white bg-blue-400 font-semibold p-2 rounded-lg"
-                      : "text-black hover:text-white hover:bg-blue-400 hover:font-semibold p-2 rounded-lg duration-300"
-                  }
+                  onClick={handleLogout}
+                  className="p-2 text-black rounded-lg cursor-pointer hover:text-white hover:bg-blue-400 hover:font-semibold"
                 >
-                  <div className="flex flex-row gap-4 items-center">
+                  <div className="flex flex-row items-center gap-4">
                     <FontAwesomeIcon icon={iconMap[item.icon]} />
                     <span>{item.title}</span>
+                    <Link to={`/`}></Link>
                   </div>
-                </NavLink>
+                </div>
               );
-            })}
-          </div>
+            }
+            return (
+              <NavLink
+                key={index}
+                to={item.path}
+                className={({ isActive, isPending }) =>
+                  isPending
+                    ? "text-black hover:text-white hover:bg-blue-400 hover:font-semibold p-2 rounded-lg duration-300"
+                    : isActive
+                    ? " text-white bg-blue-400 font-semibold p-2 rounded-lg"
+                    : "text-black hover:text-white hover:bg-blue-400 hover:font-semibold p-2 rounded-lg duration-300"
+                }
+              >
+                <div className="flex flex-row items-center gap-4">
+                  <FontAwesomeIcon icon={iconMap[item.icon]} />
+                  <span>{item.title}</span>
+                </div>
+              </NavLink>
+            );
+          })}
         </div>
-        {/* right side */}
-        <div className="bg-white sm:w-3/4 w-full rounded-lg shadow-xl">
-          <Outlet />
-        </div>
+      </div>
+      {/* right side */}
+      <div className="w-full col-span-1 bg-white rounded-lg shadow-xl md:col-span-3">
+        <Outlet />
       </div>
     </div>
   );

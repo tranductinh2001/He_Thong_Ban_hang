@@ -1,72 +1,86 @@
-import React from "react";
 import { Carousel } from "antd";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import carousel1 from "../../assets/carousel1.jpg";
 import carousel2 from "../../assets/carousel2.jpg";
 import carousel3 from "../../assets/carousel3.jpg";
 import carousel4 from "../../assets/carousel4.jpg";
-import { Link } from "react-router-dom";
 
-function CustomArrow(props) {
-  const { className, style, onClick } = props;
+function CustomArrow({ className, style, onClick, direction }) {
   return (
     <div
-      className={className}
+      className={`${className} group`}
       style={{
         ...style,
-        background: "red",
-        borderRadius: "10px",
-        padding: "5px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "40px",
+        height: "40px",
+        background: "rgba(0, 0, 0, 0.5)",
+        borderRadius: "50%",
+        cursor: "pointer",
+        zIndex: 10,
       }}
       onClick={onClick}
-    />
+    >
+      {direction === "left" ? (
+        <FaChevronLeft className="text-xl text-white group-hover:text-red-500" />
+      ) : (
+        <FaChevronRight className="text-xl text-white group-hover:text-red-500" />
+      )}
+    </div>
   );
 }
 
 export default function _Carousel() {
   return (
-    <div className="w-full h-auto">
+    <div className="w-full h-full">
       <Carousel
-        className="max-w-screen-sm h-auto"
+        className="w-full h-full"
         arrows
         autoplay
         pauseOnHover
-        nextArrow={<CustomArrow />}
-        prevArrow={<CustomArrow />}
+        nextArrow={<CustomArrow direction="right" />}
+        prevArrow={<CustomArrow direction="left" />}
         fade
         customPaging={(i) => {
           return (
-            <Link>
-              <img src={`/src/assets/carousel${i + 1}.jpg`} />
-            </Link>
+            <div className="flex items-center justify-center w-12 h-12">
+              <img
+                className="object-cover w-10 h-10 border border-gray-200 rounded-md"
+                src={`/src/assets/carousel${i + 1}.jpg`}
+                alt={`Slide ${i + 1}`}
+              />
+            </div>
           );
         }}
       >
-        <div key="1" className="bg-red-100 flex items-center justify-center">
+        <div key="1" className="flex items-center justify-center bg-red-100">
           <img
             src={carousel1}
             alt=""
-            className="h-96 w-full rounded-lg object-cover"
+            className="object-cover w-full rounded-lg h-[500px]"
           />
         </div>
-        <div key="2" className="bg-red-100 flex items-center justify-center">
+        <div key="2" className="flex items-center justify-center bg-red-100">
           <img
             src={carousel2}
             alt=""
-            className="h-96 w-full rounded-lg object-cover"
+            className="object-cover w-full rounded-lg h-[500px]"
           />
         </div>
-        <div key="3" className="bg-red-100 flex items-center justify-center">
+        <div key="3" className="flex items-center justify-center bg-red-100">
           <img
             src={carousel3}
             alt=""
-            className="h-96 w-full rounded-lg object-cover"
+            className="object-cover w-full rounded-lg h-[500px]"
           />
         </div>
-        <div key="4" className="bg-red-100 flex items-center justify-center">
+        <div key="4" className="flex items-center justify-center bg-red-100">
           <img
             src={carousel4}
             alt=""
-            className="h-96 w-full rounded-lg object-cover"
+            className="object-cover w-full rounded-lg h-[500px]"
           />
         </div>
       </Carousel>

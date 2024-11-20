@@ -32,7 +32,7 @@
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "date-fns": "^3.6.0",
-    "framer-motion": "^11.11.17",
+    "framer-motion": "^11.2.14",
     "history": "^5.3.0",
     "jwt-decode": "^4.0.0",
     "mdb-react-ui-kit": "^8.0.0",

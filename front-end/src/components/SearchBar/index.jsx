@@ -108,10 +108,10 @@ export default function SearchBar({ keyWord }) {
   }, [totalProductItems, productList.length]);
 
   return (
-    <div className="flex flex-row gap-10 flex-auto items-center justify-between">
-      <div className="flex flex-col relative">
+    <div className="flex flex-row items-center justify-between flex-auto gap-10">
+      <div className="relative flex flex-col">
         <motion.div
-          className="w-96 h-auto"
+          className="h-auto w-96"
           initial={{ scale: 1 }}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3 }}
@@ -129,17 +129,17 @@ export default function SearchBar({ keyWord }) {
         <AnimatePresence>
           {isOpenDropDown && keyWordSearch && (
             <motion.div
-              className="absolute top-10 w-full z-50 bg-white rounded-lg border opacity-100"
+              className="absolute z-50 w-full bg-white border rounded-lg opacity-100 top-10"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="p-2 sticky top-0 bg-gray-100 z-10 w-full rounded-t-lg">
+              <div className="sticky top-0 z-10 w-full p-2 bg-gray-500 rounded-t-lg">
                 Sản phẩm gợi ý
               </div>
               <div
-                className="bg-white w-full border opacity-100 h-80 rounded-b-lg overflow-auto border-b last:border-b"
+                className="w-full overflow-auto bg-white border border-b rounded-b-lg opacity-100 h-80 last:border-b"
                 id="scrollableDiv"
               >
                 <InfiniteScroll
@@ -148,14 +148,14 @@ export default function SearchBar({ keyWord }) {
                   hasMore={hasMore}
                   loader={<p>Loading...</p>}
                   endMessage={
-                    <p className="text-center text-sm p-5">
+                    <p className="p-5 text-sm text-center">
                       Bạn đã xem hết danh sách sản phẩm
                     </p>
                   }
                   scrollableTarget="scrollableDiv" // Sử dụng id của div chứa để làm target cho scroll
                 >
                   <List
-                    className="bg-white p-3"
+                    className="p-3 bg-white"
                     itemLayout="vertical"
                     dataSource={productList}
                     split={true}
@@ -177,13 +177,13 @@ export default function SearchBar({ keyWord }) {
                               avatar={
                                 <Avatar
                                   src={urlImg(item)}
-                                  className="w-20 h-20 rounded-full shadow-xl border-4 border-neutral-100"
+                                  className="w-20 h-20 border-4 rounded-full shadow-xl border-neutral-100"
                                 />
                               }
                               title={<p>{item?.name}</p>}
                               description={
                                 isAuthenticated ? (
-                                  <p className="text-red-600 font-semibold">
+                                  <p className="font-semibold text-red-600">
                                     {item?.price?.toLocaleString()}₫
                                   </p>
                                 ) : (

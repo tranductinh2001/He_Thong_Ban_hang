@@ -5,9 +5,9 @@ import homeImage1 from "../assets/home-image1.jpg";
 import homeImage2 from "../assets/home-image2.png";
 import { CiMedal } from "react-icons/ci";
 import CategoryDropdown from "../components/CategoryDropdown";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Button, message } from "antd";
+import { Button } from "antd";
 import { motion } from "framer-motion";
 
 const adsList = [
@@ -49,33 +49,32 @@ export default function HomePage() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="flex flex-col justify-between gap-2 sm:flex-row">
-        <div className="hidden sm:block w-56">
-          <CategoryDropdown isbordered={true} />
+      <div className="grid items-start justify-center grid-cols-1 gap-2 md:grid-cols-8">
+        <div className="flex flex-col order-1 w-full col-span-1 gap-2 md:col-span-2 md:order-2">
+          <CategoryDropdown isbordered={true} className="hidden md:block" />
+          <img src={homeImage1} alt="" className="h-full rounded-lg" />
         </div>
-        <div className="flex flex-col items-center justify-around">
-          <_Carousel />
-          <div className="flex flex-col items-center mt-32 justify-center">
+
+        <div className="flex flex-col items-center justify-around order-2 w-full h-full col-span-1 md:col-span-4 md:order-1">
+          <div className="flex flex-col items-center justify-center">
             <span className="text-red-500">Quần áo thể thao KAWIN</span>
-            <span className="text-2xl font-semibold text-neutral-700 text-center">
+            <span className="text-2xl font-semibold text-center text-neutral-700">
               Chào mừng quý khách đã đến trang đặt hàng.
             </span>
           </div>
+          <_Carousel />
         </div>
-        <div className="flex flex-row sm:flex-col justify-center gap-2">
-          <img
-            src={homeImage1}
-            alt=""
-            className="sm:w-72 w-52 h-full rounded-lg"
-          />
+
+        <div className="order-3 w-full h-full col-span-1 md:col-span-2">
           <img
             src={homeImage2}
             alt=""
-            className="sm:w-72 w-52 h-full rounded-lg"
+            className="w-full h-full rounded-lg"
           />
         </div>
       </div>
-      <div className="sm:flex-row flex flex-col items-center sm:items-stretch justify-between gap-5 mt-5">
+
+      <div className="flex flex-col items-center justify-between w-full gap-3 mt-5 sm:flex-row sm:items-stretch">
         {adsList.map((item, index) => (
           <AdsCard
             key={index}
@@ -85,10 +84,11 @@ export default function HomePage() {
           />
         ))}
       </div>
+
       {!isAuthenticated ? (
         <div className="my-2">
-          <div className="bg-gradient-to-r from-red-500 to-slate-400 p-10 gap-5 flex flex-col items-center">
-            <span className="text-white text-3xl drop-shadow-lg text-center">
+          <div className="flex flex-col items-center gap-5 p-10 bg-gradient-to-r from-red-500 to-slate-400">
+            <span className="text-3xl text-center text-white drop-shadow-lg">
               Đăng ký, đăng nhập để mua hàng sỉ
             </span>
             <div className="flex gap-5">

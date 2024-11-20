@@ -53,23 +53,23 @@ const HeaderMenu = ({ username, onClose, logout }) => {
   };
   return (
     <div className="flex flex-col items-center justify-center">
-      <span className="text-neutral-400 font-light text-lg">{username}</span>
+      <span className="text-lg font-light text-neutral-400">{username}</span>
       <div className="flex flex-row gap-4">
-        <div className="flex flex-row gap-1 items-center">
+        <div className="flex flex-row items-center gap-1">
           <CiUser size={20} />
           <Link
             to="profile"
             onClick={onClose}
-            className="text-blue-600 font-normal"
+            className="font-normal text-blue-600"
           >
             Thông tin
           </Link>
         </div>
-        <div className="flex flex-row gap-1 items-center">
+        <div className="flex flex-row items-center gap-1">
           <CiLogout size={20} />
           <Link
             to="/"
-            className="text-blue-600 font-normal"
+            className="font-normal text-blue-600"
             onClick={handleLogout}
           >
             Đăng xuất
@@ -108,7 +108,7 @@ export default function ResponsiveHeader() {
     setSearchOpen(false);
   }, [location]);
   return (
-    <div className="sm:hidden sticky top-0 w-full z-50 flex flex-row items-center justify-between h-auto bg-black text-white pl-4 pr-4">
+    <div className="sticky top-0 z-50 flex flex-row items-center justify-between w-full h-auto pl-4 pr-4 text-white sm:hidden bg-sky-500">
       {/* MENU */}
       <div className="cursor-pointer" onClick={showMenuDrawer}>
         <svg
@@ -128,7 +128,7 @@ export default function ResponsiveHeader() {
       </div>
       {/* LOGO */}
       <Link to="/">
-        <img className="w-32 " src={logo} alt="logo" />
+        <img className="w-24" src={logo} alt="logo" />
       </Link>
       {/* SEARCH */}
       <div className="cursor-pointer" onClick={showSearchDrawer}>
@@ -160,7 +160,7 @@ export default function ResponsiveHeader() {
               }}
             />
           ) : (
-            <div className="flex flex-row gap-5 items-center justify-center text-blue-600 font-base">
+            <div className="flex flex-row items-center justify-center gap-5 text-blue-600 font-base">
               <Link to="login">Đăng nhập</Link>
               <Link to="register">Đăng ký</Link>
             </div>

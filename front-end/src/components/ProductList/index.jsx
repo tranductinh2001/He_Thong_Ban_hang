@@ -96,7 +96,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         })
       );
     } else {
-      console.log("fetchProductList");
+      // console.log("fetchProductList");
       dispatch(
         fetchProductList({
           sortParam: "",
@@ -110,9 +110,9 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   };
 
   return (
-    <div className="p-9">
+    <div className="p-2 md:p-4">
       {productListByPage.length === 0 ? (
-        <p className="text-center text-sm p-5">
+        <p className="p-5 text-sm text-center">
           Không có sản phẩm nào trong danh sách.
         </p>
       ) : (
@@ -122,12 +122,12 @@ function ProductList({ sortParam, titleParam, searchParam }) {
           hasMore={hasMore}
           loader={<p>Loading...</p>}
           endMessage={
-            <p className="text-center text-sm p-5">
+            <p className="p-5 text-sm text-center">
               Bạn đã xem hết danh sách sản phẩm
             </p>
           }
         >
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 justify-center">
+          <div className="grid justify-center grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
             {Array.isArray(productListByPage) &&
               productListByPage.map((product, index) => (
                 <ProductCard

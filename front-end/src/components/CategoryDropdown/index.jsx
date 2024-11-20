@@ -1,7 +1,11 @@
 import { Dropdown, List, Menu } from "antd";
 import React from "react";
-import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
+import {
+  MdOutlineKeyboardArrowLeft,
+  MdOutlineKeyboardArrowRight,
+} from "react-icons/md";
+
 const data = [
   {
     title: "QUẦN ÁO THƯƠNG HIỆU",
@@ -50,31 +54,80 @@ const data = [
     ],
   },
 ];
-export default function CategoryDropdown({ isbordered }) {
+export default function CategoryDropdown({
+  isbordered,
+  isMenu = false,
+  className = "",
+}) {
+  const menuCategories = (
+    <Menu className="mt-3 bg-white">
+      <Menu.Item
+        key="quality"
+        className="p-2 text-2xl border-b border-b-gray-100"
+      >
+        Chất lượng sản phẩm
+      </Menu.Item>
+      <Menu.Item
+        key="delivery"
+        className="p-2 text-2xl border-b border-b-gray-100"
+      >
+        Phân phối sỉ toàn quốc
+      </Menu.Item>
+      <Menu.Item
+        key="various"
+        className="p-2 text-2xl border-b border-b-gray-100"
+      >
+        Mặt hàng đa dạng
+      </Menu.Item>
+      <Menu.Item
+        key="super"
+        className="p-2 text-2xl border-b border-b-gray-100"
+      >
+        Giao hàng nhanh chóng
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <List
       bordered={isbordered !== undefined ? isbordered : false}
       size="small"
       dataSource={data}
+      className={className}
       renderItem={(item) => {
-        const menuItems = item.children.map((subItem, index) => ({
+        item.children.map((subItem) => ({
           key: subItem.to,
-          label: (
-            <>
-              <Link to={`/${subItem.to}`}>{subItem.title}</Link>
-            </>
-          ),
+          label: <Link to={`/${subItem.to}`}>{subItem.title}</Link>,
         }));
         return (
           <List.Item key={item.to}>
             <Dropdown
-              dropdownRender={() => <Menu items={menuItems} />}
+              dropdownRender={() => menuCategories}
               trigger={["hover"]}
-              placement="right"
+              placement="bottomLeft"
               autoAdjustOverflow
             >
-              <Link className="flex flex-row items-center" to={`/${item.to}`}>
-                {item.title} <MdOutlineKeyboardArrowRight size={30} />
+              <Link
+                className="flex flex-row w-full h-full items-cente justify-centerr"
+                to={`/${item.to}`}
+              >
+                {isMenu ? (
+                  <>
+                    <MdOutlineKeyboardArrowLeft
+                      size={30}
+                      className="text-black/30"
+                    />
+                    {item.title}
+                  </>
+                ) : (
+                  <>
+                    {item.title}
+                    <MdOutlineKeyboardArrowRight
+                      size={24}
+                      className="text-black"
+                    />
+                  </>
+                )}
               </Link>
             </Dropdown>
           </List.Item>

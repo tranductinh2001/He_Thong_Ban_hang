@@ -1,34 +1,108 @@
-import { Badge, Divider, Input } from "antd";
 import { motion } from "framer-motion";
-import { default as React, useEffect } from "react";
-import { FaHeadphones, FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
-import { IoLogOut, IoPersonAddSharp, IoPersonCircle } from "react-icons/io5";
-import { PiNotepadFill } from "react-icons/pi";
+import { Badge, Divider, Dropdown, Menu } from "antd";
+import { Link, NavLink } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { PiNotepadFill } from "react-icons/pi";
+import { FaHeadphones, FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
+import {
+  IoLogOut,
+  IoPersonAddSharp,
+  IoPersonCircle,
+  IoShirtSharp,
+} from "react-icons/io5";
+
 import logo from "../../assets/logo.jpg";
 import useRedirectToLogin from "../../custom hooks/useRedirectToLogin";
-import { logout } from "../../redux/slices/authSlice";
-import { fetchCartData } from "../../redux/slices/cartSlice";
+import CategoryDropdown from "../CategoryDropdown";
 import SearchBar from "../SearchBar";
-const { Search } = Input;
 
-const menuItems = [
-  {
-    Icon: FaHome,
-    title: "TRANG CHỦ",
-    to: "/",
-  },
-  {
-    title: "SẢN PHẨM",
-    to: "products",
-  },
-  {
-    Icon: FaHeadphones,
-    title: "LIÊN HỆ",
-    to: "contact",
-  },
-];
+import { logout } from "../../redux/slices/authSlice";
+const { SubMenu } = Menu;
+
+const menuCategories = (
+  <Menu className="mt-3 bg-white">
+    <SubMenu
+      key="category"
+      title={
+        <NavLink
+          to="/categories"
+          className={({ isActive }) =>
+            isActive
+              ? "text-blue-400 font-medium flex items-center"
+              : "text-black hover:text-blue-400 font-medium flex items-center"
+          }
+        >
+          Danh mục sản phẩm
+        </NavLink>
+      }
+      className="!text-2xl p-2 border-b border-b-gray-100"
+    >
+      <CategoryDropdown isbordered={false} />
+    </SubMenu>
+    <Menu.Item
+      key="quality"
+      className="p-2 text-2xl border-b border-b-gray-100"
+    >
+      Chất lượng sản phẩm
+    </Menu.Item>
+    <Menu.Item
+      key="delivery"
+      className="p-2 text-2xl border-b border-b-gray-100"
+    >
+      Phân phối sỉ toàn quốc
+    </Menu.Item>
+    <Menu.Item
+      key="various"
+      className="p-2 text-2xl border-b border-b-gray-100"
+    >
+      Mặt hàng đa dạng
+    </Menu.Item>
+    <Menu.Item key="super" className="p-2 text-2xl border-b border-b-gray-100">
+      Giao hàng nhanh chóng
+    </Menu.Item>
+  </Menu>
+);
+
+function MenuLink({ Icon, title, to, dropdownContent }) {
+  const linkContent = (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        isActive
+          ? "text-blue-400 p-2 flex items-center gap-2 duration-200 font-medium"
+          : "hover:text-blue-400 p-2 flex items-center gap-2 text-black duration-200 font-medium"
+      }
+    >
+      {Icon && <Icon className="text-black" size={20} />}
+      {title}
+    </NavLink>
+  );
+
+  if (dropdownContent) {
+    return (
+      <>
+        <Dropdown
+          overlay={dropdownContent}
+          placement="bottomLeft"
+          trigger={["hover"]}
+          disabled={location.pathname === "/"}
+          className="flex gap-2"
+        >
+          {linkContent}
+        </Dropdown>
+        <Divider className="border-black/10 h-7" type="vertical" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {linkContent}
+      <Divider className="border-black/10 h-7" type="vertical" />
+    </>
+  );
+}
 
 function NavigationLink({ Icon, title, to, count }) {
   const redirectToLogin = useRedirectToLogin();
@@ -41,22 +115,21 @@ function NavigationLink({ Icon, title, to, count }) {
     <>
       {title === "Đăng nhập" ? (
         <div
-          className="text-sm flex flex-row gap-2 items-center cursor-pointer"
+          className="flex flex-row items-center gap-1 text-xs cursor-pointer"
           onClick={handleClick}
         >
-          <Icon size={30} className="text-red-500" />
+          <Icon size={24} className="text-white" />
           {title}
         </div>
       ) : (
-        <Link className="text-sm flex flex-row gap-2 items-center" to={to}>
+        <Link className="flex flex-row items-center gap-1 text-xs" to={to}>
           {title === "Giỏ hàng" ? (
-            <Badge count={count} showZero>
-              <Icon size={30} className="text-red-500" />
+            <Badge count={count} size="small" showZero>
+              <Icon size={22} className="text-white" />
             </Badge>
           ) : (
-            <Icon size={30} className="text-red-500" />
+            <Icon size={22} className="text-white" />
           )}
-
           {title}
         </Link>
       )}
@@ -64,172 +137,122 @@ function NavigationLink({ Icon, title, to, count }) {
   );
 }
 
-function MenuLink({ Icon, title, to }) {
-  return (
-    <>
-      <NavLink
-        to={to}
-        className={({ isActive }) =>
-          isActive
-            ? "text-blue-400 p-2 flex items-center gap-2  duration-200 font-medium"
-            : " hover:text-blue-400 p-2 flex items-center gap-2 text-white duration-200 font-medium"
-        }
-      >
-        {Icon && <Icon className="text-red-600" size={20} />}
-        {title}
-      </NavLink>
-      <Divider className="border-white h-7" type="vertical" />
-    </>
-  );
-}
-
 export default function Header() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  // console.log("test đang nhập từ user và authentication   ", currentUser, isAuthenticated);
   const number_of_product = useSelector(
     (state) => state.cart?.number_of_product
   );
 
-  // console.log(number_of_product);
-  const products = useSelector((state) => state.cart.products);
-
-  //fetch cart data để tính số lượng sản phẩm trong giỏ hàng
-  // useEffect(() => {
-  //   if (currentUser) dispatch(fetchCartData(currentUser?._id));
-  // }, [dispatch, currentUser?._id]);
+  const menuItems = [
+    {
+      Icon: FaHome,
+      title: "TRANG CHỦ",
+      to: "/",
+    },
+    {
+      Icon: IoShirtSharp,
+      title: "SẢN PHẨM",
+      to: "/products",
+      dropdownContent: menuCategories,
+    },
+    {
+      Icon: FaHeadphones,
+      title: "LIÊN HỆ",
+      to: "/contact",
+    },
+  ];
 
   return (
-    <div className="sm:flex hidden border-b flex-row h-32 w-full gap-10 items-center justify-between">
-      <Link to="/">
-        <motion.img
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{
-            opacity: [0.7, 0.8, 0.9, 1],
-            scale: [1.4, 1.3, 1.2, 1],
-          }}
-          whileHover={{ scale: 1.4 }}
-          transition={{ duration: 0.4 }}
-          className="w-32 scale-105 h-auto ml-8 object-cover grow"
-          src={logo}
-          alt=""
-        />
-      </Link>
-      <div className=" gap-6 flex flex-col p-4 grow">
-        <div className="flex flex-row gap-10 flex-auto items-center justify-between">
-          {/* <div className="flex flex-col relative">
-            <Search
-              placeholder="Nhập sản phẩm tìm kiếm"
-              enterButton
-              className="w-96 h-auto"
-              onSearch={handleSearch}
-              onChange={onChangeHandleSearch}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-              value={keyWordSearch}
+    <div className="sticky top-0 flex-col items-center justify-start hidden w-full h-auto border-b border-b-slate-300 sm:flex z-[99999]">
+      {/* Top Bar */}
+      <div className="flex items-start justify-start w-full p-2 text-white bg-sky-500">
+        <div className="flex items-center justify-start w-full gap-3">
+          <Link to="/">
+            <motion.img
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: [0.7, 0.8, 0.9, 1],
+                scale: [1.4, 1.3, 1.2, 1],
+              }}
+              whileHover={{ scale: 1.4 }}
+              transition={{ duration: 0.4 }}
+              className="object-cover w-12 h-auto"
+              src={logo}
+              alt=""
             />
-            {isOpenDropDown && keyWordSearch && (
-              <div className="absolute top-10 w-full z-50 bg-white rounded-lg border opacity-100">
-                <div className="p-2 sticky top-0 bg-gray-100 z-10 w-full rounded-t-lg">
-                  Sản phẩm gợi ý
-                </div>
-                <div className="bg-white w-full border opacity-100 overflow-auto h-80 rounded-b-lg border-b last:border-b">
-                  <List
-                    className="bg-white p-3"
-                    itemLayout="vertical"
-                    dataSource={productList}
-                    split={true} // Thuộc tính split để thêm đường kẻ
-                    renderItem={(item, index) => (
-                      <Link to={`/product/${item?.id}`} key={item?.id}>
-                        <List.Item className="w-full border-b border-gray-300 last:border-b-0">
-                          <List.Item.Meta
-                            avatar={
-                              <Avatar
-                                src={urlImg(item)}
-                                className="w-20 h-20 rounded-full shadow-xl border-4 border-neutral-100"
-                              />
-                            }
-                            title={<a>{item?.attributes?.name}</a>}
-                            description={
-                              isAuthenticated ? (
-                                <p>{item?.attributes?.price} $</p>
-                              ) : (
-                                <p className="font-semibold">
-                                  Đăng nhập để xem giá
-                                </p>
-                              )
-                            }
-                          />
-                          <Divider />
-                        </List.Item>
-                      </Link>
-                    )}
-                  />
-                </div>
-              </div>
-            )}
-          </div> */}
-
+          </Link>
           <SearchBar />
-
-          <div className="flex flex-row items-center gap-5">
-            <NavigationLink
-              title="Kiểm tra đơn hàng"
-              Icon={PiNotepadFill}
-              to="/profile/orders"
-            />
-            {isAuthenticated && currentUser ? (
-              <NavigationLink
-                title={`Xin chào, ${currentUser?.username}`}
-                Icon={FaUser}
-                to="profile"
-              />
-            ) : (
-              <NavigationLink
-                title="Đăng ký"
-                Icon={IoPersonAddSharp}
-                to="/register"
-              />
-            )}
-            {isAuthenticated && currentUser ? (
-              <Link
-                className="text-sm flex flex-row gap-2 items-center"
-                onClick={() => dispatch(logout())}
-              >
-                <IoLogOut size={35} className="text-red-500" />
-                Đăng xuất
-              </Link>
-            ) : (
-              <NavigationLink title="Đăng nhập" Icon={IoPersonCircle} />
-            )}
-            <NavigationLink
-              count={
-                isAuthenticated
-                  ? number_of_product
-                    ? number_of_product
-                    : 0
-                  : 0
-              }
-              title="Giỏ hàng"
-              Icon={FaShoppingCart}
-              to="cart"
-            />
-          </div>
         </div>
-        <div className="bg-blue-800 flex flex-row items-center">
-          {menuItems.map((item, index) => {
-            return (
+
+        <div className="items-center justify-end hidden w-full h-full gap-4 pt-1 lg:flex">
+          <NavigationLink
+            title="Kiểm tra đơn hàng"
+            Icon={PiNotepadFill}
+            to="/profile/orders"
+          />
+          <NavigationLink
+            count={isAuthenticated ? number_of_product || 0 : 0}
+            title="Giỏ hàng"
+            Icon={FaShoppingCart}
+            to="/cart"
+          />
+          {isAuthenticated && currentUser ? (
+            <NavigationLink
+              title={`Xin chào, ${currentUser?.username}`}
+              Icon={FaUser}
+              to="/profile"
+            />
+          ) : (
+            <NavigationLink
+              title="Đăng ký"
+              Icon={IoPersonAddSharp}
+              to="/register"
+            />
+          )}
+          {isAuthenticated && currentUser ? (
+            <Link
+              className="flex flex-row items-center gap-2 text-sm"
+              onClick={() => dispatch(logout())}
+            >
+              <IoLogOut size={26} />
+              Đăng xuất
+            </Link>
+          ) : (
+            <NavigationLink title="Đăng nhập" Icon={IoPersonCircle} />
+          )}
+        </div>
+      </div>
+
+      {/* Navigation Menu */}
+      <div className="flex items-center justify-between w-full px-2 overflow-hidden bg-white">
+        <Link to="/">
+          <motion.img
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{
+              opacity: [0.7, 0.8, 0.9, 1],
+              scale: [1.4, 1.3, 1.2, 1],
+            }}
+            whileHover={{ scale: 1.4 }}
+            transition={{ duration: 0.4 }}
+            className="object-cover w-20 h-full ml-8 grow"
+            src={logo}
+            alt=""
+          />
+        </Link>
+        <div className="flex flex-col items-end justify-end w-full gap-6 grow">
+          <div className="flex flex-row items-center">
+            {menuItems.map((item, index) => (
               <MenuLink
                 key={index}
                 Icon={item.Icon}
                 title={item.title}
                 to={item.to}
+                dropdownContent={item.dropdownContent}
               />
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </div>

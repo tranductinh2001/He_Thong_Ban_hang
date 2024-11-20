@@ -56,6 +56,7 @@ export const QuantityEditor = ({
         disabled={currentValue >= max}
       />
       
+
     </Space>
   );
 };
@@ -129,18 +130,15 @@ const CartItem = ({
           className="rounded-2xl"
           width={170}
           height={170}
-          src={cartItem?.product?.images[0]}
+          src={cartItem?.product?.images[0] ?? "/src/assets/default_image.png"}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <div className="flex flex-row justify-between items-center gap-2">
+        <div className="flex flex-row items-center justify-between gap-2">
           <span className="font-semibold">{cartItem?.product?.name}</span>
-          {/* <Button size="small" type="text" danger>
-            <FaTrashAlt size={15} />
-          </Button> */}
           <DeleteConfirmButton onConfirm={handleDeleteCartItem} />
         </div>
-        <span>{size}</span>
+        <span className="px-2 text-white bg-gray-500 rounded-md w-fit">{size}</span>
         {quantity > foundItem?.quantity ? (
           <span className="text-xs text-red-600">
             Số lượng sản phẩm trong kho còn{" "}
@@ -163,16 +161,17 @@ const CartItem = ({
           </span>
         ) : (
           <>
-            <span className="font-semibold text-sm text-red-500 line-through">
+            <span className="text-sm font-semibold text-red-500 line-through">
               {cartItem?.product?.price?.toLocaleString()}đ
             </span>
             <span className="font-semibold text-green-500">
               {cartItem?.product?.salePrice?.toLocaleString()}đ
-            </span>
+              </span>
+
           </>
         )}
 
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row items-center justify-between">
           <QuantityEditor
             max={foundItem?.quantity}
             min={1}
