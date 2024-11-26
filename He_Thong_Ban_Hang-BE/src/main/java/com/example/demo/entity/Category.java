@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

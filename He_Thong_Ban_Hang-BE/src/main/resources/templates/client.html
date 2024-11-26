@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Xác nhận đơn hàng</title>
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css' />
 	<style>
-		/* General Reset */
+		/* Your existing CSS styles */
+		/* ... */
+
+		/* Additional styles for email */
+
+		/* Set body styles */
 		body {
 			font-family: 'Roboto', sans-serif;
 			font-size: 16px;
@@ -15,201 +18,171 @@
 			color: #333;
 			margin: 0;
 			padding: 0;
-			background-color: #f8f9fa;
+			background-color: #f4f4f4;
 		}
 
+		/* Set container styles */
 		.container {
-			width: 60%;
-			margin: 30px auto;
+			width: 50%;
+			margin: 50px auto;
 			padding: 20px;
-			background-color: #ffffff;
-			border-radius: 12px;
-			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-			transition: transform 0.3s ease;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 		}
 
-		.container:hover {
-			transform: scale(1.02);
-		}
-
+		/* Set header styles */
 		.header {
 			text-align: center;
 			margin-bottom: 20px;
-			color: #007bff;
+			color: #ff5733;
 		}
 
-		.header h1 {
-			margin: 0;
-			font-size: 28px;
-		}
-
+		/* Set content styles */
 		.content {
 			margin-bottom: 20px;
 		}
 
-		.content p {
-			margin: 10px 0;
-			color: #555;
-		}
-
+		/* Set button styles */
 		.button {
 			display: inline-block;
-			padding: 12px 25px;
-			background-color: #007bff;
+			padding: 10px 20px;
+			background-color: #3498db;
 			color: #fff;
 			text-decoration: none;
-			border-radius: 8px;
-			font-weight: bold;
-			transition: background-color 0.3s, transform 0.2s;
-			box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+			border-radius: 5px;
+			transition: background-color 0.3s;
 		}
 
 		.button:hover {
-			background-color: #0056b3;
-			transform: translateY(-2px);
-			box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+			background-color: #2980b9;
 		}
 
+		/* Set footer styles */
+		.footer {
+			text-align: center;
+			font-size: 14px;
+			color: #888;
+		}
+
+		/* Set paragraph styles */
+		p {
+			color: #666;
+			margin-bottom: 10px;
+		}
+
+		/* Set heading styles */
+		h1 {
+			color: #333;
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		/* Table styles */
 		table {
 			width: 100%;
 			border-collapse: collapse;
-			margin-top: 20px;
-			font-size: 14px;
+			margin-bottom: 20px;
 		}
 
-		table th, table td {
+		table th,
+		table td {
 			border: 1px solid #ddd;
-			padding: 12px;
-			text-align: left;
+			padding: 8px;
 		}
 
 		table th {
-			background-color: #f7f7f7;
+			background-color: #f2f2f2;
 			font-weight: bold;
-			text-transform: uppercase;
-			color: #555;
 		}
 
 		table tbody tr:nth-child(even) {
 			background-color: #f9f9f9;
 		}
 
-		.table-summary {
-			margin-top: 20px;
-			padding: 10px;
-			background-color: #f1f1f1;
-			border-radius: 8px;
-			font-size: 15px;
+		table tbody tr:hover {
+			background-color: #f2f2f2;
 		}
 
-		.footer {
-			text-align: center;
-			font-size: 14px;
-			color: #888;
-			margin-top: 20px;
+		table th,
+		table td {
+			overflow: hidden;
+			/* hoặc overflow: ellipsis; */
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
-
-		.footer p {
-			margin: 5px 0;
-		}
-		body {
-			background: linear-gradient(120deg, #f8f9fa, #e3f2fd);
-			background-size: 200% 200%;
-			animation: gradientMove 5s ease infinite;
-		}
-
-		@keyframes gradientMove {
-			0% { background-position: 0% 50%; }
-			50% { background-position: 100% 50%; }
-			100% { background-position: 0% 50%; }
-		}
-		.table-summary strong {
-			animation: pulse 1.5s infinite;
-		}
-
-		@keyframes pulse {
-			0% { transform: scale(1); opacity: 1; }
-			50% { transform: scale(1.05); opacity: 0.8; }
-			100% { transform: scale(1); opacity: 1; }
-		}
-
 	</style>
 </head>
 
 <body>
-<div class="container">
-	<div class="header">
-		<h1>Xác nhận đơn hàng</h1>
-	</div>
-	<div class="content">
-		<p>Xin chào <span th:text="${name}"></span>,</p>
-		<p>Chúng tôi đã nhận được đơn hàng của bạn và cần xác nhận thanh toán.</p>
-		<p>Thông tin đơn hàng của bạn:</p>
-
-		<p><strong>Số điện thoại:</strong> <span th:text="${NumberPhone}"></span></p>
-		<p><strong>Địa chỉ giao hàng:</strong> <span th:text="${OrderAddress}"></span></p>
-		<p><strong>Yêu cầu đặc biệt:</strong> <span th:text="${specialRequest}">Không có</span></p>
-
-		<table>
-			<thead>
-			<tr>
-				<th>Sản phẩm</th>
-				<th>Giá</th>
-				<th>Số lượng</th>
-				<th>Kích thước</th>
-				<th>Tổng giá</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr th:each="item : ${listCart}">
-				<td th:text="${item.product.name}">Tên sản phẩm</td>
-				<td th:text="${item.product.price}">0</td>
-				<td th:text="${item.count}">0</td>
-				<td th:text="${item.size}">Kích thước</td>
-				<td th:text="${item.formattedTotal}">0</td>
-			</tr>
-			</tbody>
-		</table>
-
-		<div class="table-summary">
-			<p><strong>Tổng giá trị đơn hàng:</strong> <span th:text="${total}"></span> đồng</p>
-			<p>
-				<strong>Mã thanh toán:</strong> <span th:text="${code}"></span><br>
-				Vui lòng sử dụng mã này khi thực hiện thanh toán.
-			</p>
+	<div class="container">
+		<div class="header">
+			<h1>Xác nhận thanh toán</h1>
 		</div>
+		<div class="content">
+			<p>Xin chào, <span th:text="${name}"></span>!</p>
+			<p>Chúng tôi đã nhận được đơn đặt tour của bạn và cần xác nhận thanh toán</p>
+			<p>Thông tin đơn đặt tour:</p>
 
-		<p>Vui lòng xác nhận thanh toán bằng cách nhấn nút dưới đây:</p>
-		<a class="button" th:href="@{'http://localhost:5173/payment/' + ${code}}">Xác nhận thanh toán</a>
-	</div>
-	<div class="footer">
-		<p>Đây là email tự động, vui lòng không trả lời.</p>
-		<p>HỆ THỐNG BÁN HÀNG - TÌNH</p>
-	</div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script>
-	// Hiệu ứng hoa giấy khi mở email
-	window.onload = () => {
-		confetti({
-			particleCount: 150,
-			spread: 70,
-			origin: { y: 0.6 }
-		});
-	};
+			<table>
+				<thead>
+					<tr>
+						<th class="shoping__product">Tour</th>
+						<th>Giá</th>
+						<th>số lượng</th>
+						<th>dịch vụ</th>
+						<th>tổng giá</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="order, orderStat : ${listCart}">
+						<td th:text="${order.name}"></td>
+						<td th:text="${order.price}"></td>
+						<td th:text="${order.quantity}"></td>
+						<td>
+							<div th:if="${order.services}">
+								<table>
+									<thead>
+										<tr>
+											<th>STT</th>
+											<th>Tên Dịch Vụ</th>
+											<th>Giá</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="service, serviceStat : ${order.services}">
+											<td th:text="${serviceStat.index + 1}"></td>
+											<td th:text="${service.name}"></td>
+											<td th:text="${service.price}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<p th:unless="${order.services}">Không có dịch vụ đi kèm</p>
+						</td>
+						<td th:text="${order.subTotal}"></td>
+					</tr>
+				</tbody>
+			</table>
 
-	// Hiệu ứng hoa giấy khi click nút "Xác nhận thanh toán"
-	function celebrate() {
-		confetti({
-			particleCount: 200,
-			spread: 90,
-			origin: { y: 0.6 },
-			colors: ['#ff0', '#0f0', '#00f', '#f0f', '#0ff']
-		});
-		// Hiển thị thông báo chúc mừng
-		document.getElementById('congratsMessage').style.display = 'block';
-	}
-</script>
+			<h5>phiếu của giỏ hàng</h5>
+			<ul>
+				<li>
+					Tổng giá phiếu <span th:text="${total}"></span> đồng
+				</li>
+				<li>
+					Mã code thanh toán của bạn là, hãy ghi nội dung thanh toán kèm với mã này: <span th:text="${code}"></span>
+				</li>
+			</ul>
+
+			<p>Vui lòng xác nhận thanh toán bằng cách nhấn nút dưới đây:</p>
+			<a class="button" th:href="@{'http://localhost:4200/#/payment/'+ ${code}}">Xác nhận thanh toán</a>
+		</div>
+		<div class="footer">
+			<p>Đây là email tự động, vui lòng không trả lời.</p>
+			<p>QUẢN LÝ TOUR DU LỊCH BY Tình</p>
+		</div>
+	</div>
 </body>
 
 </html>

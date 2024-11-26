@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +48,9 @@ public class Order {
     @Column(name = "notes")
     private String notes = "";
 
+    @Column(name = "payment_url")
+    private String paymentUrl;
+
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt = new Date();
@@ -57,11 +60,8 @@ public class Order {
     private Date expiresAt;
 
     @ManyToMany
-    @JoinColumn(name = "Product_id")
+    @JoinColumn(name = "tour_id")
     private List<Product> product;
-
-    @Column(name = "verification_code", length = 64)
-    private String verificationCode;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

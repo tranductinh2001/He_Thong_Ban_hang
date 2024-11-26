@@ -33,22 +33,6 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ModelMapper modelMapper;
 
-
-    public Cart getCartByUser(Long userId) {
-        // Tìm người dùng theo userId
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Lấy Cart từ User
-        Cart cart = user.getCart();
-
-        if (cart == null) {
-            throw new RuntimeException("Cart not found for user with id " + userId);
-        }
-
-        return cart;
-    }
-
     @Override
     public Optional<CartDTO> getCartDtoById(Long id) {
         Cart cart = cartRepository.findById(id)

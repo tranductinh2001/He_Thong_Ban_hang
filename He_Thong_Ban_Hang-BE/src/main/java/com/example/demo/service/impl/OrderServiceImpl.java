@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Order;
-import com.example.demo.entity.User;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.service.OrderService;
@@ -31,13 +30,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Order order) {
         return orderRepository.save(order);
-    }
-
-
-    @Override
-    public Order getOrderByVerificationCode(String code) {
-        // TODO Auto-generated method stub
-        return orderRepository.getOrderByVerificationCode(code);
     }
 
     @Override
