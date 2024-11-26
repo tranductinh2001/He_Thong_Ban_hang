@@ -2,7 +2,7 @@ package com.example.demo.service.impl;
 
 import java.util.*;
 import java.text.DecimalFormat;
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 import com.example.demo.DTO.*;
 import com.example.demo.entity.*;

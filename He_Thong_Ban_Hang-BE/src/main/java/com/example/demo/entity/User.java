@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
