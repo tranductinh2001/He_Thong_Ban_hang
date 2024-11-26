@@ -8,6 +8,7 @@ import Select from "react-select";
 import { Input } from "antd";
 import { register } from "../redux/slices/authSlice";
 import { useRef } from "react";
+import { setCreatedAccount } from "../redux/slices/authSlice";
 
 export default function RegisterPage() {
   const isLoading = useSelector((state) => state.auth.isLoading);
@@ -44,6 +45,14 @@ export default function RegisterPage() {
     username: "",
   });
 
+  useEffect(() => {
+    if (success == true) {
+      navigate("/login");
+      dispatch(setCreatedAccount())
+    }
+  }, [success]);
+
+
   const containerRef = useRef(null);
 
   const handleFocus = (e) => {
@@ -76,12 +85,6 @@ export default function RegisterPage() {
   };
 
   useEffect(() => {
-    if (success == true) {
-      navigate("/login");
-    }
-  }, [success]);
-
-  useEffect(() => {
     setPayload((prevState) => ({
       ...prevState,
       address:
@@ -102,7 +105,7 @@ export default function RegisterPage() {
     const { confirmPassword, ...payloadWithoutConfirmPassword } = {
       ...payload,
     };
-    console.log("form ", payloadWithoutConfirmPassword);
+    // console.log("form ", payloadWithoutConfirmPassword);
     dispatch(register(payloadWithoutConfirmPassword));
   };
 

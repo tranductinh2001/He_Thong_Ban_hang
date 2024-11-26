@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import placeholder from "../../assets/playholder.png";
 import useSessionStorage from "../../custom hooks/useSessionStorage";
-import useRedirectToLogin from "../../custom hooks/useRedirectToLogin";
 //thuộc tính displayQuantity = true : hiển thị số lượng tồn kho của sản phẩm
 
 const ProductCard = React.memo(function ProductCard({
