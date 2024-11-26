@@ -1,0 +1,95 @@
+Chương 1. CƠ SỞ LÝ THUYẾT
+1.1. Tổng quan về hệ thống bán hàng trực tuyến
+1.1.1. Khái niệm hệ thống bán hàng trực tuyến
+1.1.2. Các mô hình triển khai phổ biến trong thương mại điện tử
+1.1.3. Lợi ích của hệ thống bán hàng trực tuyến
+
+1.2. Công nghệ trí tuệ nhân tạo (AI) và ứng dụng trong phòng thử đồ ảo
+1.2.1. Tổng quan về AI và xử lý hình ảnh
+1.2.2. Nguyên lý hoạt động của công nghệ phòng thử đồ ảo
+1.2.3. Lợi ích của phòng thử đồ ảo đối với ngành thời trang
+
+1.3. Voice Navigation trong thương mại điện tử
+1.3.1. Tổng quan về điều hướng bằng giọng nói
+1.3.2. Lợi ích của Voice Navigation trong trải nghiệm người dùng
+1.3.3. Các công cụ hỗ trợ phát triển Voice Navigation
+
+1.4. Tích hợp thanh toán trực tuyến qua ví MoMo
+1.4.1. Giới thiệu ví điện tử MoMo
+1.4.2. Quy trình tích hợp API thanh toán của MoMo
+1.4.3. Các vấn đề bảo mật khi sử dụng ví điện tử
+
+1.5. Công nghệ sử dụng trong hệ thống
+1.5.1. Spring Boot và kiến trúc microservices
+1.5.2. ReactJS và xây dựng giao diện người dùng
+1.5.3. MySQL và quản lý cơ sở dữ liệu
+
+1.6. Kết luận
+Tóm tắt nội dung chương, khẳng định vai trò của cơ sở lý thuyết trong việc xây dựng hệ thống bán hàng trực tuyến tích hợp các công nghệ tiên tiến.
+
+Chương 2. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
+2.1. Mô tả bài toán
+2.1.1. Yêu cầu và mục tiêu của hệ thống
+2.1.2. Vấn đề cần giải quyết trong lĩnh vực thương mại điện tử
+
+2.2. Mô hình hoạt động chung của hệ thống
+2.2.1. Mô tả tổng quan
+2.2.2. Quy trình hoạt động chính của hệ thống
+
+2.3. Tích hợp phòng thử đồ ảo vào hệ thống bán hàng
+2.3.1. Sơ đồ hoạt động của tính năng phòng thử đồ
+2.3.2. Quy trình xử lý ảnh bằng AI
+
+2.4. Phân tích và thiết kế hệ thống
+2.4.1. Xác định các tác nhân của hệ thống
+2.4.2. Xác định các ca sử dụng của hệ thống
+2.4.3. Các thực thể chính trong hệ thống
+2.4.4. Kiến trúc phân tầng
+2.4.5. Biểu đồ triển khai
+
+2.5. Phân tích và thiết kế cơ sở dữ liệu
+2.5.1. Mô hình ERD
+2.5.2. Thiết kế các bảng dữ liệu chính
+
+2.6. Thiết kế giao diện người dùng
+2.6.1. Giao diện ứng dụng web
+2.6.2. Giao diện phòng thử đồ ảo
+
+2.7. Kết luận
+Tóm tắt nội dung chương, nhấn mạnh sự cần thiết của thiết kế hệ thống bài bản trước khi triển khai.
+
+Chương 3. XÂY DỰNG VÀ TRIỂN KHAI HỆ THỐNG
+3.1. Giới hạn các chức năng của hệ thống
+3.1.1. Phạm vi các tính năng được triển khai
+3.1.2. Các chức năng nâng cao trong tương lai
+
+3.2. Lựa chọn công nghệ cài đặt
+3.2.1. Backend với Spring Boot
+3.2.2. Frontend với ReactJS
+3.2.3. Quản lý dữ liệu với MySQL
+
+3.3. Xây dựng ứng dụng web
+3.3.1. Chức năng quản lý sản phẩm
+3.3.2. Chức năng giỏ hàng
+3.3.3. Tích hợp thanh toán qua ví MoMo
+
+3.4. Phát triển tính năng phòng thử đồ ảo
+3.4.1. Quy trình xử lý ảnh người dùng
+3.4.2. Mô hình AI tạo hình ảnh sản phẩm trực quan
+
+3.5. Điều hướng bằng giọng nói
+3.5.1. Tích hợp API Voice Navigation
+3.5.2. Các kịch bản sử dụng giọng nói phổ biến
+
+3.6. Triển khai và kiểm thử hệ thống
+3.6.1. Môi trường triển khai
+3.6.2. Kiểm thử hệ thống và ghi nhận lỗi
+
+3.7. Kết luận
+Tóm tắt chương, đánh giá hiệu quả của hệ thống đã xây dựng.
+
+KẾT LUẬN VÀ KIẾN NGHỊ
+Tóm tắt các nội dung chính của đề tài, nêu bật những đóng góp và các kiến nghị để phát triển hệ thống trong tương lai.
+
+TÀI LIỆU THAM KHẢO
+Liệt kê các tài liệu, nghiên cứu đã tham khảo để thực hiện đề tài.

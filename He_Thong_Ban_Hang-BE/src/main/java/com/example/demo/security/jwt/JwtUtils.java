@@ -3,6 +3,7 @@ package com.example.demo.security.jwt;
 import java.util.Date;
 
 
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -13,13 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
 import com.example.demo.security.service.UserDetailsImpl;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class JwtUtils {
@@ -72,7 +66,16 @@ public class JwtUtils {
     public String getUserNameFromJwtToken(String token) {
       return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
-  
+
+    public String getSubjectFromToken(String token) {
+        return Jwts.parserBuilder()  // Sử dụng parserBuilder thay cho parser
+                .setSigningKey(jwtSecret.getBytes())  // Cung cấp khóa bí mật
+                .build()  // Xây dựng JwtParser
+                .parseClaimsJws(token)  // Phân tích JWT
+                .getBody()  // Lấy thông tin body
+                .getSubject();  // Lấy subject từ claims
+    }
+
     public boolean validateJwtToken(String authToken) {
       try {
         Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
