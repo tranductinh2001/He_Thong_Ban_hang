@@ -1,8 +1,10 @@
 package com.example.demo.security.jwt;
 
+import java.security.Key;
 import java.util.Date;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;  // Thêm import này
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -21,14 +23,14 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${jwtSecret}")
-    private String jwtSecret; // Mã hóa bí mật, có thể thay bằng một giá trị mạnh hơn nếu cần
+    private String jwtSecret;
+
+//    @Value("${jwtExpirationMs}")
+//    private int jwtExpirationMs;
 
     @Value("${jwtCookieName}")
     private String jwtCookie;
 
-    private int jwtExpirationMs = 24 * 60 * 60 * 1000; // 1 ngày
-
-    // Lấy JWT từ cookie
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
         if (cookie != null) {
@@ -38,7 +40,15 @@ public class JwtUtils {
         }
     }
 
-    // Tạo JWT từ UserDetailsImpl
+//    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
+//      String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+//      ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
+//      return cookie;
+//    }
+
+    // Thiết lập thời gian hết hạn của token là 1 ngày (24 giờ)
+    private int jwtExpirationMs = 24 * 60 * 60 * 1000; // 1 ngày
+
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
         long jwtExpirationSeconds = jwtExpirationMs / 1000;
@@ -50,29 +60,19 @@ public class JwtUtils {
         return cookie;
     }
 
-    // Xóa JWT từ cookie
+
     public ResponseCookie getCleanJwtCookie() {
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
         return cookie;
     }
 
-    // Lấy tên người dùng từ JWT
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder()  // Sử dụng parserBuilder thay cho parser
-                .setSigningKey(jwtSecret.getBytes())  // Cung cấp khóa bí mật
-                .build()  // Xây dựng JwtParser
-                .parseClaimsJws(token)  // Phân tích JWT
-                .getBody()  // Lấy thông tin body
-                .getSubject();  // Lấy subject từ claims
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Xác thực token JWT
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parserBuilder()  // Sử dụng parserBuilder thay cho parser
-                    .setSigningKey(jwtSecret.getBytes())  // Cung cấp khóa bí mật
-                    .build()  // Xây dựng JwtParser
-                    .parseClaimsJws(authToken);  // Phân tích JWT
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
@@ -85,19 +85,23 @@ public class JwtUtils {
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
+
         return false;
     }
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
 
-    // Tạo JWT từ username
     public String generateTokenFromUsername(String username) {
-        // Tạo khóa bí mật an toàn cho HS512
-        SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);  // Tạo khóa mạnh cho HS512
+//        return Jwts.builder()
+//                .setSubject(username)
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+//                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+//                .compact();
 
-        return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(secretKey)  // Sử dụng khóa bí mật an toàn cho HS512
-                .compact();
+        return Jwts.builder().setSubject(username).setIssuedAt(new Date()).signWith(getSignInKey(),SignatureAlgorithm.HS256).compact();
+
     }
 }

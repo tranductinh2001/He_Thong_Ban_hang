@@ -7,6 +7,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async (payload, { rejectWithValue }) => {
     try {
+      console.log("payload   ", payload);
       const response = await authRequests.loginService(payload);
       const { jwt, user } = response.data;
       localStorage.setItem("jwt", jwt?.value);
@@ -109,6 +110,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     });
     builder.addCase(login.rejected, (state, action) => {
+      console.log(" auth rejected ",action.payload)
       state.isLoading = false;
       state.errorMessages = action.payload?.message;
     });

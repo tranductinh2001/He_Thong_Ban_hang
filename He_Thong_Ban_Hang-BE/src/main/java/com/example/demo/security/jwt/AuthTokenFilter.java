@@ -37,7 +37,7 @@ public class AuthTokenFilter extends OncePerRequestFilter  {
             throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            System.out.print("jwt từ reactjs  " + jwt + "   ");
+            System.out.print("jwt từ angular  " + jwt + "   ");
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
 
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
@@ -68,7 +68,7 @@ public class AuthTokenFilter extends OncePerRequestFilter  {
 //      String jwt = jwtUtils.getJwtFromCookies(request);
 //      return jwt;
 //    }
-//    
+//
     private String parseJwt(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")){
@@ -77,6 +77,5 @@ public class AuthTokenFilter extends OncePerRequestFilter  {
         }
         return authHeader;
     }
-
 
 }
