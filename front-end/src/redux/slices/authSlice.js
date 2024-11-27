@@ -90,7 +90,11 @@ const authSlice = createSlice({
       state.errorMessages = null;
       localStorage.removeItem("jwt");
       state.success = false;
+      state.createdAccountSuccess = false;
     },
+    setCreatedAccount: (state) => {
+      state.createdAccountSuccess = false;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(login.pending, (state) => {
@@ -159,6 +163,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setCreatedAccount } = authSlice.actions;
 
 export default authSlice.reducer;
