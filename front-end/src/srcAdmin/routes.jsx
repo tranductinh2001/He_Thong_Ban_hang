@@ -2,7 +2,12 @@ import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
-//product
+//management
+const UserManager = React.lazy(() => import('./views/UserManager/UserManager'))
+const ColorManager = React.lazy(() => import('./views/ColorManager/ColorManager'))
+const BrandManager = React.lazy(() => import('./views/BrandManager/BrandManager'))
+const ServiceManager = React.lazy(() => import('./views/ServiceManager/ServiceManager'))
+const CategoryManager = React.lazy(() => import('./views/CategoryManager/CategoryManager'))
 const ProductManager = React.lazy(() => import('./views/ProductManager/ProductManager'))
 
 // Base
@@ -32,6 +37,11 @@ const routes = [
 
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
 
+  { path: '/user', name: 'User', element: UserManager },
+  { path: '/color', name: 'Color', element: ColorManager },
+  { path: '/brand', name: 'Brand', element: BrandManager },
+  { path: '/category', name: 'Category', element: CategoryManager },
+  { path: '/service', name: 'Service', element: ServiceManager },
   { path: '/product', name: 'Product', element: ProductManager },
 
   { path: '/base/tabs', name: 'Tabs', element: Tabs },

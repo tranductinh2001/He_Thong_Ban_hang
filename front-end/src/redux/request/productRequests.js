@@ -77,7 +77,31 @@ const productRequests = {
       console.error("Error fetching product detail data:", error);
       throw error;
     }
-  }
+  },
+  create: async (body) => {
+    try {
+      const response = await axiosInstance.post(API_ENDPOINTS.CREATE_PRODUCT, body);
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  update: async (productId, body) => {
+    try {
+      const response = await axiosInstance.put(`${API_ENDPOINTS.UPDATE_PRODUCT}${productId}`, body);
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  delete: async (productId) => {
+    try {
+      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_PRODUCT}?id=${productId}`);
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
 };
 
 export default productRequests;

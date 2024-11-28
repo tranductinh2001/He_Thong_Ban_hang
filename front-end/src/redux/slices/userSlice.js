@@ -1,6 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { request } from "../request";
 
+import userRequests from "../request/userRequests.js";
+
+export const fetchUserList = createAsyncThunk(
+    "user/fetchUserList",
+    async (_, { rejectWithValue }) => {
+      try {
+        const response = await userRequests.getAll();
+        return response;
+      } catch (error) {
+        return rejectWithValue(
+          error.response ? error.response.data : error.message
+        );
+      }
+    }
+  );
+
 export const fetchUserDetail = createAsyncThunk(
   "user/fetchUserDetail",
   async (_, { rejectWithValue }) => {
@@ -45,6 +61,7 @@ export const fetchUpdateRelationUser = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    userList: [],
     user: null,
     loading: false,
     error: null,
@@ -61,7 +78,6 @@ const userSlice = createSlice({
       .addCase(fetchUserDetail.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        // state.success = true;
       })
       .addCase(fetchUserDetail.rejected, (state, action) => {
         state.loading = false;
@@ -82,11 +98,20 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.success = false;
+      })
+      .addCase(fetchUserList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userList = action.payload;
+      })
+      .addCase(fetchUserList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });
 
 export default userSlice.reducer;
-
-// Export các actions nếu cần (optional)
-export const {} = userSlice.actions;

@@ -10,12 +10,48 @@ const API_ENDPOINTS = {
     `product/sort?page=${currentPage}&pageSize=${pageSize}&orderBy=${sort}`,
   LIST_FILLTER: (title, sort, currentPage, pageSize) =>
     `/product/filter?page=${currentPage}&pageSize=${pageSize}&${title}=${sort}`,
-  LIST_SALE: (currentPage, pageSize)  => `/product/sale?page=${currentPage}&pageSize=${pageSize}`,
+  LIST_SALE: (currentPage, pageSize) =>
+    `/product/sale?page=${currentPage}&pageSize=${pageSize}`,
   PRODUCT_DETAIL: (productId) => `/product/${productId}`,
+  CREATE_PRODUCT: `/product/create`,
+  UPDATE_PRODUCT: `/product/update/`,
+  DELETE_PRODUCT: `/product/delete`,
+
+  //image
+  UPLOAD_IMAGE: `/image/upload-file`,
+
+  //service
+  GET_SERVICE: `/service`,
+  CREATE_SERVICE: `/service/create`,
+  UPDATE_SERVICE: `/service/update/`,
+  DELETE_SERVICE: `/service/delete`,
+
+  //brand
+  GET_BRAND: `/brand`,
+  CREATE_BRAND: `/brand/create`,
+  UPDATE_BRAND: `/brand/update/`,
+  DELETE_BRAND: `/brand/delete`,
+
+  //category
+  GET_CATEGORY: `/category`,
+  CREATE_CATEGORY: `/category/create`,
+  UPDATE_CATEGORY: `/category/update/`,
+  DELETE_CATEGORY: `/category/delete`,
+
+  //color
+  GET_COLOR: `/color`,
+  CREATE_COLOR: `/color/create`,
+  UPDATE_COLOR: `/color/update/`,
+  DELETE_COLOR: `/color/delete`,
+
+  //size
+  GET_SIZE: `/size`,
 
   //user
+  GET_USER: `/user`,
   USER_DETAIL: `/user/profile`,
   UPDATE_USER: `/user/update`,
+  DELETE_USER: `/user/delete`,
 
   //authentication
   LOGIN: `auth/login`,

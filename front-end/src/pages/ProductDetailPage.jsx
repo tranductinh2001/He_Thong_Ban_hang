@@ -110,11 +110,7 @@ const ProductDetailPage = () => {
   );
   const saleProducts = useSelector((state) => state.products?.saleProductList);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
-  const currentPageListSale = useSelector(
-    (state) => state.products?.currentPage
-  );
 
-  const totalPageListSale = useSelector((state) => state.products?.totalPage);
   const loading = useSelector((state) => state.products?.loading);
   const dataSource = product?.sizeList?.map((item, index) => ({
     ...item,
@@ -126,6 +122,13 @@ const ProductDetailPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [cart, setCart] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(
+    product?.images[0]?.url ?? "/src/assets/default_image.png"
+  );
+
+  const handleImageClick = (url) => {
+    setSelectedImage(url);
+  };
 
   const error = () => {
     messageApi.open({
@@ -268,28 +271,41 @@ const ProductDetailPage = () => {
         <>
           <div className="flex flex-col justify-between sm:flex-row">
             <motion.div
-              className="flex flex-row-reverse justify-between flex-1 w-full h-full sm:flex-row sm:justify-center"
+              className="relative flex flex-col items-center flex-1 w-full h-full sm:flex-row sm:justify-center"
               initial={{ opacity: 0, x: -200 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Image
-                rootClassName="w-4/5 h-full"
-                className="hidden rounded-xl sm:block"
-                src={product?.images[0] ?? "/src/assets/default_image.png"}
-                alt={product?.name}
-              />
-              <Image
-                className="rounded-xl sm:hidden"
-                src={product?.images[0]}
-                alt={product?.name}
-              />
+              <div className="relative w-full h-full md:h-[400px] sm:w-3/5 overflow-hidden">
+                <Image
+                  className="object-cover w-full h-full rounded-xl"
+                  src={selectedImage}
+                  alt={product?.name}
+                />
+              </div>
+
+              {product?.images.length > 1 && (
+                <div className="absolute bottom-0 flex sm:flex-col sm:flex-wrap sm:gap-2 sm:left-0 sm:top-auto sm:bottom-2 sm:w-full sm:justify-center">
+                  {product.images.map((image, index) => (
+                    <div key={index} className="w-16 h-16 sm:w-24 sm:h-24">
+                      <Image
+                        className="cursor-pointer rounded-xl"
+                        src={image.url}
+                        alt={`Thumbnail ${index + 1}`}
+                        width={100}
+                        height={100}
+                        onClick={() => handleImageClick(image.url)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 200 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col flex-1 gap-2"
+              className="flex flex-col flex-1 w-full gap-2 mt-24 md:mt-0"
             >
               <span className="text-2xl font-semibold">
                 {product?.name} - {product?.brand?.name.toUpperCase()}

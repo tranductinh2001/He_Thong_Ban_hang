@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CCardBody, CCardHeader, CRow, CButton } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,9 +7,11 @@ import {
 } from "../../../redux/slices/productSlice";
 import { createStyles } from "antd-style";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag, Popconfirm, Modal } from "antd";
+import { Button, Input, Space, Table, Tag, Popconfirm, Modal, message } from "antd";
 import Highlighter from "react-highlight-words";
-import EditProductForm from "../forms/editFormAdmin/editProductForm/editProductForm";
+import ProductForm from "../forms/FormAdmin/ProductForm/ProductForm.jsx";
+
+import productRequests from "../../../redux/request/productRequests.js";
 
 const useStyle = createStyles(({ css, token }) => {
   const { antCls } = token;
@@ -42,6 +44,7 @@ const ProductManager = () => {
     clearFilters();
     setSearchText("");
   };
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -158,7 +161,7 @@ const ProductManager = () => {
     },
 
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
       key: "name",
       fixed: "left",
@@ -167,7 +170,7 @@ const ProductManager = () => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Image",
+      title: "Hình ảnh",
       dataIndex: "images",
       key: "image",
       render: (images) =>
@@ -182,26 +185,26 @@ const ProductManager = () => {
         ),
     },
     {
-      title: "Price",
+      title: "Giá",
       dataIndex: "price",
       key: "price",
       ...getColumnSearchProps("price"),
       render: (price) => `${price.toLocaleString()} VND`,
     },
     {
-      title: "Category",
+      title: "Thể loại",
       dataIndex: ["category", "name"],
       key: "category",
       ...getColumnSearchProps("category"),
     },
     {
-      title: "Brand",
+      title: "Nhãn hàng",
       dataIndex: ["brand", "name"],
       key: "brand",
       ...getColumnSearchProps("brand", "name"),
     },
     {
-      title: "Colors",
+      title: "Màu sắc",
       dataIndex: "colors",
       key: "colors",
       ...getColumnSearchProps("colors"),
@@ -214,7 +217,7 @@ const ProductManager = () => {
       ),
     },
     {
-      title: "Size List",
+      title: "Kích cỡ",
       dataIndex: "sizeList",
       key: "sizeList",
       ...getColumnSearchProps("sizeList"),
@@ -245,7 +248,7 @@ const ProductManager = () => {
       ),
     },
     {
-      title: "Sale Price",
+      title: "Giá sale",
       dataIndex: "salePrice",
       key: "salePrice",
       ...getColumnSearchProps("salePrice"),
@@ -253,7 +256,7 @@ const ProductManager = () => {
         salePrice ? `${salePrice.toLocaleString()} VND` : "N/A",
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       ...getColumnSearchProps("status"),
@@ -264,20 +267,20 @@ const ProductManager = () => {
       ),
     },
     {
-      title: "Description",
+      title: "Mô tả",
       dataIndex: "description",
       key: "description",
       ...getColumnSearchProps("description"),
     },
     {
-      title: "Created At",
+      title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
       ...getColumnSearchProps("createdAt"),
       render: (date) => new Date(date).toLocaleDateString("en-GB"),
     },
     {
-      title: "Updated At",
+      title: "Ngày cập nhật",
       dataIndex: "updatedAt",
       key: "updatedAt",
       ...getColumnSearchProps("updatedAt"),
@@ -285,7 +288,7 @@ const ProductManager = () => {
         date ? new Date(date).toLocaleDateString("en-GB") : "N/A",
     },
     {
-      title: "Actions",
+      title: "Hành động",
       key: "action",
       fixed: "right",
       render: (_, record) => (
@@ -301,8 +304,8 @@ const ProductManager = () => {
             item.isDelete ? (
               <Popconfirm
                 key={index}
-                title="Sure to delete?"
-                onConfirm={() => handleDelete(record.key)}
+                title="Bạn chắc chắn xoá chứ?"
+                onConfirm={() => handleDelete(record.id)}
               >
                 <CButton color={item.color} shape="rounded-pill">
                   {item.label}
@@ -318,7 +321,7 @@ const ProductManager = () => {
                 color={item.color}
                 shape="rounded-pill"
                 key={index}
-                onClick={() => showEditModal(record)}
+                onClick={() => showModal("edit", record)}
               >
                 {item.label}
                 {item.name && (
@@ -340,10 +343,10 @@ const ProductManager = () => {
   const productListByPage = useSelector(
     (state) => state.products.combinedProductList
   );
-  const totalProductItems = useSelector((state) => state.products.totalItems);
+  const totalProductItems = useSelector((state) => state.products.totalProductItems);
+  const pageSize = 15
 
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
 
   useEffect(() => {
     if (Number.isInteger(currentPage) && currentPage >= 1) {
@@ -359,14 +362,19 @@ const ProductManager = () => {
   };
 
   //handle delete
-  const handleDelete = (key) => {};
+  const handleDelete = async (productId) => {
+    await productRequests.delete(productId);
+    message.success("Xoá sản phẩm thành công!");
+  };
 
   //config handle show form edit
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [typeModal, setTypeModal] = useState("");
 
-  const showEditModal = (record) => {
+  const showModal = (type, record) => {
     setSelectedRecord(record); // Lưu thông tin sản phẩm để chỉnh sửa
+    setTypeModal(type);
     setIsModalVisible(true); // Hiển thị modal
   };
 
@@ -388,8 +396,9 @@ const ProductManager = () => {
               float: "right",
               size: 100,
             }}
+            onClick={() => showModal("create", null)}
           >
-            Add a row
+            Thêm sản phẩm
           </Button>
           <Table
             scroll={{
@@ -411,12 +420,14 @@ const ProductManager = () => {
           />
         </div>
         <Modal
-          title="Edit Product"
+          title={
+            typeModal === "edit" ? "Chỉnh sửa sản phẩm" : "Tạo mới sản phẩm"
+          }
           visible={isModalVisible}
           onCancel={handleCancel}
           footer={null} // Nếu không muốn có nút footer
         >
-          <EditProductForm product={selectedRecord} />
+          <ProductForm type={typeModal} product={selectedRecord} />
         </Modal>
       </CCardBody>
     </CRow>

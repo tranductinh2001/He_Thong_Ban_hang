@@ -35,9 +35,9 @@ public class CreateProductRequest {
 
     private Long categoryId;
 
-    private List<Long> images; // Danh sách ID của hình ảnh
+    private List<String> images; // Danh sách ID của hình ảnh
 
-    private List<Long> colors; // Danh sách ID của màu sắc
+    private List<String> colors; // Danh sách ID của màu sắc
 
     private List<SizeRequest> sizes; // Danh sách size và số lượng của sản phẩm
 }

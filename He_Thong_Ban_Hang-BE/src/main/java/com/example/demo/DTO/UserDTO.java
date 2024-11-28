@@ -21,6 +21,7 @@ public class UserDTO {
     private String address;
     private Boolean isDeleted;
     private Date dob;
+    private String avatarUrl;
     private Date createdAt;
     private Date updatedAt;
     private boolean enabled;

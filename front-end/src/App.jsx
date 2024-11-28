@@ -59,7 +59,6 @@ function App() {
     if (isColorModeSet()) {
       return;
     }
-
     setColorMode(storedTheme);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
