@@ -118,13 +118,18 @@ public class RoomController {
             // Chuyển đổi URL cho ảnh nếu cần thiết
             // Chuyển đổi URL cho ảnh nếu cần thiết
 // Chuyển đổi URL cho ảnh nếu cần thiết
-            String faceImageUrl = tryOnHistory.getFaceImage().getUrl().replace("http://localhost:8080/photos", "/src/main/resources/static/photos");
+            String faceImageUrl = tryOnHistory.getFaceImage().getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos");
             List<String> updatedClothesImageUrls = tryOnHistory.getClothesImages().stream()
-                    .map(image -> image.getUrl().replace("http://localhost:8080/photos", "/src/main/resources/static/photos"))
+                    .map(image -> image.getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"))
                     .collect(Collectors.toList());
 
 // Lấy phần tử đầu tiên trong danh sách quần áo (nếu có)
             String updatedClothesImageUrl = updatedClothesImageUrls.isEmpty() ? "" : updatedClothesImageUrls.get(0);
+
+
+            System.out.println("faceImageUrl url   : " + faceImageUrl);
+            System.out.println("updatedClothesImageUrl url   : " + updatedClothesImageUrl);
+
 
 // Tạo prompt cho AI
             String clothingPrompt = "This is a clothing item for virtual try-on.";  // Ví dụ prompt cho quần áo
@@ -132,14 +137,15 @@ public class RoomController {
 
 // Gửi yêu cầu tạo hình ảnh AI với chỉ 1 URL quần áo (phần tử đầu tiên trong danh sách)
             String generatedImage = Arrays.toString(TexelModaService.tryOnClothes(
-                    faceImageUrl, // Truyền đường dẫn ảnh mặt
-                    updatedClothesImageUrl, // Truyền một URL duy nhất từ danh sách
+                    updatedClothesImageUrl, // Truyền đường dẫn ảnh mặt
+                    faceImageUrl, // Truyền một URL duy nhất từ danh sách
                     clothingPrompt,
                     gender, // avatarSex có thể là gender hoặc tham số tương tự
                     avatarPrompt,
                     "someSeed", // Sử dụng một giá trị seed hoặc ID cho AI generation
                     tryOnHistory.getId() // Truyền ID lịch sử thử đồ
             ));
+//            System.out.println("generatedImage url   : " + generatedImage);
 
 
 

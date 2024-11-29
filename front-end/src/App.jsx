@@ -39,7 +39,7 @@ const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 
 function App() {
   //config web socket topic
-  const SendMaiTtopics = ["/topic/gmail/send"];
+  const SendMaiTtopics = ["/topic/gmail/send", "/topic/room/createImage"];
 
   //config admin
   const { isColorModeSet, setColorMode } = useColorModes(

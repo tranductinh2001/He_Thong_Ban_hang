@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,16 +21,22 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class TexelModaServiceImpl implements TexelModaService {
+
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public TexelModaServiceImpl(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+    private static String UPLOAD_DIR  = System.getProperty("user.dir") + "/src/main/resources/static/photos/";
 
     private static String apiKey = "3d0be417acmsh0966b664a86e14dp1278b4jsn5ef298ce2e0d";
 
@@ -62,8 +69,11 @@ public class TexelModaServiceImpl implements TexelModaService {
         multipartRequest.add("avatar_prompt", avatarPrompt);
 
         // Thêm đường dẫn hình ảnh vào multipart request
-        multipartRequest.add("clothing_image_url", clothingImageUrl);  // Sử dụng URL của quần áo
-        multipartRequest.add("avatar_image_url", avatarImageUrl);      // Sử dụng URL của avatar
+        Path clothingImagePath = Paths.get(clothingImageUrl);
+        Path avatarImagePath = Paths.get(avatarImageUrl);
+
+        multipartRequest.add("clothing_image", new FileSystemResource(clothingImagePath));
+        multipartRequest.add("avatar_image", new FileSystemResource(avatarImagePath));
 
         // Thiết lập HttpEntity với các headers và dữ liệu form
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(multipartRequest, headers);
@@ -85,11 +95,6 @@ public class TexelModaServiceImpl implements TexelModaService {
                 if (history.getCreatedImageGenerateAI() == null) {
                     history.setCreatedImageGenerateAI(new ArrayList<>());
                 }
-
-                // Tạo đối tượng Image từ mảng byte và thêm vào danh sách
-//                Image image = new Image(imageBytes);
-//                history.getCreatedImageGenerateAI().add(image);  // Thêm đối tượng Image vào danh sách
-
                 modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
             }
 
@@ -104,27 +109,8 @@ public class TexelModaServiceImpl implements TexelModaService {
 
 
 
-    // Hàm thêm các tham số văn bản vào multipart request
-    private void addTextParamsToRequest(MultiValueMap<String, Object> multipartRequest, String clothingPrompt,
-                                        String avatarSex, String avatarPrompt) {
-        multipartRequest.add("clothing_prompt", clothingPrompt);
-        multipartRequest.add("avatar_sex", avatarSex);
-        multipartRequest.add("avatar_prompt", avatarPrompt);
-        // Nếu có seed, có thể bổ sung vào đây
-//        if (seed != null && !seed.isEmpty()) {
-//            multipartRequest.add("seed", seed);
-//        }
-    }
-
-    // Hàm thêm các tham số hình ảnh vào multipart request
-    private void addImageParamsToRequest(MultiValueMap<String, Object> multipartRequest, String clothingImageUrl, String avatarImageUrl) {
-        multipartRequest.add("clothing_image_url", clothingImageUrl);
-        multipartRequest.add("avatar_image_url", avatarImageUrl);
-    }
-
-
     private void saveGeneratedImageToHistory(Long tryOnHistoryId, byte[] imageBytes) {
-        // Tìm ModelTryOnHistory theo ID
+        // Tìm kiếm `ModelTryOnHistory` theo ID
         Optional<ModelTryOnHistory> tryOnHistoryOptional = modelTryOnHistoryRepository.findById(tryOnHistoryId);
         if (tryOnHistoryOptional.isEmpty()) {
             throw new RuntimeException("ModelTryOnHistory not found with ID: " + tryOnHistoryId);
@@ -132,16 +118,46 @@ public class TexelModaServiceImpl implements TexelModaService {
 
         ModelTryOnHistory tryOnHistory = tryOnHistoryOptional.get();
 
-        // Tạo một đối tượng Image và lưu ảnh vào cơ sở dữ liệu
-        Image image = new Image();
+        try {
+            // Tạo tên file duy nhất để lưu ảnh
+            String uid = UUID.randomUUID().toString();
+            String extension = "png"; // Giả định ảnh được tạo là PNG
+            String filePath = UPLOAD_DIR + uid + "." + extension;
 
-        // Lưu Image vào cơ sở dữ liệu
-        imageRepository.save(image);
+            // Lưu file ảnh dưới dạng byte[] vào server
+            File serverFile = new File(filePath);
+            try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
+                stream.write(imageBytes);
+            }
 
-        // Cập nhật ModelTryOnHistory với ảnh vừa tạo
-        tryOnHistory.getCreatedImageGenerateAI().add(image); // Thêm ảnh vào danh sách ảnh đã tạo
-        modelTryOnHistoryRepository.save(tryOnHistory);
+            // Lưu thông tin ảnh vào database
+            Image img = new Image();
+            img.setName(uid + "." + extension); // Lưu tên file duy nhất
+            img.setSize((long) imageBytes.length); // Kích thước file
+            img.setType(extension); // Định dạng file
+            img.setUrl("http://localhost:8080/photos/" + uid + "." + extension); // URL truy cập ảnh
+
+            Image savedImg = imageRepository.save(img);
+
+            String messageSK = savedImg.getUrl();
+            messagingTemplate.convertAndSend("/topic/room/createImage", messageSK);
+
+            // Kiểm tra và khởi tạo danh sách nếu null
+            if (tryOnHistory.getCreatedImageGenerateAI() == null) {
+                tryOnHistory.setCreatedImageGenerateAI(new ArrayList<>());
+            }
+
+            // Liên kết ảnh với `ModelTryOnHistory`
+            tryOnHistory.getCreatedImageGenerateAI().add(savedImg);
+            modelTryOnHistoryRepository.save(tryOnHistory); // Lưu cập nhật
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi lưu ảnh vào lịch sử", e);
+        }
     }
+
+
 
 
 

@@ -1,19 +1,30 @@
 import { Drawer, Button } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import UserInfoForm from "../UserInfoForm";
 import imagBackgroundRoom from "../../../assets/room/room.jpg";
-import { Carousel } from "antd";
+import { Carousel, Image } from "antd";
+import { useWebSocket } from "../../../WebSocket/WebSocketContext";
 
 export default function ClothingRoom({ imageList }) {
+  const { receivedData } = useWebSocket();
+  const [MessageSocket, setMessageSocket] = useState("");
+  console.log("MessageSocket   ", MessageSocket);
+  useEffect(() => {
+    if (receivedData) {
+      // Tách dữ liệu từ đối tượng
+      const messageKey = Object.keys(receivedData)[0]; // Lấy key đầu tiên
+      const messageValue = receivedData[messageKey]; // Lấy giá trị tương ứng
+      setMessageSocket(messageValue);
+    }
+  }, [receivedData]);
+
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("right");
   const [selectedImages, setSelectedImages] = useState([]);
 
   const handleImageSelect = (image) => {
-    if (
-      selectedImages.some((selectedImage) => selectedImage.id === image.id)
-    ) {
+    if (selectedImages.some((selectedImage) => selectedImage.id === image.id)) {
       // Nếu ảnh đã được chọn, bỏ chọn
       setSelectedImages((prevSelectedImages) =>
         prevSelectedImages.filter(
@@ -93,7 +104,20 @@ export default function ClothingRoom({ imageList }) {
           </div>
 
           <div className="flex flex-col item-center justify-center ml-12">
-            <p className="text-4xl">center</p>
+            {/* {product.images.map((image, index) => ( */}
+            {/* <div className=""> */}
+              <Image
+                className="w-80 h-100" // Thay đổi kích thước ảnh
+                src={
+                  "http://localhost:8080/photos/44a33264-af88-4b90-9b19-83806da9ad78.png"
+                }
+                alt="Ảnh thử đồ"
+                width={100} // Bạn vẫn có thể giữ kích thước width và height trong thẻ Image nếu muốn
+                height={100}
+              />
+            {/* </div> */}
+
+            {/* } */}
             {/* <Carousel arrows infinite={false}>
               <div>
                 <h3 style={contentStyle}>1</h3>
