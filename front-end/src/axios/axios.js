@@ -4,13 +4,17 @@ import axios from "axios";
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:8080/api',
   timeout: 3000,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
+    if (config.data instanceof FormData) {
+      // Nếu là FormData, dùng "multipart/form-data"
+      config.headers["Content-Type"] = "multipart/form-data";
+    } else {
+      // Mặc định là JSON
+      config.headers["Content-Type"] = "application/json";
+    }
     const token = localStorage.getItem("jwt");
     config.headers["Authorization"] = token
       ? `Bearer ${token}`

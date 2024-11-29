@@ -43,6 +43,11 @@ const API_ENDPOINTS = {
   CREATE_CHECKOUT_SESSION: `/payment/create-checkout-session`,
   CHECKOUT_SESSION: (session_id) =>
     `/payment/checkout-session?sessionId=${session_id}`,
+  
+  //room
+  CREATE_MODEL_IN_ROOM: `/room/create-model`,
 };
+
+
 
 export default API_ENDPOINTS;

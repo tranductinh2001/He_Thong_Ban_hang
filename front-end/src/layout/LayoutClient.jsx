@@ -10,6 +10,7 @@ import ResponsiveHeader from "../components/ResponsiveHeader";
 import ChatBox from "../components/ChatBox";
 import FloatMenuButton from "../components/FloatMenuButton";
 
+
 export default function LayoutClient() {
   return (
     <div className="flex flex-col w-full h-full scroll-smooth">

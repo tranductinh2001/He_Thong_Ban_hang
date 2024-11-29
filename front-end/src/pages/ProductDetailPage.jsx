@@ -22,6 +22,8 @@ import {
   fetchSaleProductList,
 } from "../redux/slices/productSlice";
 
+import ClothingRoom from "../components/Room/ClothingRoom";
+
 const carouselResponsiveSetting = [
   {
     breakpoint: 640,
@@ -126,6 +128,29 @@ const ProductDetailPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [cart, setCart] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const defaultImageList = [
+    {
+      uid: "-1", // Một id duy nhất cho mỗi ảnh
+      name: "set-do-nu-dep.jpg", // Tên của ảnh (có thể sử dụng tên file)
+      status: "done", // Trạng thái của ảnh (done, uploading, error)
+      url: "https://hoyang.vn/wp-content/uploads/2022/01/set-do-nu-dep.jpg", // Đường dẫn URL của ảnh
+    },
+    {
+      uid: "-2",
+      name: "shop-t7win-520262.jpg",
+      status: "done",
+      url: "https://toplist.vn/images/800px/shop-t7win-520262.jpg",
+    },
+    {
+      uid: "-3",
+      name: "OIP.p2lVh-nwtqqEaAIWbT3m2QHaJU.jpg",
+      status: "done",
+      url: "https://th.bing.com/th/id/OIP.p2lVh-nwtqqEaAIWbT3m2QHaJU?rs=1&pid=ImgDetMain",
+    },
+  ];
+  
+
 
   const error = () => {
     messageApi.open({
@@ -370,6 +395,9 @@ const ProductDetailPage = () => {
               <span className="text-sm font-medium">
                 Quý khách vui lòng để lại số điện thoại để được tư vấn sỉ
               </span>
+              <ClothingRoom
+                imageList={defaultImageList}
+              />
               <div className="flex flex-row items-center gap-1">
                 <Input
                   className="border-2 border-blue-500"
