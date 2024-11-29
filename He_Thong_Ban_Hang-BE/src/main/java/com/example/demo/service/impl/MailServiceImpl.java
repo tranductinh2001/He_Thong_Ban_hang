@@ -52,6 +52,7 @@ public class MailServiceImpl implements MailService {
         try {
             // Gửi email
             mailSender.send(message);
+
             String messageSK1 = "Email sent successfully to: " + dataMail.getTo();
             System.out.println(messageSK1);
             messagingTemplate.convertAndSend("/topic/gmail/send", messageSK1);
@@ -64,4 +65,6 @@ public class MailServiceImpl implements MailService {
         }
 
     }
+
+
 }

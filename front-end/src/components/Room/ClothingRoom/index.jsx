@@ -12,12 +12,12 @@ export default function ClothingRoom({ imageList }) {
 
   const handleImageSelect = (image) => {
     if (
-      selectedImages.some((selectedImage) => selectedImage.uid === image.uid)
+      selectedImages.some((selectedImage) => selectedImage.id === image.id)
     ) {
       // Nếu ảnh đã được chọn, bỏ chọn
       setSelectedImages((prevSelectedImages) =>
         prevSelectedImages.filter(
-          (selectedImage) => selectedImage.uid !== image.uid
+          (selectedImage) => selectedImage.id !== image.id
         )
       );
     } else {
@@ -70,12 +70,12 @@ export default function ClothingRoom({ imageList }) {
       >
         <div className="flex item-center justify-between my-10">
           <div className="flex flex-col flex-wrap hover:cursor-pointer rounded-lg">
-            {imageList.map((image) => (
+            {imageList?.map((image) => (
               <div
-                key={image.uid}
+                key={image.id}
                 className={`flex flex-col items-center p-2 cursor-pointer rounded-lg ${
                   selectedImages.some(
-                    (selectedImage) => selectedImage.uid === image.uid
+                    (selectedImage) => selectedImage.id === image.id
                   )
                     ? "border-2 border-blue-500"
                     : ""

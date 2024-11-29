@@ -110,6 +110,7 @@ const ProductDetailPage = () => {
   const product = useSelector(
     (state) => state.products?.productDetails?.product
   );
+  console.log("p=iamge produc  ", product?.images);
   const saleProducts = useSelector((state) => state.products?.saleProductList);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
 
@@ -152,8 +153,6 @@ const ProductDetailPage = () => {
       url: "https://th.bing.com/th/id/OIP.p2lVh-nwtqqEaAIWbT3m2QHaJU?rs=1&pid=ImgDetMain",
     },
   ];
-  
-
 
   const error = () => {
     messageApi.open({
@@ -411,9 +410,7 @@ const ProductDetailPage = () => {
               <span className="text-sm font-medium">
                 Quý khách vui lòng để lại số điện thoại để được tư vấn sỉ
               </span>
-              <ClothingRoom
-                imageList={defaultImageList}
-              />
+              <ClothingRoom imageList={product?.images} />
               <div className="flex flex-row items-center gap-1">
                 <Input
                   className="border-2 border-blue-500"

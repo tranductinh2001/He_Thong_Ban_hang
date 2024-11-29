@@ -113,6 +113,10 @@ public class ClientServiceImpl implements ClientService {
 
             // Tạo đối tượng Mail
             Mail dataMail = new Mail();
+            // Lưu mã xác thực cho người dùng
+            userService.saveAuthenticationCodeForUser();
+            codeCurrency = userService.getAuthenticationCodeForUser(getCurrentUsername());
+
             dataMail.setTo(sdi.getEmail());
             dataMail.setSubject("XÁC NHẬN ĐƠN HÀNG CỦA BẠN");
 
@@ -123,7 +127,7 @@ public class ClientServiceImpl implements ClientService {
             props.put("specialRequest", sdi.getNotes());
             props.put("listCart", formattedCartItems);
             props.put("total", formattedTotal);
-            props.put("code", userService.getAuthenticationCodeForUser(getCurrentUsername()));
+            props.put("code", codeCurrency);
             props.put("Notes", sdi.getNotes());
             props.put("OrderAddress", sdi.getOrderAddress());
             props.put("NumberPhone", sdi.getNumberPhone());

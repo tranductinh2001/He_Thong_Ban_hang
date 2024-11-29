@@ -36,12 +36,12 @@ export default function UserInfoForm({ selectedImages }) {
 
   const [filesFace, setFilesFace] = useState([]);
   const [fileListClothes, setFileListClothes] = useState([]);
-  const formData = new FormData();
+  const formData1 = new FormData();
 
   useEffect(() => {
     if (selectedImages && selectedImages.length > 0) {
       // Xóa dữ liệu cũ trong formData
-      formData.delete("fileListClothes");
+      formData1.delete("fileListClothes");
       setFileListClothes(selectedImages)
       // Chuyển đối tượng thành JSON string và append vào formData
     }
@@ -53,7 +53,7 @@ export default function UserInfoForm({ selectedImages }) {
     // Giả sử bạn upload file ở đây và trả về thông tin file sau khi upload thành công
     return new Promise((resolve, reject) => {
       setFilesFace(file);
-      formData.append("image_face", file);
+      formData1.append("image_face", file);
       setTimeout(() => {
         resolve(file);
       }, 2000); // Giả lập delay 2 giây
@@ -66,7 +66,7 @@ export default function UserInfoForm({ selectedImages }) {
     // Giả sử API trả về một Promise
     return new Promise((resolve, reject) => {
       setFilesFace([])
-      formData.append("image_face", file);
+      formData1.append("image_face", file);
       setTimeout(() => {
         message.success("Đã xóa ảnh thành công");
         resolve(true); // Đánh dấu việc xóa thành công
@@ -80,6 +80,7 @@ export default function UserInfoForm({ selectedImages }) {
     console.log("Dữ liệu từ form:", values); // Kiểm tra dữ liệu từ form
 
     try {
+      const formData = new FormData();
       // Thêm các trường thông tin từ form vào FormData
       formData.append("weight", values.weight);
       formData.append("height", values.height);

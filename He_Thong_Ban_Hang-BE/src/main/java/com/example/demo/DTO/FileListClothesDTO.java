@@ -8,15 +8,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileListClothesDTO {
-    private String uid;
+    private String id;    // Thêm trường id thay vì uid
     private String name;
-    private String status;
+    private String type;  // Thêm trường type từ JSON
+    private Long size;    // Thêm trường size (kiểu dữ liệu Long để lưu kích thước file)
+    private String uploadedBy;  // Thêm trường uploadedBy
     private String url;
 
-    // Getters và Setters
 
     @Override
     public String toString() {
-        return "FileListClothesDTO{uid='" + uid + "', name='" + name + "', status='" + status + "', url='" + url + "'}";
+        return "FileListClothesDTO{id='" + id + "', name='" + name + "', type='" + type + "', size=" + size + ", uploadedBy='" + uploadedBy + "', url='" + url + "'}";
     }
 }
