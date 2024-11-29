@@ -22,7 +22,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Lấy danh sách tất cả đơn hàng")
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();

@@ -3,9 +3,10 @@ package com.example.demo.entity;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Date;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,6 +41,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
@@ -59,6 +61,9 @@ public class User {
     @Temporal(TemporalType.DATE)
     @Column(name = "dob", nullable = false)
     private Date dob;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false)

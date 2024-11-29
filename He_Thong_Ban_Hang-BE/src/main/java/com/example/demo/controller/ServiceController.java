@@ -21,7 +21,7 @@ public class ServiceController {
     @Autowired
     private ServiceService serviceService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Lấy danh sách tất cả dịch vụ")
     public ResponseEntity<List<ServiceEntity>> getAllServices() {
         List<ServiceEntity> services = serviceService.getListService();

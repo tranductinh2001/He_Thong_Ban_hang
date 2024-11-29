@@ -7,6 +7,7 @@ import com.example.demo.entity.User;
 import com.example.demo.request.ChangePasswordRequest;
 import com.example.demo.request.CreateUserRequest;
 import com.example.demo.request.UpdateProfileRequest;
+import com.example.demo.request.UpdateUserRequest;
 
 public interface UserService {
 	UserDTO getUserProfile();
@@ -20,14 +21,16 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
-    User updateUser(UpdateProfileRequest request);
+    User updateUser(Long id, UpdateUserRequest request);
 
     void changePassword(ChangePasswordRequest request);
     
     Long countUser();
     
-	List<User> getAllUsser();
-	
+	List<User> getAllUser();
+
+	void deleteUser(Long id);
+
 	Long count();
 	
 	void updateUserEnabledStatus(String username, Long status);

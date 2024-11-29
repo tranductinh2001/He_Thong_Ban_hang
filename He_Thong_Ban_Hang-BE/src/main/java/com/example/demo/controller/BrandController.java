@@ -17,7 +17,7 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Lấy tất cả các thương hiệu")
     public ResponseEntity<List<Brand>> getAllBrands() {
         List<Brand> brands = brandService.getAllBrands();

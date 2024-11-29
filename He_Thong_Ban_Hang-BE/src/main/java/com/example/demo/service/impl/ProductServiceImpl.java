@@ -131,7 +131,8 @@ public class ProductServiceImpl implements ProductService {
 
         // Xử lý danh sách hình ảnh
         List<Image> images = new ArrayList<>();
-        for (Long imageId : body.getImages()) {
+        for (String imageIdStr : body.getImages()) {
+            Long imageId = Long.parseLong(imageIdStr);
             Image image = imageRepository.findById(imageId)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy hình ảnh với ID: " + imageId));
             images.add(image);
@@ -140,7 +141,8 @@ public class ProductServiceImpl implements ProductService {
 
         // Xử lý danh sách màu sắc
         List<Color> colors = new ArrayList<>();
-        for (Long colorId : body.getColors()) {
+        for (String colorIdStr : body.getColors()) {
+            Long colorId = Long.parseLong(colorIdStr);
             Color color = colorRepository.findById(colorId)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy màu với ID: " + colorId));
             colors.add(color);
@@ -153,7 +155,7 @@ public class ProductServiceImpl implements ProductService {
             Size size = new Size();
             size.setSizeName(sizeRequest.getSizeName());
             size.setQuantity(sizeRequest.getQuantity());
-            sizeRepository.save(size); // Lưu size mới vào cơ sở dữ liệu
+            sizeRepository.save(size);
             sizes.add(size);
         }
         product.setSizeList(sizes);
@@ -233,7 +235,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(CreateProductRequest body, Long id) {
-        Product product = getProductById(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm với ID: " + id));
 
         // Cập nhật thông tin cơ bản của sản phẩm
@@ -249,7 +251,8 @@ public class ProductServiceImpl implements ProductService {
 
         // Cập nhật danh sách hình ảnh
         List<Image> images = new ArrayList<>();
-        for (Long imageId : body.getImages()) {
+        for (String imageIdStr : body.getImages()) {
+            Long imageId = Long.parseLong(imageIdStr);
             Image image = imageRepository.findById(imageId)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy hình ảnh với ID: " + imageId));
             images.add(image);
@@ -258,7 +261,8 @@ public class ProductServiceImpl implements ProductService {
 
         // Cập nhật danh sách màu sắc
         List<Color> colors = new ArrayList<>();
-        for (Long colorId : body.getColors()) {
+        for (String colorIdStr : body.getColors()) {
+            Long colorId = Long.parseLong(colorIdStr);
             Color color = colorRepository.findById(colorId)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy màu với ID: " + colorId));
             colors.add(color);

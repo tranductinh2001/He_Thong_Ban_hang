@@ -17,7 +17,7 @@ public class ColorController {
     @Autowired
     private ColorService colorService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Lấy tất cả các màu sắc")
     public ResponseEntity<List<Color>> getAllColors() {
         List<Color> colors = colorService.getAllColors();

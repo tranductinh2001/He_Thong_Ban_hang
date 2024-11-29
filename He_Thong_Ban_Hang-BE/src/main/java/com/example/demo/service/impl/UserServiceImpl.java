@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.example.demo.DTO.UserDTO;
+import com.example.demo.request.UpdateUserRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -188,6 +189,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<User> getAllUser() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public void deleteUser(Long id) {
+		User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+		userRepository.delete(user);
+	}
+	@Override
 	public User getUserByUsername(String username) {
 		// TODO Auto-generated method stub
 		User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User"));
@@ -195,17 +206,35 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateUser(UpdateProfileRequest request) {
-		// TODO Auto-generated method stub
-		User user = userRepository.findByUsername(request.getUsername())
-				.orElseThrow(() -> new NotFoundException("Not Found User"));
-		user.setFirstName(request.getFirstname());
-		user.setLastName(request.getLastname());
-		user.setEmail(request.getEmail());
-		user.setAddress(request.getCountry());
-		//user.setState(request.getState());
-		user.setAddress(request.getAddress());
-		user.setNumberPhone(request.getPhone());
+	public User updateUser(Long id, UpdateUserRequest request) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("User not found"));
+
+		if (request.getFirstName() != null) {
+			user.setFirstName(request.getFirstName());
+		}
+		if (request.getLastName() != null) {
+			user.setLastName(request.getLastName());
+		}
+		if (request.getEmail() != null) {
+			user.setEmail(request.getEmail());
+		}
+		if (request.getNumberPhone() != null) {
+			user.setNumberPhone(request.getNumberPhone());
+		}
+		if (request.getAvatarUrl() != null) {
+			user.setAvatarUrl(request.getAvatarUrl());
+		}
+		if (request.getAddress() != null) {
+			user.setAddress(request.getAddress());
+		}
+		if (request.getDob() != null) {
+			user.setDob(request.getDob());
+		}
+
+		if (request.getPassword() != null) {
+			user.setPassword(encoder.encode(request.getPassword()));
+		}
 		userRepository.save(user);
 		return user;
 	}
@@ -235,12 +264,6 @@ public class UserServiceImpl implements UserService {
 	public Long countUser() {
 		// TODO Auto-generated method stub
 		return userRepository.countUser();
-	}
-
-	@Override
-	public List<User> getAllUsser() {
-		// TODO Auto-generated method stub
-		return userRepository.findAll();
 	}
 
 	@Override

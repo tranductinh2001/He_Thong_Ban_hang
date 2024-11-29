@@ -18,7 +18,7 @@ public class SizeController {
     @Autowired
     private SizeService sizeService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Lấy danh sách tất cả kích thước")
     public ResponseEntity<List<Size>> getAllSizes() {
         List<Size> sizes = sizeService.getAllSizes();

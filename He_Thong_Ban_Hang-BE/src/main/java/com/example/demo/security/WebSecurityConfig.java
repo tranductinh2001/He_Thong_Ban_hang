@@ -54,7 +54,15 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-				.cors().and().csrf().disable()
+				.cors().configurationSource(request -> {
+					var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+					corsConfig.setAllowedOrigins(java.util.List.of("http://localhost:5173"));
+					corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+					corsConfig.setAllowedHeaders(java.util.List.of("*"));
+					corsConfig.setAllowCredentials(true);
+
+					return corsConfig;
+				}).and().csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				.authorizeHttpRequests(authorize -> authorize

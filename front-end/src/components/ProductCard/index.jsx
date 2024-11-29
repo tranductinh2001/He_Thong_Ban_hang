@@ -43,7 +43,7 @@ const ProductCard = React.memo(function ProductCard({
             id="img-product"
             src={
               product?.images?.length > 0
-                ? `data:image/${imageUrl.type};base64,${imageUrl.data}`
+                ? product?.images[0]?.url
                 : "/src/assets/default_image.png"
             }
             className={`w-full h-60 duration-500 shadow-neutral-500 transition-transform rounded-md object-contain object-center`}
