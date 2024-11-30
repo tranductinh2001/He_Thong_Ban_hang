@@ -56,7 +56,7 @@ const API_ENDPOINTS = {
 
   //authentication
   LOGIN: `auth/login`,
-  CHANGE_PASSWORD: `/auth/change-password`,
+  CHANGE_PASSWORD: `/user/change-password`,
   RIGISTER: `/auth/register`,
 
   //order address

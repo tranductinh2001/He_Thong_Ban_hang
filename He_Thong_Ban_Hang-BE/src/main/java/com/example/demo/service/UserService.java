@@ -23,7 +23,7 @@ public interface UserService {
 
     User updateUser(Long id, UpdateUserRequest request);
 	User updateUserProfile(Long id, UpdateProfileRequest request);
-    void changePassword(ChangePasswordRequest request);
+    boolean changePassword(ChangePasswordRequest request);
     
     Long countUser();
     

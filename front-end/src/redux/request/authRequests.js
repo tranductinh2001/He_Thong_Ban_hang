@@ -17,7 +17,7 @@ const authRequests = {
   },
   changePassword: async (data) => {
     try {
-      const response = await axiosInstance.post(API_ENDPOINTS.CHANGE_PASSWORD, data);
+      const response = await axiosInstance.put(API_ENDPOINTS.CHANGE_PASSWORD, data);
       return response;
     } catch (error) {
       return errorHandler(error);

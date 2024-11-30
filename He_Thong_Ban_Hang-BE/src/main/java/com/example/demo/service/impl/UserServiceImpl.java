@@ -270,19 +270,29 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void changePassword(ChangePasswordRequest request) {
-		// TODO Auto-generated method stub
-		User user = userRepository.findByUsername(request.getUsername())
-				.orElseThrow(() -> new NotFoundException("Not Found User"));
-		// if(encoder.encode(request.getOldPassword()) != user.getPassword())
-		if (!encoder.matches(request.getOldPassword(), user.getPassword())) {
-			throw new BadRequestException(
-					"nhập sai mật khẩu hiện tại" + request.getOldPassword() + "mk sv: " + user.getPassword());
+	public boolean changePassword(ChangePasswordRequest request) {
+		// Lấy người dùng hiện tại dựa trên tên đăng nhập
+		User user = userRepository.findByUsername(getCurrentUsername())
+				.orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
+
+		// Kiểm tra mật khẩu hiện tại có đúng không
+		if (!encoder.matches(request.getCurrentPassword(), user.getPassword())) {
+			throw new BadRequestException("Mật khẩu hiện tại không đúng");
 		}
-		System.out.print(request.getOldPassword() + "mk sv: " + user.getPassword());
+
+		// Kiểm tra mật khẩu mới và xác nhận mật khẩu mới có trùng khớp không
+		if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+			throw new BadRequestException("Mật khẩu mới và xác nhận mật khẩu không khớp");
+		}
+
+		// Mã hóa mật khẩu mới và cập nhật vào cơ sở dữ liệu
 		user.setPassword(encoder.encode(request.getNewPassword()));
 		userRepository.save(user);
+
+		// Trả về true nếu thay đổi mật khẩu thành công
+		return true;
 	}
+
 
 	@Override
 	public List<User> getListUserByVerificationCode(String code) {

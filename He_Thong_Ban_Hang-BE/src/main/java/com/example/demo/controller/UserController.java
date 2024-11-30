@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.Color;
 import com.example.demo.entity.User;
+import com.example.demo.request.ChangePasswordRequest;
 import com.example.demo.request.UpdateProfileRequest;
 import com.example.demo.request.UpdateUserRequest;
 import com.example.demo.service.UserService;
@@ -38,6 +39,30 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PutMapping("/change-password")
+    @Operation(summary = "Thay đổi mật khẩu người dùng")
+    public ResponseEntity<String> changePassword(
+            @RequestBody ChangePasswordRequest request) {
+
+        try {
+            // Kiểm tra mật khẩu hiện tại và mật khẩu mới có khớp với confirmNewPassword không
+            if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mật khẩu mới và xác nhận mật khẩu không khớp");
+            }
+
+            // Gọi dịch vụ để thay đổi mật khẩu
+            boolean isChanged = userService.changePassword(request);
+
+            if (isChanged) {
+                return ResponseEntity.ok("Mật khẩu đã được thay đổi thành công");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mật khẩu hiện tại không đúng");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Có lỗi xảy ra trong quá trình thay đổi mật khẩu");
         }
     }
 
