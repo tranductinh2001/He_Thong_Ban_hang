@@ -131,18 +131,24 @@ public class RoomController {
             System.out.println("updatedClothesImageUrl url   : " + updatedClothesImageUrl);
 
 
-// Tạo prompt cho AI
+            // Tạo prompt cho AI
             String clothingPrompt = "This is a clothing item for virtual try-on.";  // Ví dụ prompt cho quần áo
-            String avatarPrompt = "Avatar is wearing the clothes.";  // Ví dụ prompt cho avatar
+            // 1. Chuẩn bị thông tin cho avatar
+            String avatarPrompt = "A " + gender + " character with " + (skinTone != null ? skinTone : "default") +
+                    " skin, " + (hairColor != null ? hairColor : "default") + " hair, aged " + (age != null ? age : "25") +
+                    " years, body shape: " + (bodyShape != null ? bodyShape : "slim") + ". " +
+                    "Height: " + height + " cm, Weight: " + weight + " kg. Nationality: " + (nationality != null ? nationality : "unspecified") +
+                    ", Hair style: " + (hairStyle != null ? hairStyle : "short") + ", Chest: " + (chest != null ? chest : "90") +
+                    " cm, Waist: " + (wc != null ? wc : "70") + " cm, Hips: " + (hip != null ? hip : "95") + " cm.";
 
-// Gửi yêu cầu tạo hình ảnh AI với chỉ 1 URL quần áo (phần tử đầu tiên trong danh sách)
+            System.out.println("updatedClothesImageUrl url   : " + avatarPrompt);
+
             String generatedImage = Arrays.toString(TexelModaService.tryOnClothes(
                     updatedClothesImageUrl, // Truyền đường dẫn ảnh mặt
                     faceImageUrl, // Truyền một URL duy nhất từ danh sách
                     clothingPrompt,
                     gender, // avatarSex có thể là gender hoặc tham số tương tự
                     avatarPrompt,
-                    "someSeed", // Sử dụng một giá trị seed hoặc ID cho AI generation
                     tryOnHistory.getId() // Truyền ID lịch sử thử đồ
             ));
 //            System.out.println("generatedImage url   : " + generatedImage);

@@ -6,6 +6,6 @@ import java.io.IOException;
 
 public interface TexelModaService {
     byte[] tryOnClothes(String clothingImageUrl, String avatarImageUrl, String clothingPrompt,
-                        String avatarSex, String avatarPrompt, String seed, Long tryOnHistoryId) throws IOException;
+                        String avatarSex, String avatarPrompt, Long tryOnHistoryId) throws IOException;
 
 }

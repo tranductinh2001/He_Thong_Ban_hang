@@ -9,15 +9,17 @@ import { useWebSocket } from "../../../WebSocket/WebSocketContext";
 export default function ClothingRoom({ imageList }) {
   const { receivedData } = useWebSocket();
   const [MessageSocket, setMessageSocket] = useState("");
-  console.log("MessageSocket   ", MessageSocket);
+  // console.log("MessageSocket   ", MessageSocket);
   useEffect(() => {
     if (receivedData) {
       // Tách dữ liệu từ đối tượng
       const messageKey = Object.keys(receivedData)[0]; // Lấy key đầu tiên
       const messageValue = receivedData[messageKey]; // Lấy giá trị tương ứng
       setMessageSocket(messageValue);
+      console.log("data url nè: ", MessageSocket);
     }
   }, [receivedData]);
+  console.log("selectedImage nè: ", imageList);
 
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("right");
@@ -73,6 +75,7 @@ export default function ClothingRoom({ imageList }) {
         width={1500}
         bodyStyle={{
           backgroundImage: `url(${imagBackgroundRoom})`,
+          // background: MessageSocket,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -103,18 +106,15 @@ export default function ClothingRoom({ imageList }) {
             ))}
           </div>
 
-          <div className="flex flex-col item-center justify-center ml-12">
+          <div className="flex flex-col item-center justify-center ">
             {/* {product.images.map((image, index) => ( */}
             {/* <div className=""> */}
-              <Image
-                className="w-80 h-100" // Thay đổi kích thước ảnh
-                src={
-                  "http://localhost:8080/photos/44a33264-af88-4b90-9b19-83806da9ad78.png"
-                }
-                alt="Ảnh thử đồ"
-                width={100} // Bạn vẫn có thể giữ kích thước width và height trong thẻ Image nếu muốn
-                height={100}
-              />
+            <Image
+              style={{ width: "600px", height: "600px" }}
+              src={MessageSocket}
+              alt="Ảnh thử đồ"
+            />
+
             {/* </div> */}
 
             {/* } */}

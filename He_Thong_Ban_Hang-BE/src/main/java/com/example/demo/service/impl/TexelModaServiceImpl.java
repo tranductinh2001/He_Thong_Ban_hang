@@ -36,7 +36,8 @@ public class TexelModaServiceImpl implements TexelModaService {
     public TexelModaServiceImpl(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
-    private static String UPLOAD_DIR  = System.getProperty("user.dir") + "/src/main/resources/static/photos/";
+
+    private static String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static/photos/";
 
     private static String apiKey = "3d0be417acmsh0966b664a86e14dp1278b4jsn5ef298ce2e0d";
 
@@ -50,7 +51,7 @@ public class TexelModaServiceImpl implements TexelModaService {
 
     @Override
     public byte[] tryOnClothes(String clothingImageUrl, String avatarImageUrl, String clothingPrompt,
-                               String avatarSex, String avatarPrompt, String seed, Long tryOnHistoryId) throws IOException {
+                               String avatarSex, String avatarPrompt, Long tryOnHistoryId) throws IOException {
 
         // Tạo RestTemplate để gửi yêu cầu
         RestTemplate restTemplate = new RestTemplate();
@@ -63,10 +64,19 @@ public class TexelModaServiceImpl implements TexelModaService {
         // Tạo một MultiValueMap để chứa tham số và URL
         MultiValueMap<String, Object> multipartRequest = new LinkedMultiValueMap<>();
 
-        // Thêm các tham số văn bản vào multipart request
-        multipartRequest.add("clothing_prompt", clothingPrompt);
+// Thêm các tham số văn bản vào multipart request
+
+// Đoạn mô tả avatar
+
+// Thêm thông tin về trang phục
+        String clothingDescription = "A " + clothingPrompt;  // Description for clothing (e.g., "red sleeveless mini dress")
+
+// Truyền thông tin vào multipartRequest
+        multipartRequest.add("clothing_prompt", clothingDescription);
         multipartRequest.add("avatar_sex", avatarSex);
         multipartRequest.add("avatar_prompt", avatarPrompt);
+        multipartRequest.add("background_prompt", "Remove background, only the avatar character visible.");
+
 
         // Thêm đường dẫn hình ảnh vào multipart request
         Path clothingImagePath = Paths.get(clothingImageUrl);
@@ -74,39 +84,71 @@ public class TexelModaServiceImpl implements TexelModaService {
 
         multipartRequest.add("clothing_image", new FileSystemResource(clothingImagePath));
         multipartRequest.add("avatar_image", new FileSystemResource(avatarImagePath));
+        //multipartRequest.add("background_image", new FileSystemResource("C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos/room.jpg"));
 
         // Thiết lập HttpEntity với các headers và dữ liệu form
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(multipartRequest, headers);
+        System.out.println("dữ liệu trước khi học:");
+        for (String key : Objects.requireNonNull(entity.getBody()).keySet()) {
+            System.out.println("Key: " + key + ", Values: " + entity.getBody().get(key));
+        }
+            byte[] imageBytes = null;
 
         // Gửi yêu cầu API dưới dạng multipart/form-data và nhận phản hồi
-        ResponseEntity<byte[]> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, byte[].class);
+//        ResponseEntity<byte[]> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, byte[].class);
 
         // Kiểm tra nếu phản hồi thành công
-        if (response.getStatusCode().is2xxSuccessful()) {
-            byte[] imageBytes = response.getBody();
+//        if (response.getStatusCode().is2xxSuccessful()) {
+//            byte[] imageBytes = response.getBody();
+//
+//            // Lấy đối tượng ModelTryOnHistory từ repository bằng ID
+//            Optional<ModelTryOnHistory> optionalHistory = modelTryOnHistoryRepository.findById(tryOnHistoryId);
+//
+//            if (optionalHistory.isPresent()) {
+//                ModelTryOnHistory history = optionalHistory.get();
+//
+//                // Kiểm tra và khởi tạo danh sách nếu nó là null
+//                if (history.getCreatedImageGenerateAI() == null) {
+//                    history.setCreatedImageGenerateAI(new ArrayList<>());
+//                }
+//                modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
+//            }
+//
+//            saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
+//
+//            // Trả về ảnh đã được tạo
+//            return imageBytes;
+//        } else {
+//            throw new RuntimeException("Error while trying on clothes: " + response.getStatusCode());
+//        }
 
-            // Lấy đối tượng ModelTryOnHistory từ repository bằng ID
-            Optional<ModelTryOnHistory> optionalHistory = modelTryOnHistoryRepository.findById(tryOnHistoryId);
-
-            if (optionalHistory.isPresent()) {
-                ModelTryOnHistory history = optionalHistory.get();
-
-                // Kiểm tra và khởi tạo danh sách nếu nó là null
-                if (history.getCreatedImageGenerateAI() == null) {
-                    history.setCreatedImageGenerateAI(new ArrayList<>());
-                }
-                modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
-            }
-
-            saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
-
-            // Trả về ảnh đã được tạo
-            return imageBytes;
-        } else {
-            throw new RuntimeException("Error while trying on clothes: " + response.getStatusCode());
-        }
+//        File imageFile = new File(clothingImageUrl);
+//
+//        if (!imageFile.exists()) {
+//            throw new IOException("File không tồn tại: " + clothingImageUrl);
+//        }
+//
+//        byte[] imageBytes = Files.readAllBytes(Paths.get(clothingImageUrl));  // Đọc ảnh dưới dạng byte[]
+//
+//        //Kiểm tra và lưu ảnh vào lịch sử mà không cần gọi API
+//        Optional<ModelTryOnHistory> optionalHistory = modelTryOnHistoryRepository.findById(tryOnHistoryId);
+//
+//        if (optionalHistory.isPresent()) {
+//            ModelTryOnHistory history = optionalHistory.get();
+//
+//            // Kiểm tra và khởi tạo danh sách nếu nó là null
+//            if (history.getCreatedImageGenerateAI() == null) {
+//                history.setCreatedImageGenerateAI(new ArrayList<>());
+//            }
+//
+//            modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
+//        }
+//
+//        saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
+//
+//        // Trả về ảnh đã được tạo
+        return imageBytes;
     }
-
 
 
     private void saveGeneratedImageToHistory(Long tryOnHistoryId, byte[] imageBytes) {
@@ -140,7 +182,20 @@ public class TexelModaServiceImpl implements TexelModaService {
             Image savedImg = imageRepository.save(img);
 
             String messageSK = savedImg.getUrl();
-            messagingTemplate.convertAndSend("/topic/room/createImage", messageSK);
+
+            int retryCount = 0;
+            while (retryCount < 300) { // Tối đa 10 lần thử
+                if (isImagePublic(messageSK) && retryCount >= 10) {
+                    System.out.println("Ảnh đã được lưu vào server. " + "http://localhost:8080/photos/" + uid + "." + extension);
+
+                    // Ảnh đã public, bắn WebSocket
+                    messagingTemplate.convertAndSend("/topic/room/createImage", messageSK);
+                    break;
+                }
+                retryCount++;
+                Thread.sleep(1000); // Chờ 1 giây trước khi thử lại
+            }
+
 
             // Kiểm tra và khởi tạo danh sách nếu null
             if (tryOnHistory.getCreatedImageGenerateAI() == null) {
@@ -154,11 +209,20 @@ public class TexelModaServiceImpl implements TexelModaService {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Lỗi khi lưu ảnh vào lịch sử", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-
-
+    public boolean isImagePublic(String imageUrl) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.getForEntity(imageUrl, String.class);
+            return response.getStatusCode().is2xxSuccessful();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 
 }
