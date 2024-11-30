@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.DTO.UserDTO;
 import com.example.demo.entity.Color;
 import com.example.demo.entity.User;
+import com.example.demo.request.UpdateProfileRequest;
 import com.example.demo.request.UpdateUserRequest;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +34,18 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
         try {
             User updatedUser = userService.updateUser(id, request);
+
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PutMapping("/updateProfile/{id}")
+    @Operation(summary = "Cập nhật thông tin người dùng theo ID")
+    public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBody UpdateProfileRequest request) {
+        try {
+            User updatedUser = userService.updateUserProfile(id, request);
 
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {

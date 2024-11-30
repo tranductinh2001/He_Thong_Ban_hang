@@ -13,10 +13,25 @@ const userRequests = {
       return errorHandler(error);
     }
   },
-  UpdateUser: async (userId, data) => {
+  UpdateUser: async (data, id) => {
     try {
+      // console.log("datât trong request", data, id);
       const response = await axiosInstance.put(
-        API_ENDPOINTS.UPDATE_USER(userId),
+        API_ENDPOINTS.UPDATE_USER(id),
+        data
+      );
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+  UpdateUserProdfile: async (data, id) => {
+    try {
+      console.log("datât trong request UpdateUserProdfile", data, id, API_ENDPOINTS.UPDATE_USER_PROFILE(id));
+      console.log("API Endpoint:", API_ENDPOINTS.UPDATE_USER_PROFILE(id)); // Log URL với id
+
+      const response = await axiosInstance.put(
+        API_ENDPOINTS.UPDATE_USER_PROFILE(id),
         data
       );
       return response.data;
@@ -46,6 +61,28 @@ const userRequests = {
       return response.data;
     } catch (error) {
       return errorHandler(error);
+    }
+  },
+  UserDetail: async () => {
+    try {
+      const response = await axiosInstance.get(API_ENDPOINTS.USER_DETAIL);
+      return response;
+    } catch (error) {
+      console.error("Error fetching user detail data:", error);
+      throw error;
+    }
+  },updateRelationUser: async ({ userId, oderAddressId }) => {
+    try {
+      const data = {
+        order_addresses: {
+          connect: [oderAddressId],
+        },
+      };
+      const response = await axiosInstance.put(API_ENDPOINTS.UPDATE_USER, data);
+      return response;
+    } catch (error) {
+      console.error("Error fetching user detail data:", error);
+      throw error;
     }
   },
 };

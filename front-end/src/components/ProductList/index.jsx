@@ -20,7 +20,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   );
   const error = useSelector((state) => state.products?.error);
   const [hasMore, setHasMore] = useState(true);
-  const pageSize = useSelector((state) => state.products?.pageSize) || 4;
+  const pageSize = useSelector((state) => state.products?.pageSize) || 3;
   const totalProductItems = useSelector(
     (state) => state.products?.totalProductItems
   );
@@ -127,11 +127,11 @@ function ProductList({ sortParam, titleParam, searchParam }) {
             </p>
           }
         >
-          <div className="grid justify-center grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid justify-center grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-3">
             {Array.isArray(productListByPage) &&
               productListByPage.map((product, index) => (
                 <ProductCard
-                  key={product._id || index}
+                  key={product.id || index}
                   product={product}
                   displayQuantity={true}
                 />

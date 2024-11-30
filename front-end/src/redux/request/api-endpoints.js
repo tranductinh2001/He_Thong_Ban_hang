@@ -49,9 +49,10 @@ const API_ENDPOINTS = {
 
   //user
   GET_USER: `/user`,
-  USER_DETAIL: `/user/profile`,
-  UPDATE_USER: `/user/update`,
+  UPDATE_USER_PROFILE: (id) => `/user/updateProfile/${id}`,
+  UPDATE_USER: (id) => `/user/update/${id}`,
   DELETE_USER: `/user/delete`,
+  USER_DETAIL: "/user/profile",
 
   //authentication
   LOGIN: `auth/login`,
@@ -66,7 +67,6 @@ const API_ENDPOINTS = {
 
   // cart
   GET_CART_BY_ID_USER: `/cart/my-cart`,
-  // ADD_TO_CART: () => `/cart/update`,
   UPDATE_CART: `/cart/update`,
   REMOVE_FROM_CART: `/cart/update`,
 
@@ -79,11 +79,9 @@ const API_ENDPOINTS = {
   CREATE_CHECKOUT_SESSION: `/payment/create-checkout-session`,
   CHECKOUT_SESSION: (session_id) =>
     `/payment/checkout-session?sessionId=${session_id}`,
-  
+
   //room
   CREATE_MODEL_IN_ROOM: `/room/create-model`,
 };
-
-
 
 export default API_ENDPOINTS;

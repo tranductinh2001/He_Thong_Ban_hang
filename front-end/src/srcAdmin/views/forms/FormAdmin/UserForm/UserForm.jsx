@@ -72,7 +72,7 @@ const UserForm = ({ type, user }) => {
       };
 
       if (type === "edit") {
-        await userRequests.update(user.id, body);
+        await userRequests.update(user?.id , body);
         message.success("Cập nhật người dùng thành công!");
       } else {
         await userRequests.create(body);

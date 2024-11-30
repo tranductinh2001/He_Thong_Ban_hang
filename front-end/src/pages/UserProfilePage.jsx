@@ -79,13 +79,13 @@ export default function UserProfilePage() {
       {/* left side */}
       <div className="flex flex-col w-full h-full col-span-1 p-5 bg-white rounded-lg shadow-xl">
         <div className="flex flex-col w-full text-center text-neutral-500">
-          <span className="font-semibold uppercase">
-            {currentUser?.username}
-          </span>
-          <span>{`${currentUser?.first_name || ""} ${
-            currentUser?.last_name || ""
+          {/* <span className="font-semibold uppercase">
+            {currentUsers?.username}
+          </span> */}
+          <span className="font-semibold uppercase">{`${currentUsers?.firstName || ""} ${
+            currentUsers?.lastName || ""
           }`}</span>
-          <span className="text-base">{currentUser?.email}</span>
+          <span className="text-base">Email: {currentUsers?.email}</span>
         </div>
         <Divider />
 

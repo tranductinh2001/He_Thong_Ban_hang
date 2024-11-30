@@ -14,23 +14,23 @@ export default function ContactPage() {
               Địa chỉ: 638/45/4 Lê Trọng Tấn - Bình Hưng Hoà - Bình Tân - TPHCM
             </p>
             <p>
-              Điện thoại: 0985639992
+              Điện thoại: 0352911750
               {/* <FaYoutube size={40} /> */}
             </p>
             <p>
               E-mail:{" "}
-              <a href="mailto:voxuanvuloc@gmail.com">voxuanvuloc@gmail.com</a>
+              <a href="mailto:tinhkkhoat@gmail.com">tinhkkhoat@gmail.com</a>
             </p>
             <div className="flex items-center justify-start gap-2">
               <a
-                href="https://www.facebook.com/trung.han.2506/"
+                href="https://www.facebook.com/tinhstart123/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <FaFacebook size={40} />
               </a>
               <a
-                href="https://www.youtube.com/@hanquoctrung3343"
+                href="https://www.youtube.com/@tranuctinh-ktpm6943"
                 target="_blank"
                 rel="noopener noreferrer"
               >

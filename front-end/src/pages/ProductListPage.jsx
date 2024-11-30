@@ -6,7 +6,7 @@ import _Breadcrumb from "../components/Breadcrumb";
 import Loading from "../components/Loading";
 import { lazy, Suspense } from "react";
 import { useDispatch } from "react-redux";
-import { setActiveFilter } from "../redux/slices/productSlice";
+import { setActiveFilter, setActiveListProduct } from "../redux/slices/productSlice";
 
 const ProductList = lazy(() => import("../components/ProductList"));
 
@@ -49,7 +49,8 @@ export default function ProductPage() {
   // console.log("search   ",search)
   const handleFilterChange = (item, index) => {
     //lưu id button
-    // dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
+    dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
+    dispatch(setActiveListProduct());
     setActiveButton(index);
     setSearchParams(item);
   };

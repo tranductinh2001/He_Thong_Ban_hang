@@ -238,6 +238,36 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 		return user;
 	}
+	@Override
+	public User updateUserProfile(Long id, UpdateProfileRequest request) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("User not found"));
+
+		if (request.getFirstname() != null) {
+			user.setFirstName(request.getFirstname());
+		}
+		if (request.getLastname() != null) {
+			user.setLastName(request.getLastname());
+		}
+		if (request.getEmail() != null) {
+			user.setEmail(request.getEmail());
+		}
+		if (request.getPhone() != null) {
+			user.setNumberPhone(request.getPhone());
+		}
+		if (request.getAvatarUrl() != null) {
+			user.setAvatarUrl(request.getAvatarUrl());
+		}
+		if (request.getAddress() != null) {
+			user.setAddress(request.getAddress());
+		}
+		if (request.getDob() != null) {
+			user.setDob(request.getDob());
+		}
+
+		userRepository.save(user);
+		return user;
+	}
 
 	@Override
 	public void changePassword(ChangePasswordRequest request) {

@@ -22,7 +22,7 @@ public interface UserService {
     User getUserByUsername(String username);
 
     User updateUser(Long id, UpdateUserRequest request);
-
+	User updateUserProfile(Long id, UpdateProfileRequest request);
     void changePassword(ChangePasswordRequest request);
     
     Long countUser();

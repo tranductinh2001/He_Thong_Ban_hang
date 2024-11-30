@@ -10,7 +10,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserRequest {
-
     private String username;
     private String email;
     private String firstName;
