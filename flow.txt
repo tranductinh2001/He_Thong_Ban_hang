@@ -1,0 +1,31 @@
+*thanh toán
+- đặt hàng ở cart thì gửi mail xác nhận và cập nhật lại số lượng hàng (chưa làm)
+- ấn xác nhận qua trang thanh toán ở đây là realtime khi quét mã chuyển tiền
+- thành công chuyển hướng về trang thanh toán thành công còn thất bại thì ngược lại
+	+xác nhận dúng người chuyển tiền và thành toán thành công mới cho về trang thành công (chưa làm)
+
+ 
+**BUG - need UPDATE
+- chỉnh lại giao diện room
+- chỉnh lại giao diện product list ( các item vào giữa và có khoảng cách với top)
+- thanh điều hướng thêm các chức năng hiển thị ... và cho nó vào giữa 
+- xoá logo ở thanh điều hướng
+- tăng kích thước logo ở bên cạnh search
+- tuốt lại giao diện thông tin tài khoản
+- thêm sửa xoá sổ địa chỉ
+- show danh sách đơn hàng
+- khoảng trắng phần dưới home quá nhiều
+
+
+**test chức năng
+- lazyloading search
+- các thông báo của các chức năng
+
+
+
+
+
+
+
+
+

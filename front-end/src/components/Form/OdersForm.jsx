@@ -97,9 +97,13 @@ export default function OdersForm() {
     console.log("params", pagination, filters, sorter, extra);
   };
   const orders = useSelector((state) => state.order?.orders);
+  console.log("oser list nè ", orders);
+
+  
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
+
   return (
     <>
       <div className="container mx-auto p-5">

@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query(value = "SELECT * FROM user where verification_code LIKE %:keyword% ",nativeQuery = true)
+    @Query(value = "SELECT * FROM orders where verification_code LIKE %:keyword% ",nativeQuery = true)
     Order getOrderByVerificationCode(String keyword);
 }

@@ -84,7 +84,7 @@ export default function SearchBar({ keyWord }) {
   };
 
   const urlImg = (item) => {
-    return item?.images[0] ? item?.images[0] : placeholder;
+    return item?.images[0] ? item?.images[0]?.url : placeholder;
   };
 
   const fetchMoreData = () => {

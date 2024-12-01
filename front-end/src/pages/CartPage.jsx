@@ -22,6 +22,29 @@ export default function CartPage() {
   const { receivedData } = useWebSocket();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const userId = useSelector((state) => state.auth?.currentUser);
+  const cartData = useSelector((state) => state.cart?.products);
+  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+  //tổng giá tiền sản phẩm của giỏ hàng
+  const total = useSelector((state) => state.cart?.total);
+  // console.log("total   ", total);
+  // tổng số lượng sản phẩm có trong giỏ hàng (tính cả size)
+  const totalProduct = useSelector((state) => state.cart?.number_of_product);
+
+  console.log("cartData ", cartData);
+  // Tính tổng tiền giỏ hàng
+  const calculatedTotal = cartData.reduce((total, item) => {
+    // Kiểm tra xem có giảm giá hay không và sử dụng giá phù hợp
+    const price =
+      item?.product?.sale && item.product.salePrice
+        ? item.product.salePrice // Nếu có giảm giá, lấy salePrice
+        : item?.product?.price; // Nếu không có giảm giá, lấy giá gốc
+
+    return total + price * item.count; // Tính tổng
+  }, 0);
+  console.log("calculatedTotal ", calculatedTotal);
+
+  const priceSale = total - calculatedTotal;
 
   useEffect(() => {
     if (receivedData) {
@@ -53,20 +76,13 @@ export default function CartPage() {
     email: "",
     name: "",
   });
-  const userId = useSelector((state) => state.auth?.currentUser?.id);
-  const cartData = useSelector((state) => state.cart?.products);
+
   //tổng tiền của giỏ hàng
   const default_address = useSelector(
     (state) => state.orderAddress?.defaultOrderAddress
   );
   // console.log(default_address)
 
-  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
-  //tổng giá tiền sản phẩm của giỏ hàng
-  const total = useSelector((state) => state.cart?.total);
-  // console.log("total   ", total);
-  // tổng số lượng sản phẩm có trong giỏ hàng (tính cả size)
-  const totalProduct = useSelector((state) => state.cart?.number_of_product);
   // xử lý thêm sản phẩm vào giỏ hàng trên strapi
   const handleAddToCart = (product) => {
     // console.log("đã vào được call api này với data   ", product);
@@ -291,6 +307,21 @@ export default function CartPage() {
                   </motion.span>
                 </div>
                 <div className="flex flex-row items-center justify-between">
+                  <span>Giảm giá</span>
+                  <motion.span
+                    key={total}
+                    initial={{ scale: 1 }}
+                    animate={{
+                      scale: [1.2, 1.3, 1],
+                      fontWeight: [800, 500],
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="text-lg font-semibold text-red-500"
+                  >
+                    -{priceSale?.toLocaleString()}đ
+                  </motion.span>
+                </div>
+                <div className="flex flex-row items-center justify-between">
                   <span>Tổng</span>
                   <motion.span
                     key={total}
@@ -302,7 +333,7 @@ export default function CartPage() {
                     transition={{ duration: 0.3 }}
                     className="text-lg font-semibold text-red-500"
                   >
-                    {total?.toLocaleString()}đ
+                    {calculatedTotal?.toLocaleString()}đ
                   </motion.span>
                 </div>
                 <Divider />

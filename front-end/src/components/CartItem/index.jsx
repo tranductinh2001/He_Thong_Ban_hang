@@ -100,6 +100,7 @@ const CartItem = ({
   removeFromCart,
   deleteFromCart,
 }) => {
+  // console.log(cartItem?.product);
   const [quantity, setQuantity] = useState(productQuantity);
   const foundItem = cartItem?.product?.sizeList?.find(
     (item) => item.sizeName === size
@@ -130,7 +131,7 @@ const CartItem = ({
           className="rounded-2xl"
           width={170}
           height={170}
-          src={cartItem?.product?.images[0] ?? "/src/assets/default_image.png"}
+          src={cartItem?.product?.images[0]?.url ?? "/src/assets/default_image.png"}
         />
       </div>
       <div className="flex flex-col gap-2">

@@ -30,126 +30,130 @@ import com.example.demo.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
-	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	private static final int CODE_LENGTH = 8;
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int CODE_LENGTH = 8;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private RoleRepository roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@Autowired
-	private PasswordEncoder encoder;
+    @Autowired
+    private PasswordEncoder encoder;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
-	public static String generateCode() {
-		Random random = new Random();
-		StringBuilder code = new StringBuilder(CODE_LENGTH);
+    public static String generateCode() {
+        Random random = new Random();
+        StringBuilder code = new StringBuilder(CODE_LENGTH);
 
-		for (int i = 0; i < CODE_LENGTH; i++) {
-			int randomIndex = random.nextInt(CHARACTERS.length());
-			code.append(CHARACTERS.charAt(randomIndex));
-		}
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            code.append(CHARACTERS.charAt(randomIndex));
+        }
 
-		return code.toString();
-	}
+        return code.toString();
+    }
 
-	public String getAuthenticationCodeForUser(String username) {
-		Optional<User> optionalUser = userRepository.findByUsername(username);
-		return optionalUser.map(User::getVerificationCode).orElse(null);
-	}
+    public String getAuthenticationCodeForUser(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        return optionalUser.map(User::getVerificationCode).orElse(null);
+    }
 
-	public void saveAuthenticationCodeForUser() {
-		String code = generateCode();
-		List<User> users = userRepository.getListUserByVerificationCode(code);
-		for (int i = 0; i < users.size(); i++) {
-			System.out.print("users     " + users.toString());
-		}
-		if (!((users.size()) >= 1)) {
-			String username = getCurrentUsername();
-			User user = userRepository.findByUsername(username)
-					.orElseThrow(() -> new RuntimeException("User not found"));
+    public void saveAuthenticationCodeForUser() {
+        String code = generateCode();
+        List<User> users = userRepository.getListUserByVerificationCode(code);
+        for (int i = 0; i < users.size(); i++) {
+            System.out.print("users     " + users.toString());
+        }
+        if (!((users.size()) >= 1)) {
+            String username = getCurrentUsername();
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-			if (user != null) {
-				user.setVerificationCode(code);
-				userRepository.save(user);
-			} else {
-				User newUser = new User();
-				newUser.setEmail(username);
-				newUser.setVerificationCode(code);
-				userRepository.save(newUser);
-			}
-		} else {
-			saveAuthenticationCodeForUser();
-		}
-	}
-	@Override
-	public UserDTO getUserProfile() {
-		String username = getCurrentUsername();
-		User user = userRepository.findByUsername(username)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+            if (user != null) {
+                user.setVerificationCode(code);
+                userRepository.save(user);
+            } else {
+                User newUser = new User();
+                newUser.setEmail(username);
+                newUser.setVerificationCode(code);
+                userRepository.save(newUser);
+            }
+        } else {
+            saveAuthenticationCodeForUser();
+        }
+    }
 
-		return modelMapper.map(user, UserDTO.class);
-	}
+    @Override
+    public UserDTO getUserProfile() {
+        String username = getCurrentUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-	private String getCurrentUsername() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
-			throw new RuntimeException("User not authenticated");
-		}
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		return userDetails.getUsername();
-	}
+        return modelMapper.map(user, UserDTO.class);
+    }
 
-	@Override
-	public User findByUsername(String username) {
-		if (username == null || username.trim().isEmpty()) {
-			throw new IllegalArgumentException("Username không được để trống hoặc null.");
-		}
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
+            throw new RuntimeException("User not authenticated");
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userDetails.getUsername();
+    }
 
-		Optional<User> userOptional = userRepository.findByUsername(username);
-		if (userOptional.isPresent()) {
-			return userOptional.get();
-		} else {
-			throw new UsernameNotFoundException("Không tìm thấy người dùng với username: " + username);
-		}
-	}
+    @Override
+    public User findByUsername(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username không được để trống hoặc null.");
+        }
 
-	@Override
-	public void register(CreateUserRequest request) {
-		System.out.println(" register đã được thực thi "+request);
-		// TODO Auto-generated method stub
-		User user = new User();
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            throw new UsernameNotFoundException("Không tìm thấy người dùng với username: " + username);
+        }
+    }
 
-		// Set các thuộc tính từ request\
-		user.setUsername(request.getEmail());
-		user.setFirstName(request.getFirstName());
-		user.setLastName(request.getLastName());
-		user.setEmail(request.getEmail());
-		user.setNumberPhone(request.getNumberPhone());
-		user.setAddress(request.getAddress());
+    @Override
+    public void register(CreateUserRequest request) {
 
-		// Định dạng ngày tháng
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        if (userRepository.existsByUsername(request.getEmail()) || userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Username or email is already taken!");
+        }
+        // TODO Auto-generated method stub
+        User user = new User();
 
-		try {
-			Date dob = formatter.parse(request.getDob());
-			user.setDob(dob);
-		} catch (ParseException e) {
-			System.out.println("Lỗi: Định dạng ngày tháng không hợp lệ.");
-			throw new RuntimeException("Ngày tháng không hợp lệ: " + e.getMessage());
-		}
+        // Set các thuộc tính từ request\
+        user.setUsername(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setNumberPhone(request.getNumberPhone());
+        user.setAddress(request.getAddress());
 
-		// Mã hóa mật khẩu
-		user.setPassword(encoder.encode(request.getPassword()));
+        // Định dạng ngày tháng
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-		// Lấy danh sách quyền từ request
+        try {
+            Date dob = formatter.parse(request.getDob());
+            user.setDob(dob);
+        } catch (ParseException e) {
+            System.out.println("Lỗi: Định dạng ngày tháng không hợp lệ.");
+            throw new RuntimeException("Ngày tháng không hợp lệ: " + e.getMessage());
+        }
+
+        // Mã hóa mật khẩu
+        user.setPassword(encoder.encode(request.getPassword()));
+
+        // Lấy danh sách quyền từ request
 //		Set<String> strRoles = request.getRole();
 //		Set<Role> roles = new HashSet<>();
 //
@@ -183,151 +187,153 @@ public class UserServiceImpl implements UserService {
 //		// Set các quyền cho người dùng
 //		user.setRoles(roles);
 
-		// Đánh dấu tài khoản là chưa kích hoạt (chờ xác thực qua email chẳng hạn)
-		user.setEnabled(false);
-		userRepository.save(user);
-	}
+        // Đánh dấu tài khoản là chưa kích hoạt (chờ xác thực qua email chẳng hạn)
+        user.setEnabled(false);
+        userRepository.save(user);
+    }
 
-	@Override
-	public List<User> getAllUser() {
-		return userRepository.findAll();
-	}
+    @Override
+    public List<User> getAllUser() {
+        return userRepository.findAll();
+    }
 
-	@Override
-	public void deleteUser(Long id) {
-		User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-		userRepository.delete(user);
-	}
-	@Override
-	public User getUserByUsername(String username) {
-		// TODO Auto-generated method stub
-		User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User"));
-		return user;
-	}
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        userRepository.delete(user);
+    }
 
-	@Override
-	public User updateUser(Long id, UpdateUserRequest request) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("User not found"));
+    @Override
+    public User getUserByUsername(String username) {
+        // TODO Auto-generated method stub
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User"));
+        return user;
+    }
 
-		if (request.getFirstName() != null) {
-			user.setFirstName(request.getFirstName());
-		}
-		if (request.getLastName() != null) {
-			user.setLastName(request.getLastName());
-		}
-		if (request.getEmail() != null) {
-			user.setEmail(request.getEmail());
-		}
-		if (request.getNumberPhone() != null) {
-			user.setNumberPhone(request.getNumberPhone());
-		}
-		if (request.getAvatarUrl() != null) {
-			user.setAvatarUrl(request.getAvatarUrl());
-		}
-		if (request.getAddress() != null) {
-			user.setAddress(request.getAddress());
-		}
-		if (request.getDob() != null) {
-			user.setDob(request.getDob());
-		}
+    @Override
+    public User updateUser(Long id, UpdateUserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
-		if (request.getPassword() != null) {
-			user.setPassword(encoder.encode(request.getPassword()));
-		}
-		userRepository.save(user);
-		return user;
-	}
-	@Override
-	public User updateUserProfile(Long id, UpdateProfileRequest request) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("User not found"));
+        if (request.getFirstName() != null) {
+            user.setFirstName(request.getFirstName());
+        }
+        if (request.getLastName() != null) {
+            user.setLastName(request.getLastName());
+        }
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.getNumberPhone() != null) {
+            user.setNumberPhone(request.getNumberPhone());
+        }
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
+        if (request.getAddress() != null) {
+            user.setAddress(request.getAddress());
+        }
+        if (request.getDob() != null) {
+            user.setDob(request.getDob());
+        }
 
-		if (request.getFirstname() != null) {
-			user.setFirstName(request.getFirstname());
-		}
-		if (request.getLastname() != null) {
-			user.setLastName(request.getLastname());
-		}
-		if (request.getEmail() != null) {
-			user.setEmail(request.getEmail());
-		}
-		if (request.getPhone() != null) {
-			user.setNumberPhone(request.getPhone());
-		}
-		if (request.getAvatarUrl() != null) {
-			user.setAvatarUrl(request.getAvatarUrl());
-		}
-		if (request.getAddress() != null) {
-			user.setAddress(request.getAddress());
-		}
-		if (request.getDob() != null) {
-			user.setDob(request.getDob());
-		}
+        if (request.getPassword() != null) {
+            user.setPassword(encoder.encode(request.getPassword()));
+        }
+        userRepository.save(user);
+        return user;
+    }
 
-		userRepository.save(user);
-		return user;
-	}
+    @Override
+    public User updateUserProfile(Long id, UpdateProfileRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
-	@Override
-	public boolean changePassword(ChangePasswordRequest request) {
-		// Lấy người dùng hiện tại dựa trên tên đăng nhập
-		User user = userRepository.findByUsername(getCurrentUsername())
-				.orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
+        if (request.getFirstname() != null) {
+            user.setFirstName(request.getFirstname());
+        }
+        if (request.getLastname() != null) {
+            user.setLastName(request.getLastname());
+        }
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.getPhone() != null) {
+            user.setNumberPhone(request.getPhone());
+        }
+        if (request.getAvatarUrl() != null) {
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
+        if (request.getAddress() != null) {
+            user.setAddress(request.getAddress());
+        }
+        if (request.getDob() != null) {
+            user.setDob(request.getDob());
+        }
 
-		// Kiểm tra mật khẩu hiện tại có đúng không
-		if (!encoder.matches(request.getCurrentPassword(), user.getPassword())) {
-			throw new BadRequestException("Mật khẩu hiện tại không đúng");
-		}
+        userRepository.save(user);
+        return user;
+    }
 
-		// Kiểm tra mật khẩu mới và xác nhận mật khẩu mới có trùng khớp không
-		if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
-			throw new BadRequestException("Mật khẩu mới và xác nhận mật khẩu không khớp");
-		}
+    @Override
+    public boolean changePassword(ChangePasswordRequest request) {
+        // Lấy người dùng hiện tại dựa trên tên đăng nhập
+        User user = userRepository.findByUsername(getCurrentUsername())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
 
-		// Mã hóa mật khẩu mới và cập nhật vào cơ sở dữ liệu
-		user.setPassword(encoder.encode(request.getNewPassword()));
-		userRepository.save(user);
+        // Kiểm tra mật khẩu hiện tại có đúng không
+        if (!encoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BadRequestException("Mật khẩu hiện tại không đúng");
+        }
 
-		// Trả về true nếu thay đổi mật khẩu thành công
-		return true;
-	}
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới có trùng khớp không
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            throw new BadRequestException("Mật khẩu mới và xác nhận mật khẩu không khớp");
+        }
+
+        // Mã hóa mật khẩu mới và cập nhật vào cơ sở dữ liệu
+        user.setPassword(encoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        // Trả về true nếu thay đổi mật khẩu thành công
+        return true;
+    }
 
 
-	@Override
-	public List<User> getListUserByVerificationCode(String code) {
-		// TODO Auto-generated method stub
-		return userRepository.getListUserByVerificationCode(code);
-	}
+    @Override
+    public List<User> getListUserByVerificationCode(String code) {
+        // TODO Auto-generated method stub
+        return userRepository.getListUserByVerificationCode(code);
+    }
 
-	@Override
-	public Long countUser() {
-		// TODO Auto-generated method stub
-		return userRepository.countUser();
-	}
+    @Override
+    public Long countUser() {
+        // TODO Auto-generated method stub
+        return userRepository.countUser();
+    }
 
-	@Override
-	public Long count() {
-		// TODO Auto-generated method stub
-		return userRepository.count();
-	}
+    @Override
+    public Long count() {
+        // TODO Auto-generated method stub
+        return userRepository.count();
+    }
 
-	@Override
-	public void updateUserEnabledStatus(String username, Long status) {
-		// TODO Auto-generated method stub
-		User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User"));
-		if (status == 1) {
-			user.setEnabled(true);
-		} else if (status == 0) {
-			user.setEnabled(false);
-		}
-		userRepository.save(user);
-	}
+    @Override
+    public void updateUserEnabledStatus(String username, Long status) {
+        // TODO Auto-generated method stub
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Not Found User"));
+        if (status == 1) {
+            user.setEnabled(true);
+        } else if (status == 0) {
+            user.setEnabled(false);
+        }
+        userRepository.save(user);
+    }
 
-	@Override
-	public Long countEnabled() {
-		// TODO Auto-generated method stub
-		return userRepository.sumEnabledValues();
-	}
+    @Override
+    public Long countEnabled() {
+        // TODO Auto-generated method stub
+        return userRepository.sumEnabledValues();
+    }
 
 }

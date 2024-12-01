@@ -12,5 +12,6 @@ public class ImageDTO {
     private String name;
     private String type;
     private long size;
+    private String url;
     private String uploadedBy;
 }

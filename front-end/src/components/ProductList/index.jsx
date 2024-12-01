@@ -25,7 +25,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
     (state) => state.products?.totalProductItems
   );
   const [currentPage, setCurrentPage] = useState(0);
-  // console.log("productListByPage ", productListByPage);
+  console.log("productListByPage ", productListByPage);
   // Fetch products when filters or currentPage change
   useEffect(() => {
     setCurrentPage(1);

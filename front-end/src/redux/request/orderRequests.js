@@ -2,7 +2,6 @@ import axiosInstance from "../../axios/axios";
 import API_ENDPOINTS from "./api-endpoints";
 import errorHandler from "./handleRequests/errorHandler";
 
-
 const orderRequests = {
   GetOrders: async () => {
     try {
@@ -103,7 +102,7 @@ const orderRequests = {
       console.error("Error when checkout session:", error);
       throw error;
     }
-  }
+  },
 };
 
 export default orderRequests;

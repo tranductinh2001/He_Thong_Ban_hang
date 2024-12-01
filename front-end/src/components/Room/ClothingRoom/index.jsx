@@ -19,7 +19,7 @@ export default function ClothingRoom({ imageList }) {
       console.log("data url nè: ", MessageSocket);
     }
   }, [receivedData]);
-  console.log("selectedImage nè: ", imageList);
+  // console.log("selectedImage nè: ", imageList);
 
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("right");

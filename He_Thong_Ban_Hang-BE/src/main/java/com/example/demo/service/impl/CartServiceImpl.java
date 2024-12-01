@@ -66,6 +66,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Cart cart = user.getCart();
+//        System.out.println("crt nè  "+ cart);
         if (cart == null) {
 //            cart = new Cart();
 //            user.setCart(cart);

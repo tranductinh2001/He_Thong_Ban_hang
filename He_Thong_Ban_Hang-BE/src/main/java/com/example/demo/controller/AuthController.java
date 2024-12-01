@@ -99,11 +99,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @Operation(summary="Đăng ký")
-    public ResponseEntity<?> register(@Valid @RequestBody CreateUserRequest request){
-        System.out.println(" ĐA TA NHẬN ĐƯỢC TỪ FE"+request.toString());
-        userService.register(request);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    @Operation(summary = "Đăng ký")
+    public ResponseEntity<?> register(@Valid @RequestBody CreateUserRequest request) {
+        try {
+            System.out.println("Dữ liệu nhận được từ FE: " + request);
+            userService.register(request);
+            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
     }
 
     @PostMapping("/logout/{username}")

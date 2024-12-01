@@ -2,9 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.DTO.CartItemDTO;
 import com.example.demo.DTO.ClientSendMailRequest;
-import com.example.demo.DTO.TransactionHistory;
 import com.example.demo.entity.*;
-import com.example.demo.service.CartService;
+import com.example.demo.response.PaymentMessage;
+import com.example.demo.security.jwt.JwtUtils;
+import com.example.demo.security.service.UserDetailsImpl;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.ProductService;
 import com.example.demo.service.UserService;
@@ -19,10 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @RestController
@@ -50,6 +49,9 @@ public class WebhookController {
     private Long QuantityOfPeople = 0L;  // Declare QuantityOfPeople
 
     @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
     public WebhookController(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
     }
@@ -59,9 +61,13 @@ public class WebhookController {
         System.out.println("Webhook đã hoạt động");
         System.out.println("Dữ liệu nhận được từ webhook: " + requestBody);
 
+        // Giải mã dữ liệu URL-encoded
+        String decodedData = URLDecoder.decode(requestBody, StandardCharsets.UTF_8);
+        System.out.println("Dữ liệu sau khi decode: " + decodedData);
+
         // Sử dụng ObjectMapper để chuyển đổi dữ liệu JSON thành đối tượng Java
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(requestBody);
+        JsonNode rootNode = objectMapper.readTree(decodedData);
 
         // Lấy và in ra các trường trong dữ liệu JSON
         String signature = rootNode.path("signature").asText();
@@ -97,12 +103,17 @@ public class WebhookController {
                 order.setExpiresAt(new Date());
                 orderService.createOrder(order);
 
+                // Tạo JWT cookie
+                String username = firstUser.getUsername();
                 String message = "Đơn hàng của bạn đã được thanh toán thành công!";
-                messagingTemplate.convertAndSend("/topic/payment", message);
+
+                messagingTemplate.convertAndSend("/topic/payment", new PaymentMessage(message, username));
+
                 System.out.println("Thanh toán thành công cho user: " + firstUser.getUsername());
+
             } else {
                 // Trường hợp thanh toán không hợp lệ
-                Order order = new Order();
+                Order order = orderService.getOrderByVerificationCode(comment);
                 order.setTotalOfPrice(amount);
                 order.setNumberPhone(phone);
                 order.setEmail(firstUser.getEmail());
@@ -191,7 +202,6 @@ public class WebhookController {
 //
 
 
-
     @PostMapping("/sendMail")
     public String PigdtaMail(@RequestBody ClientSendMailRequest sdi) {
 
@@ -263,4 +273,5 @@ public class WebhookController {
 
         return "";
     }
+
 }

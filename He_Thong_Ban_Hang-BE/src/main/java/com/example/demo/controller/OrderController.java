@@ -24,10 +24,24 @@ public class OrderController {
 
     @GetMapping
     @Operation(summary = "Lấy danh sách tất cả đơn hàng")
-    public ResponseEntity<List<Order>> getAllOrders() {
+    public ResponseEntity<?> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+        if (orders == null || orders.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Trả về 204 nếu không có đơn hàng
+        }
+        return ResponseEntity.ok(orders); // Trả về 200 OK với danh sách đơn hàng
     }
+
+    @GetMapping("/oderAll")
+    @Operation(summary = "Lấy danh sách tất cả đơn hàng")
+    public ResponseEntity<List<Order>> getAllOrdersUrl() {
+        List<Order> orders = orderService.getAllOrders();
+        if (orders == null || orders.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Trả về 204 nếu không có đơn hàng
+        }
+        return ResponseEntity.ok(orders); // Trả về 200 OK với danh sách đơn hàng
+    }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Lấy chi tiết đơn hàng theo ID")

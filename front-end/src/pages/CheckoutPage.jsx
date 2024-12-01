@@ -11,23 +11,92 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCartData } from "../redux/slices/cartSlice";
 import { useNavigate, useParams } from "react-router-dom";
+import { useWebSocket } from "../WebSocket/WebSocketContext";
+import * as jwt_decode from "jwt-decode";
 
 export default function CheckoutPage() {
   const dispatch = useDispatch();
-  const cartData = useSelector((state) => state.cart?.products);
-  const totalCart = useSelector((state) => state.cart?.total);
-  const { code } = useParams(); // Lấy `code` từ URL params
-  const totalItems = cartData.reduce((total, item) => total + item.count, 0);
+  const cartData = useSelector((state) => state.cart?.products || []); // Đảm bảo cartData luôn là mảng
+  const totalCart = useSelector((state) => state.cart?.total || 0); // Đảm bảo totalCart có giá trị mặc định
+  const curentusser = useSelector((state) => state.auth?.currentUser); // Đảm bảo totalCart có giá trị mặc định
 
-  console.log("cartData   ", cartData);
-  console.log("totalCart   ", totalCart);
+  const { code } = useParams(); // Lấy `code` từ URL params
+  const totalItems = cartData.reduce((total, item) => total + item.count, 0); // Tính tổng số lượng sản phẩm
+  const { receivedData } = useWebSocket();
+  const [MessageSocketUsername, setMessageSocketUsername] = useState(null);
+  const [MessageSocket, setMessageSocket] = useState(null);
+  const [usernameCurent, setusernameCurent] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchCartData());
+    if (curentusser?.username) {
+      setusernameCurent(curentusser?.username);
+    }
+  }, [curentusser]);
+
+  useEffect(() => {
+    if (receivedData) {
+      const messageData = receivedData["/topic/payment"]; 
+
+      if (messageData) {
+        try {
+          // Parse chuỗi JSON bên trong
+          const parsedData = JSON.parse(messageData);
+          console.log("Parsed Payment Data: ", parsedData);
+
+          // Kiểm tra xem parsedData có đủ thông tin không
+          if (parsedData?.username && parsedData?.message) {
+            setMessageSocketUsername(parsedData.username);
+            setMessageSocket(parsedData.message);
+          } else {
+            console.error("Parsed data không có nội dung");
+          }
+        } catch (error) {
+          console.error("lỗi data socket:", error);
+        }
+      }
+    }
+  }, [receivedData]);
+
+  useEffect(() => {
+    // console.log(" thấy rồi Token from usernameCurent: ", usernameCurent); // Kiểm tra jwtToken từ localStorage
+    // console.log(" thấy rồi Token from MessageSocket: ", MessageSocket); // Kiểm tra jwtToken từ localStorage
+    if (MessageSocketUsername && MessageSocket) {
+      // console.log(
+      //   " vào rồi Token from MessageSocketUsername: ",
+      //   MessageSocketUsername
+      // ); // Kiểm tra jwtToken từ WebSocket
+      // console.log(" vào rồi Token from usernameCurent: ", usernameCurent); // Kiểm tra jwtToken từ localStorage
+      // console.log(" vào rồi Token from MessageSocket: ", MessageSocket); // Kiểm tra jwtToken từ localStorage
+
+      if (MessageSocketUsername === usernameCurent) {
+        if (
+          MessageSocket.includes(
+            "Đơn hàng của bạn đã được thanh toán thành công!"
+          )
+        ) {
+          setTimeout(() => {
+            window.location.href = "/payment-success";
+          }, 100);
+        } else {
+          setTimeout(() => {
+            window.location.href = "/payment-cancel";
+          }, 100);
+        }
+      } else {
+        setTimeout(() => {
+          // window.location.href = "/";
+          console.log("sai jwwt rồi : ");
+        }, 100);
+      }
+    }
+  }, [MessageSocketUsername, MessageSocket]);
+
+  useEffect(() => {
+    dispatch(fetchCartData()); // Lấy dữ liệu giỏ hàng
   }, [dispatch]);
 
   const getQrCodeUrl = () => {
@@ -36,9 +105,8 @@ export default function CheckoutPage() {
     const note = code;
     return `https://momosv3.apimienphi.com/api/QRCode?phone=${phone}&amount=${amount}&note=${note}`;
   };
-  // console.log("getQrCodeUrl:", getQrCodeUrl());
 
-  //config tiền tổng giỏ hảng các item
+  // Tính tổng tiền giỏ hàng
   const calculatedTotal = cartData.reduce((total, item) => {
     const price = item.product.sale
       ? item.product.salePrice
@@ -67,7 +135,7 @@ export default function CheckoutPage() {
                           Thanh toán
                         </MDBTypography>
                         <MDBTypography className="mb-0 text-muted">
-                        {totalItems} sản phẩm
+                          {totalItems} sản phẩm
                         </MDBTypography>
                       </div>
 
@@ -81,14 +149,20 @@ export default function CheckoutPage() {
                           <MDBCol md="2" lg="2" xl="2">
                             <MDBCardImage
                               src={
-                                item.product.images[0] ||
+                                item.product.images[0].url ||
                                 "https://via.placeholder.com/150"
                               }
                               fluid
-                              className="rounded-3"
+                              className="rounded-circle" // Đặt class cho hình tròn
                               alt={item.product.name}
+                              style={{
+                                width: "80px", // Đặt kích thước nhỏ cho hình ảnh
+                                height: "80px", // Đảm bảo chiều cao bằng chiều rộng để hình tròn
+                                objectFit: "cover", // Đảm bảo hình ảnh không bị biến dạng và phủ đầy khu vực
+                              }}
                             />
                           </MDBCol>
+
                           <MDBCol md="3" lg="3" xl="3">
                             <MDBTypography tag="h6" className="text-black mb-0">
                               {item.product.name}
@@ -135,51 +209,67 @@ export default function CheckoutPage() {
                             </MDBBtn>
                           </MDBCol>
                           <hr className="my-4" />
-
                         </MDBRow>
                       ))}
 
-<MDBCard className="mb-4">
-  <MDBCardBody>
-    <MDBTypography tag="h5" className="fw-bold mb-3">
-      Hướng dẫn chuyển tiền
-    </MDBTypography>
-    <MDBTypography tag="p" className="mb-3">
-  <strong className="text-primary">Số tài khoản:</strong> 
-  <span className="fw-bold text-dark">123456789</span>
-</MDBTypography>
-<MDBTypography tag="p" className="mb-3">
-  <strong className="text-primary">Ngân hàng:</strong> 
-  <span className="fw-bold text-dark">Vietcombank - Chi nhánh Hà Nội</span>
-</MDBTypography>
-<MDBTypography tag="p" className="mb-3">
-  <strong className="text-primary">Chủ tài khoản:</strong> 
-  <span className="fw-bold text-dark">Nguyễn Văn A</span>
-</MDBTypography>
-<MDBTypography tag="p" className="mb-3">
-  <strong className="text-primary">Nội dung chuyển khoản:</strong> 
-  <span className="fw-bold text-danger">{code} (Mã đơn hàng)</span>
-</MDBTypography>
-<MDBTypography tag="p" className="text-muted">
-  <span className="text-danger fw-bold">!Vui lòng sử dụng chính xác nội dung chuyển khoản </span> 
-   để hệ thống ghi nhận thanh toán.
-</MDBTypography>
+                      <MDBCard className="mb-4">
+                        <MDBCardBody>
+                          <MDBTypography tag="h5" className="fw-bold mb-3">
+                            Hướng dẫn chuyển tiền
+                          </MDBTypography>
+                          <MDBTypography tag="p" className="mb-3">
+                            <strong className="text-primary">
+                              Số tài khoản:
+                            </strong>
+                            <span className="fw-bold text-dark">123456789</span>
+                          </MDBTypography>
+                          <MDBTypography tag="p" className="mb-3">
+                            <strong className="text-primary">Ngân hàng:</strong>
+                            <span className="fw-bold text-dark">
+                              Vietcombank - Chi nhánh Hà Nội
+                            </span>
+                          </MDBTypography>
+                          <MDBTypography tag="p" className="mb-3">
+                            <strong className="text-primary">
+                              Chủ tài khoản:
+                            </strong>
+                            <span className="fw-bold text-dark">
+                              Nguyễn Văn A
+                            </span>
+                          </MDBTypography>
+                          <MDBTypography tag="p" className="mb-3">
+                            <strong className="text-primary">
+                              Nội dung chuyển khoản:
+                            </strong>
+                            <span className="fw-bold text-danger">
+                              {code} (Mã đơn hàng)
+                            </span>
+                          </MDBTypography>
+                          <MDBTypography tag="p" className="text-muted">
+                            <span className="text-danger fw-bold">
+                              !Vui lòng sử dụng chính xác nội dung chuyển khoản{" "}
+                            </span>
+                            để hệ thống ghi nhận thanh toán.
+                          </MDBTypography>
 
-    <MDBTypography tag="h5" className="fw-bold mt-4 mb-3">
-      Hoặc quét mã QR
-    </MDBTypography>
-    <MDBCardImage
-      src={getQrCodeUrl()} // Hàm trả về URL QR code
-      alt="QR Code"
-      className="rounded mx-auto d-block"
-      style={{ width: "200px", height: "200px" }}
-    />
-    <MDBTypography tag="p" className="text-muted text-center mt-3">
-      Sử dụng ứng dụng ngân hàng MOMO để quét mã QR và thanh toán.
-    </MDBTypography>
-  </MDBCardBody>
-</MDBCard>
-
+                          <MDBTypography tag="h5" className="fw-bold mt-4 mb-3">
+                            Hoặc quét mã QR
+                          </MDBTypography>
+                          <MDBCardImage
+                            src={getQrCodeUrl()} // Hàm trả về URL QR code
+                            alt="QR Code"
+                            className="rounded mx-auto d-block"
+                            style={{ width: "200px", height: "200px" }}
+                          />
+                          <MDBTypography
+                            tag="p"
+                            className="text-muted text-center mt-3"
+                          >
+                            Sử dụng ứng dụng ngân hàng MOMO để quét mã QR và
+                            thanh toán.
+                          </MDBTypography>
+                        </MDBCardBody>
+                      </MDBCard>
 
                       <div className="pt-5">
                         <MDBTypography tag="h6" className="mb-0">
@@ -245,7 +335,9 @@ export default function CheckoutPage() {
                         <MDBTypography tag="h5" className="text-uppercase">
                           Tổng giá phải trả
                         </MDBTypography>
-                        <MDBTypography tag="h5">{calculatedTotal.toLocaleString("vi-VN")}₫</MDBTypography>
+                        <MDBTypography tag="h5">
+                          {calculatedTotal.toLocaleString("vi-VN")}₫
+                        </MDBTypography>
                       </div>
                     </div>
                   </MDBCol>

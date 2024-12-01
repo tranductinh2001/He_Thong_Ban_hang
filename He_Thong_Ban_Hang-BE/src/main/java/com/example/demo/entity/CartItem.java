@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "CartItem")
+@Table(name = "cartItem")
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

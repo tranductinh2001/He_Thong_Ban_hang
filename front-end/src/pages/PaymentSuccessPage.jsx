@@ -10,22 +10,27 @@ export default function PaymentSuccessPage() {
   const dispatch = useDispatch();
   const session_detail = useSelector((state) => state.order?.session_detail);
   const isLoading = useSelector((state) => state.order.loading);
+  const cartData = useSelector((state) => state.cart?.products);
+
+
+  console.log("object", cartData);
   const columns = [
     {
       title: "Sản phẩm",
-      dataIndex: "description",
-      key: "description",
+      dataIndex: "product",  // Dữ liệu sẽ lấy từ object 'product'
+      key: "product",
+      render: (product) => product?.name,  // Hiển thị tên sản phẩm
     },
     {
       title: "Số lượng",
-      dataIndex: "quantity",
+      dataIndex: "count",  // Dữ liệu sẽ lấy từ thuộc tính 'count'
       key: "quantity",
     },
     {
       title: "Giá",
-      dataIndex: `price`,
+      dataIndex: "product",  // Dữ liệu sẽ lấy từ object 'product' (vì giá nằm trong 'product')
       key: "price",
-      render: (price) => `${price.unit_amount?.toLocaleString()}$`, // Format giá trị price
+      render: (product) => `${product?.price?.toLocaleString()} đ`,  // Hiển thị giá sản phẩm với định dạng số
     },
   ];
   // useEffect(() => {
@@ -74,7 +79,7 @@ export default function PaymentSuccessPage() {
               {/* Table  */}
               {/* <span>Sản phẩm</span> */}
               <Table
-                dataSource={session_detail?.session?.line_items?.data}
+                dataSource={cartData}
                 columns={columns}
                 pagination={false} // Tắt phân trang nếu không cần
               />

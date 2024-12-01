@@ -71,7 +71,7 @@ const API_ENDPOINTS = {
   REMOVE_FROM_CART: `/cart/update`,
 
   //order
-  GET_ORDERS: `/order`,
+  GET_ORDERS: `/order/oderAll`,
   ADD_ORDER: `/order`,
   UPDATE_ORDER_STATUS: (order_id) => `/order/update-order-status/${order_id}`,
 
