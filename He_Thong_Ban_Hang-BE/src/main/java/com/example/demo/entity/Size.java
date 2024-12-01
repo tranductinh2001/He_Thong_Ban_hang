@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,8 @@ public class Size {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

@@ -2,11 +2,13 @@ package com.example.demo.service.impl;
 
 import java.util.*;
 import java.text.DecimalFormat;
+
+import com.example.demo.repository.SizeRepository;
+import com.example.demo.service.*;
 import jakarta.mail.MessagingException;
 
 import com.example.demo.DTO.*;
 import com.example.demo.entity.*;
-import com.example.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,9 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.controller.WebhookController;
-import com.example.demo.service.ClientService;
-import com.example.demo.service.MailService;
-import com.example.demo.service.UserService;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -34,6 +34,12 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private SizeService sizeService;
+
+    @Autowired
+    private SizeRepository SizeRepository;
 
     @Autowired
     private WebhookController webhookController;
@@ -56,7 +62,7 @@ public class ClientServiceImpl implements ClientService {
         return userDetails.getUsername();
     }
 
-// Phương thức định dạng dữ liệu giỏ hàng
+    // Phương thức định dạng dữ liệu giỏ hàng
     public List<Map<String, Object>> formatCartData(List<CartItemDTO> cartItems) {
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
@@ -72,6 +78,33 @@ public class ClientServiceImpl implements ClientService {
             formattedItem.put("size", item.getSize());
             formattedItem.put("count", item.getCount());
             formattedItem.put("createdAt", item.getCreatedAt());
+
+            //duệt qua product lay sizeListdde cap nhat
+            List<SizeDTO> sizes = product.getSizeList();
+            for (SizeDTO itemSizeDTO : sizes) {
+                if (item.getSize().equals(itemSizeDTO.getSizeName())) {
+                    // Tìm Size entity từ database theo ID của Size
+                    Size sizeEntity = SizeRepository.findById(itemSizeDTO.getId())
+                            .orElseThrow(() -> new RuntimeException("Size not found for product: " + product.getName()));
+
+//                    System.out.println("sizeEntity.getQuantity() id: " + itemSizeDTO.getId() + " số lượng trong DB: " + sizeEntity.getQuantity() + " itemSizeDTO.getQuantity() cần trừ: " + item.getCount());
+
+                    // Trừ số lượng tương ứng
+                    int newQuantity = sizeEntity.getQuantity() - item.getCount();
+                    if (newQuantity < 0) {
+                        throw new RuntimeException("Not enough stock for size: " + sizeEntity.getSizeName());
+                    }
+
+                    // Cập nhật số lượng mới
+                    sizeEntity.setQuantity(newQuantity);
+
+                    // Lưu lại cập nhật
+                    SizeRepository.save(sizeEntity);
+
+                    // Sau khi đã cập nhật cho size của giỏ hàng thì có thể break ra khỏi vòng lặp sizeList
+                    break;
+                }
+            }
 
             // Định dạng thông tin sản phẩm
             Map<String, Object> formattedProduct = new HashMap<>();
@@ -110,6 +143,7 @@ public class ClientServiceImpl implements ClientService {
             // Định dạng dữ liệu giỏ hàng
             List<Map<String, Object>> formattedCartItems = formatCartData(sdi.getCart());
             System.out.println("Định dạng giỏ hàng: " + formattedCartItems);
+
 
             // Tạo đối tượng Mail
             Mail dataMail = new Mail();

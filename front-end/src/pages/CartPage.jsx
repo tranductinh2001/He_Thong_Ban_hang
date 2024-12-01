@@ -117,6 +117,7 @@ export default function CartPage() {
   };
   //xử lý nút đặt hàng
   const handleOrder = () => {
+    dispatch(fetchCartData());
     if (checkQuantityCartItem()) {
       setIsModalVisible(true); // Hiển thị modal
       // console.log(orderForm);

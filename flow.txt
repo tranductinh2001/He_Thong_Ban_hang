@@ -1,5 +1,7 @@
+******************chức năng**********************
 *thanh toán
-- đặt hàng ở cart thì gửi mail xác nhận và cập nhật lại số lượng hàng (chưa làm)
+- trước khi ấn thì check lại giỏ hàng còn đủ sản phẩm để thực hiện đặt hàng hay không.
+- đặt hàng ở cart thì gửi mail xác nhận và cập nhật lại số lượng hàng 
 - ấn xác nhận qua trang thanh toán ở đây là realtime khi quét mã chuyển tiền
 - thành công chuyển hướng về trang thanh toán thành công còn thất bại thì ngược lại
 	+xác nhận dúng người chuyển tiền và thành toán thành công mới cho về trang thành công (chưa làm)
@@ -15,7 +17,7 @@
 - thêm sửa xoá sổ địa chỉ
 - show danh sách đơn hàng
 - khoảng trắng phần dưới home quá nhiều
-
+- show image lên taskbar khi login
 
 **test chức năng
 - lazyloading search

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -46,6 +47,7 @@ public class Product {
     private List<Image> images;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "product_id") // Tạo khóa ngoại trong bảng Size
     private List<Size> sizeList;
 
