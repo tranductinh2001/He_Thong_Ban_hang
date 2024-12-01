@@ -9,6 +9,9 @@ const BrandManager = React.lazy(() => import('./views/BrandManager/BrandManager'
 const ServiceManager = React.lazy(() => import('./views/ServiceManager/ServiceManager'))
 const CategoryManager = React.lazy(() => import('./views/CategoryManager/CategoryManager'))
 const ProductManager = React.lazy(() => import('./views/ProductManager/ProductManager'))
+const OrderManager = React.lazy(() => import('./views/OrderManager/OrderManager'))
+const ReviewManager = React.lazy(() => import('./views/ReviewManager/ReviewManager'))
+const ContactManager = React.lazy(() => import('./views/ContactManager/ContactManager'))
 
 // Base
 const Tabs = React.lazy(() => import('./views/base/tabs/Tabs'))
@@ -43,6 +46,9 @@ const routes = [
   { path: '/category', name: 'Category', element: CategoryManager },
   { path: '/service', name: 'Service', element: ServiceManager },
   { path: '/product', name: 'Product', element: ProductManager },
+  { path: '/order', name: 'Order', element: OrderManager },
+  { path: '/review', name: 'Review', element: ReviewManager },
+  { path: '/contact', name: 'Contact', element: ContactManager },
 
   { path: '/base/tabs', name: 'Tabs', element: Tabs },
   { path: '/base/tables', name: 'Tables', element: Tables },

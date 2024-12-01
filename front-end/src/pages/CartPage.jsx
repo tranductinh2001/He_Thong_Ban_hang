@@ -143,7 +143,7 @@ export default function CartPage() {
             <div>
               {messageError}
               <br />
-              <Link className="underline text-blue-600" to={prevPaymentUrl}>
+              <Link className="text-blue-600 underline" to={prevPaymentUrl}>
                 Đơn hàng chưa thanh toán
               </Link>
             </div>
@@ -162,7 +162,10 @@ export default function CartPage() {
   const isLoading = useSelector((state) => state.order?.loading);
   useEffect(() => {
     if (currentUser && isAuthenticated) {
-      dispatch(fetchOrderAddress());
+      const userId = localStorage.getItem("userId");
+      if (userId) {
+        dispatch(fetchOrderAddress(userId));
+      }
       dispatch(fetchCartData());
     }
   }, [currentUser]);

@@ -11,6 +11,8 @@ import serviceSlice from "../redux/slices/serviceSlice";
 import searchSlice from "../redux/slices/searchSlice";
 import userSlice from "../redux/slices/userSlice";
 import orderSlice from "../redux/slices/orderSlice";
+import reviewSlice from "../redux/slices/reviewSlice";
+import contactSlice from "../redux/slices/contactSlice";
 
 export default configureStore({
   reducer: {
@@ -26,5 +28,7 @@ export default configureStore({
     user: userSlice,
     orderAddress: orderAddressSlice,
     order: orderSlice,
+    review: reviewSlice,
+    contact: contactSlice,
   },
 });

@@ -13,6 +13,7 @@ const API_ENDPOINTS = {
   LIST_SALE: (currentPage, pageSize) =>
     `/product/sale?page=${currentPage}&pageSize=${pageSize}`,
   PRODUCT_DETAIL: (productId) => `/product/${productId}`,
+  GET_PRODUCT: `/product`,
   CREATE_PRODUCT: `/product/create`,
   UPDATE_PRODUCT: `/product/update/`,
   DELETE_PRODUCT: `/product/delete`,
@@ -54,14 +55,26 @@ const API_ENDPOINTS = {
   DELETE_USER: `/user/delete`,
   USER_DETAIL: "/user/profile",
 
+  //review
+  GET_REVIEW: `/reviews`,
+  CREATE_REVIEW: `/reviews/create`,
+  UPDATE_REVIEW: `/reviews/update/`,
+  DELETE_REVIEW: `/reviews/delete`,
+
+  //contacts
+  GET_CONTACT: `/contact`,
+  CREATE_CONTACT: `/contact/create`,
+  UPDATE_CONTACT: `/contact/update/`,
+  DELETE_CONTACT: `/contact/delete`,
+
   //authentication
   LOGIN: `auth/login`,
   CHANGE_PASSWORD: `/user/change-password`,
   RIGISTER: `/auth/register`,
 
   //order address
-  CREATE_ORDER_ADDRESS: `/order-address`,
-  GET_ORDER_ADDRESS: `/order-address`,
+  CREATE_ORDER_ADDRESS: `/order/create/order-address`,
+  GET_ORDER_ADDRESS: `/order/order-address/user`,
   SET_DEFAULT_ORDER_ADDRESS: (order_address_id) =>
     `/order-address/set-default/${order_address_id}`,
 
@@ -71,9 +84,10 @@ const API_ENDPOINTS = {
   REMOVE_FROM_CART: `/cart/update`,
 
   //order
-  GET_ORDERS: `/order/oderAll`,
+  GET_ORDERS: `/order`,
+  GET_ORDER_BY_USER_ID: `/order/user`,
   ADD_ORDER: `/order`,
-  UPDATE_ORDER_STATUS: (order_id) => `/order/update-order-status/${order_id}`,
+  UPDATE_ORDER_STATUS: (order_id) => `/order/update/${order_id}`,
 
   //payment
   CREATE_CHECKOUT_SESSION: `/payment/create-checkout-session`,

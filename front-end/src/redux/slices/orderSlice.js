@@ -3,6 +3,7 @@ import { request } from "../request";
 import orderRequests from "../request/orderRequests";
 const initialState = {
   orders: [],
+  orderByUser: [],
   session_detail: null,
   loading: false,
   paymentUrl: null,
@@ -35,17 +36,30 @@ export const checkoutSession = createAsyncThunk(
   }
 );
 
+export const fetchOrderByUserId = createAsyncThunk(
+    "order/fetchOrderByUserId",
+    async (userId, { rejectWithValue }) => {
+      try {
+        const response = await orderRequests.GetOrderByUserId(userId);
+        return response;
+      } catch (error) {
+        return rejectWithValue(error.message);
+      }
+    }
+);
+
 export const fetchOrders = createAsyncThunk(
   "order/fetchOrders",
   async (_, { rejectWithValue }) => {
     try {
       const response = await orderRequests.GetOrders();
-      return response.data;
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
+
 export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (order, { rejectWithValue }) => {
@@ -94,7 +108,7 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
-        // state.orders = action.payload.data;
+        state.orders = action.payload.data;
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
@@ -130,10 +144,22 @@ const orderSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+      .addCase(updateOrderStatus.fulfilled, (state) => {
         state.loading = false;
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchOrderByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrderByUserId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderByUser = action.payload;
+      })
+      .addCase(fetchOrderByUserId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

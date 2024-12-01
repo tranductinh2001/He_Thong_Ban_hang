@@ -117,9 +117,9 @@ const request = {
       throw error;
     }
   },
-  fetchOrderAddress: async () => {
+  fetchOrderAddress: async (userId) => {
     try {
-      const response = await axiosInstance.get(API_ENDPOINTS.GET_ORDER_ADDRESS);
+      const response = await axiosInstance.get(`${API_ENDPOINTS.GET_ORDER_ADDRESS}/${userId}`);
       console.log("data ", response);
       return response;
     } catch (error) {
@@ -170,7 +170,7 @@ const request = {
       throw error;
     }
   },
-  updateRelationUser: async ({ userId, oderAddressId }) => {
+  updateRelationUser: async ({ oderAddressId }) => {
     try {
       const data = {
         order_addresses: {
@@ -486,7 +486,7 @@ const request = {
       console.log("request order_id and order_status", order_id, order_status);
       const response = await axiosInstance.put(
         API_ENDPOINTS.UPDATE_ORDER_STATUS(order_id),
-        { order_status }
+        { status: order_status }
       );
       return response.data;
     } catch (error) {
@@ -525,9 +525,9 @@ const request = {
       const response = await axiosInstance.post(API_ENDPOINTS.RIGISTER, {
         email: data.email,
         password: data.password,
-        firstName: data.first_name, 
-        lastName: data.last_name, 
-        numberPhone: data.number_phone, 
+        firstName: data.first_name,
+        lastName: data.last_name,
+        numberPhone: data.number_phone,
         address: data.address,
         dob: data.dob
       });
