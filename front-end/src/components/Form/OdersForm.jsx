@@ -85,7 +85,7 @@ const columns = [
 
 const OrdersForm = () => {
   const dispatch = useDispatch();
-  const orders = useSelector((state) => state.order.orderByUser);
+  const orders = useSelector((state) => state?.order?.orderByUser);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -99,13 +99,6 @@ const OrdersForm = () => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const orders = useSelector((state) => state.order?.orders);
-  console.log("oser list nè ", orders);
-
-  
-  useEffect(() => {
-    dispatch(fetchOrders());
-  }, [dispatch]);
 
   return (
     <>

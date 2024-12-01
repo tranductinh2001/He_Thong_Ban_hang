@@ -214,36 +214,53 @@ const Dashboard = () => {
     },
   ];
 
-  const [option, setOption] = useState('month');
-  const [dateRange, setDateRange] = useState(null);
+  const [option, setOption] = useState('day'); // Mặc định chọn "Theo tháng"
+  const [dateRange, setDateRange] = useState(null); // Lưu giá trị ngày/tháng/năm đã chọn
 
+  // Hàm xử lý thay đổi lựa chọn của Radio
   const handleOptionChange = (e) => {
-    setOption(e.target.value);
-    setDateRange(null);
+    setOption(e.target.value); // Lưu giá trị được chọn từ Radio
+    setDateRange(null); // Reset giá trị ngày khi thay đổi lựa chọn
+  };
+
+  const handleDateChange = (dates) => {
+    setDateRange(dates); // Lưu giá trị ngày/tháng/năm đã chọn
+
+    if (dates && dates.length === 2) {
+      if (option === 'day') {
+        const startMonth = dates[0].format('YYYY-MM-DD');
+        const endMonth = dates[1].format('YYYY-MM-DD');
+        console.log('Lấy dữ liệu theo tháng:', startMonth, endMonth);
+      } else if (option === 'year') {
+        const startYear = dates[0].year();
+        const endYear = dates[1].year();
+        console.log('Lấy dữ liệu theo năm:', startYear, endYear);
+      }
+    }
   };
 
   return (
     <>
       <div className="mb-10">
         <Radio.Group onChange={handleOptionChange} value={option}>
-          <Radio.Button value="month">Theo tháng</Radio.Button>
+          <Radio.Button value="day">Theo tháng</Radio.Button>
           <Radio.Button value="year">Theo năm</Radio.Button>
         </Radio.Group>
 
         <RangePicker
-          picker={option}
-          value={dateRange}
-          onChange={(dates) => setDateRange(dates)}
-          style={{ marginTop: 16 }}
-          placeholder={
-            option === "month"
-              ? ["Chọn tháng bắt đầu", "Chọn tháng kết thúc"]
-              : ["Chọn năm bắt đầu", "Chọn năm kết thúc"]
-          }
-          disabledDate={(current) => {
-            return current && current > dayjs().endOf("day");
-          }}
-        />
+            picker={option} // "month" cho chọn tháng, "year" cho chọn năm
+            value={dateRange}
+            onChange={handleDateChange} // Gọi handleDateChange khi thay đổi ngày
+            style={{ marginTop: 16 }}
+            placeholder={
+              option === 'day'
+                ? ['Chọn ngày bắt đầu', 'Chọn ngày kết thúc']
+                : ['Chọn năm bắt đầu', 'Chọn năm kết thúc']
+            }
+            disabledDate={(current) => {
+              return current && current > dayjs().endOf('day'); // Không cho phép chọn ngày trong tương lai
+            }}
+          />
       </div>
       <WidgetsDropdown className="mb-4" />
       <CCard className="mb-4">

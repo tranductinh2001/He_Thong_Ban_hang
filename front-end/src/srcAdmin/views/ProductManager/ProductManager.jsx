@@ -223,8 +223,8 @@ const ProductManager = () => {
       ...getColumnSearchProps("sizeList"),
       render: (sizes) => (
         <>
-          {sizes.map((size) => (
-            <Tag key={size.id}>{size.sizeName}</Tag>
+          {sizes?.map((size) => (
+            <Tag key={size.id}>{size?.sizeName}</Tag>
           ))}
         </>
       ),

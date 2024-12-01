@@ -40,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderAddress createOrderAddress(OrderAddress orderAddress) {
+        System.out.println("orderAddress uid nef "+ orderAddress.getUser());
         return orderAddressRepository.save(orderAddress);
     }
 
