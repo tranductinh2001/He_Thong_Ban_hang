@@ -49,6 +49,18 @@ const _nav = [
     to: "/admin/brand",
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: "Nhận xét",
+    to: "/admin/review",
+    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Liên hệ",
+    to: "/admin/contact",
+    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  },
   //   {
   //     component: CNavItem,
   //     name: "Docs",

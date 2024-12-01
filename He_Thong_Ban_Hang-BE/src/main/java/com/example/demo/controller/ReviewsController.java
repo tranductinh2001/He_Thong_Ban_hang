@@ -20,7 +20,7 @@ public class ReviewsController {
     @Autowired
     private ReviewsService reviewsService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Lấy danh sách tất cả đánh giá")
     public ResponseEntity<List<Reviews>> getAllReviews() {
         List<Reviews> reviews = reviewsService.getAllReviews();

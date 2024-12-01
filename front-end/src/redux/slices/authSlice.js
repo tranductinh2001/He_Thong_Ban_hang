@@ -10,7 +10,7 @@ export const login = createAsyncThunk(
       const response = await authRequests.loginService(payload);
       const { jwt, user } = response.data;
       localStorage.setItem("jwt", jwt?.value);
-      // localStorage.setItem("refresh_token", jwt?.refresh_token);
+      localStorage.setItem("userId", user.id);
       return user;
     } catch (error) {
       return rejectWithValue(error.response.data);

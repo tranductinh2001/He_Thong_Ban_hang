@@ -2,7 +2,6 @@ import axiosInstance from "../../axios/axios";
 import API_ENDPOINTS from "./api-endpoints";
 import errorHandler from "./handleRequests/errorHandler";
 
-
 const orderRequests = {
   GetOrders: async () => {
     try {
@@ -22,12 +21,29 @@ const orderRequests = {
       throw error;
     }
   },
+  GetOrderByUserId: async (userId) => {
+    try {
+      const response = await axiosInstance.get(`${API_ENDPOINTS.GET_ORDER_BY_USER_ID}/${userId}`);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        console.error("Error status:", error.response.status);
+        console.error("Error headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("Error request:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
+      throw error;
+    }
+  },
   createOrderAddress: async (order_address) => {
     try {
       console.log("request ", order_address);
       const response = await axiosInstance.post(
         API_ENDPOINTS.CREATE_ORDER_ADDRESS,
-        { order_address: order_address }
+        order_address
       );
       return response.data;
     } catch (error) {
@@ -70,7 +86,7 @@ const orderRequests = {
       console.log("request order_id and order_status", order_id, order_status);
       const response = await axiosInstance.put(
         API_ENDPOINTS.UPDATE_ORDER_STATUS(order_id),
-        { order_status }
+        { status: order_status }
       );
       return response.data;
     } catch (error) {
@@ -103,7 +119,7 @@ const orderRequests = {
       console.error("Error when checkout session:", error);
       throw error;
     }
-  }
+  },
 };
 
 export default orderRequests;

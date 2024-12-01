@@ -60,17 +60,10 @@ const AddressForm = () => {
     dispatch(setDefaultOrderAddress(order_address_id));
   };
   useEffect(() => {
-    // if (currentUser) {
-    //   const formattedData = currentUser.order_addresses?.map((item) => ({
-    //     key: item._id?.toString(),
-    //     name: item.name,
-    //     address: item.address,
-    //     defaultAddress: item.isDefault ? "v" : "",
-    //     action: item.isDefault ? "Cửa hàng mặc định" : "",
-    //   }));
-    //   setData(formattedData);
-    // }
-    dispatch(fetchOrderAddress());
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      dispatch(fetchOrderAddress(userId));
+    }
   }, [dispatch]);
 
   const onChange = (pagination, filters, sorter, extra) => {
@@ -79,7 +72,7 @@ const AddressForm = () => {
 
   return (
     <>
-      <div className="container mx-auto  p-5">
+      <div className="container p-5 mx-auto">
         <div className="size-full">
           <AddAddressForm />
         </div>

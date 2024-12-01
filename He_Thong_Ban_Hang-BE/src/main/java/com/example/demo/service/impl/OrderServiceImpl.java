@@ -1,8 +1,10 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Order;
+import com.example.demo.entity.OrderAddress;
 import com.example.demo.entity.User;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.repository.OrderAddressRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderAddressRepository orderAddressRepository;
 
     @Override
     public List<Order> getAllOrders() {
@@ -33,6 +38,11 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
+    @Override
+    public OrderAddress createOrderAddress(OrderAddress orderAddress) {
+        return orderAddressRepository.save(orderAddress);
+    }
+
 
     @Override
     public Order getOrderByVerificationCode(String code) {
@@ -48,6 +58,15 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(existingOrder);
     }
 
+    @Override
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<OrderAddress> getAllOrderAddressByUserId(Long userId) {
+        return orderAddressRepository.findByUserId(userId);
+    }
     @Override
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);

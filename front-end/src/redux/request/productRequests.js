@@ -3,13 +3,26 @@ import API_ENDPOINTS from "./api-endpoints";
 import errorHandler from "./handleRequests/errorHandler";
 
 const productRequests = {
+  getAll: async () => {
+    try {
+      const response = await axiosInstance.get(API_ENDPOINTS.GET_PRODUCT);
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
   List: async (currentPage, pageSize) => {
     try {
-      console.log("productRequests     currentPage   ", currentPage, "pageSize   ",pageSize)
+      console.log(
+        "productRequests     currentPage   ",
+        currentPage,
+        "pageSize   ",
+        pageSize
+      );
       const response = await axiosInstance.get(
         API_ENDPOINTS.GET_LIST_PRODUCTS(currentPage, pageSize)
       );
-      console.log("kkk", response)
+      console.log("kkk", response);
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -80,7 +93,10 @@ const productRequests = {
   },
   create: async (body) => {
     try {
-      const response = await axiosInstance.post(API_ENDPOINTS.CREATE_PRODUCT, body);
+      const response = await axiosInstance.post(
+        API_ENDPOINTS.CREATE_PRODUCT,
+        body
+      );
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -88,7 +104,10 @@ const productRequests = {
   },
   update: async (productId, body) => {
     try {
-      const response = await axiosInstance.put(`${API_ENDPOINTS.UPDATE_PRODUCT}${productId}`, body);
+      const response = await axiosInstance.put(
+        `${API_ENDPOINTS.UPDATE_PRODUCT}${productId}`,
+        body
+      );
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -96,7 +115,9 @@ const productRequests = {
   },
   delete: async (productId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_PRODUCT}?id=${productId}`);
+      const response = await axiosInstance.delete(
+        `${API_ENDPOINTS.DELETE_PRODUCT}?id=${productId}`
+      );
       return response.data;
     } catch (error) {
       return errorHandler(error);

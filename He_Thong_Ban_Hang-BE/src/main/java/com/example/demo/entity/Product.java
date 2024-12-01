@@ -1,25 +1,25 @@
 package com.example.demo.entity;
 
-import java.awt.*;
+import com.fasterxml.jackson.annotation.JsonBackReference; // Ngược lại của @JsonManagedReference
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
-import jakarta.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Entity
 @Table(name = "product")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,7 +46,7 @@ public class Product {
     private List<Image> images;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id") // Tạo khóa ngoại trong bảng Size
+    @JoinColumn(name = "product_id")
     private List<Size> sizeList;
 
     @ManyToMany
@@ -75,4 +75,8 @@ public class Product {
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt = new Date();
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "products")
+    private List<Order> orders;
 }

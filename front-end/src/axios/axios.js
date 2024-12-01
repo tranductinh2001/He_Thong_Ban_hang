@@ -1,20 +1,20 @@
 import axios from "axios";
 
-
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080/api',
-  timeout: 3000,
+  baseURL: "http://localhost:8080/api",
+  timeout: 5000,
   headers: {
     "Content-Type": "application/json",
   },
 });
-
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("jwt");
-    config.headers["Authorization"] = token
-      ? `Bearer ${token}`
-      : delete config.headers["Authorization"];
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete config.headers["Authorization"];
+    }
     return config;
   },
   (error) => {
@@ -22,17 +22,23 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+// Response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
     const { response } = error;
-    console.log(response);
-    if (response && (response.status === 401 || response.status === 403)) {
-      // window.location.href = '/login';\
 
+    if (response) {
+      console.error("API error response:", response);
+
+      if (response.status === 401 || response.status === 403) {
+        // alert("Your session has expired. Please log in again.");
+        // window.location.href = "/login";
+      }
     }
+
     return Promise.reject(error);
   }
 );

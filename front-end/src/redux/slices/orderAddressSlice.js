@@ -28,10 +28,9 @@ export const setDefaultOrderAddress = createAsyncThunk(
 
 export const fetchOrderAddress = createAsyncThunk(
   "orderAddress/fetchOrderAddress",
-  async (_, { rejectWithValue }) => {
+  async (userId, { rejectWithValue }) => {
     try {
-      const response = await request.fetchOrderAddress();
-      // console.log("data ", response.data)
+      const response = await request.fetchOrderAddress(userId);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);

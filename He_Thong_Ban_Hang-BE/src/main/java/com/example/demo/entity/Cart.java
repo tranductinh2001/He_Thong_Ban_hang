@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -17,8 +16,8 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
 public class Cart {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,4 +34,8 @@ public class Cart {
     @JsonIgnore
     @OneToOne(mappedBy = "cart")
     private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "cart")
+    private List<Order> orders;
 }

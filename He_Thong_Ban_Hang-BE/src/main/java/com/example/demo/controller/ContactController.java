@@ -20,7 +20,7 @@ public class ContactController {
     @Autowired
     private ContactService contactService;
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Lấy danh sách tất cả liên hệ")
     public ResponseEntity<List<Contact>> getAllContacts() {
         List<Contact> contacts = contactService.getAllContacts();

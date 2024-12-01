@@ -1,115 +1,118 @@
-import { Table, Tag } from "antd";
+import { Table } from "antd";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchOrders } from "../../redux/slices/orderSlice";
-import { format } from "date-fns";
-import { Link } from "react-router-dom";
+import { fetchOrderByUserId } from "../../redux/slices/orderSlice";
 
 const columns = [
   {
-    title: "Mã đơn hàng",
-    dataIndex: "_id",
-    key: "_id",
-    width: 90,
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+    fixed: "left",
+    width: 70,
+    render: (id) => id.toString(),
   },
   {
-    title: "Tổng tiền",
-    dataIndex: "total_of_price",
-    key: "total_of_price",
-    render: (price) => {
-      return `${price?.toLocaleString()}₫`;
-    },
+    title: "Tổng giá trị (VND)",
+    dataIndex: "totalOfPrice",
+    key: "totalOfPrice",
+    fixed: "left",
+    render: (totalOfPrice) => totalOfPrice?.toLocaleString("vi-VN"),
   },
   {
-    title: "Ngày mua",
-    dataIndex: "created_at",
-    key: "created_at",
-    render: (created_at) => {
-      return created_at ? format(new Date(created_at), "dd/MM/yyyy") : "";
-    },
+    title: "Số điện thoại",
+    dataIndex: "numberPhone",
+    key: "numberPhone",
   },
   {
-    title: "Tình trạng",
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+  },
+  {
+    title: "Địa chỉ giao hàng",
+    dataIndex: "orderAddress",
+    key: "orderAddress",
+  },
+  {
+    title: "Ghi chú",
+    dataIndex: "notes",
+    key: "notes",
+  },
+  {
+    title: "Trạng thái",
     dataIndex: "status",
     key: "status",
+    filters: [
+      { text: "PENDING", value: "PENDING" },
+      { text: "COMPLETED", value: "COMPLETED" },
+      { text: "CANCELED", value: "CANCELED" },
+    ],
+    onFilter: (value, record) => record.status === value,
     render: (status) => {
-      let tagColor, tagText;
-
+      let color;
       switch (status) {
-        case "pending":
-          tagColor = "processing";
-          tagText = "Pending";
+        case "PENDING":
+          color = "orange";
           break;
-        case "completed":
-          tagColor = "success";
-          tagText = "Hoàn thành";
+        case "COMPLETED":
+          color = "green";
           break;
-        case "shipping":
-          tagColor = "warning";
-          tagText = "Đang giao";
-          break;
-        case "paid":
-          tagColor = "success";
-          tagText = "Đã thanh toán";
-          break;
-        case "canceled":
-          tagColor = "error";
-          tagText = "Hủy bỏ";
+        case "CANCELED":
+          color = "red";
           break;
         default:
-          tagColor = "default";
-          tagText = "Unknown";
+          color = "blue";
       }
-
-      return <Tag color={tagColor}>{tagText}</Tag>;
+      return <span style={{ color, fontWeight: "bold" }}>{status}</span>;
     },
   },
-
   {
-    title: "Chi tiết",
-    dataIndex: "cart",
-    key: "cart",
-    render: (cart) => (
-      <div>
-        {cart?.map((item, index) => (
-          <div key={index}>
-            <span>- Sản phẩm: {item.product.name}</span>
-            <br />
-            <span>Kích thước: {item.size}</span>
-            <br />
-            <span>Số lượng: {item.count}</span>
-          </div>
-        ))}
-      </div>
-    ),
+    title: "Ngày tạo",
+    dataIndex: "createdAt",
+    key: "createdAt",
+    render: (date) =>
+      date ? new Date(date).toLocaleDateString("vi-VN") : "Không có",
   },
   {
-    title: "Thanh toán",
-    dataIndex: "payment_url",
-    key: "payment_url",
-    render: (payment_url) => <Link to={payment_url}>Link thanh toán</Link>,
+    title: "Ngày hết hạn",
+    dataIndex: "expiresAt",
+    key: "expiresAt",
+    render: (date) =>
+      date ? new Date(date).toLocaleDateString("vi-VN") : "Không có",
   },
 ];
 
-export default function OdersForm() {
+const OrdersForm = () => {
   const dispatch = useDispatch();
+  const orders = useSelector((state) => state.order.orderByUser);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      dispatch(fetchOrderByUserId(userId));
+    }
+  }, [dispatch]);
+
+  console.log(orders)
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const orders = useSelector((state) => state.order?.orders);
-  useEffect(() => {
-    dispatch(fetchOrders());
-  }, [dispatch]);
+
   return (
     <>
-      <div className="container mx-auto p-5">
-        {/* <div className="flex justify-end mb-4">
-          <button className="duration-300 h-12 w-40 hover:border-2 hover:border-green-600 bg-green-600 hover:bg-white hover:text-green-500 text-white font-bold text-xs py-2 px-4 rounded-xl">
-            THÊM ĐỊA CHỈ
-          </button>
-        </div> */}
-        <Table columns={columns} dataSource={orders} onChange={onChange} />
+      <div className="container p-5 mx-auto">
+        <Table
+          columns={columns}
+          dataSource={orders}
+          onChange={onChange}
+          rowKey="id"
+          scroll={{ x: 1200 }}
+        />
       </div>
     </>
   );
-}
+};
+
+export default OrdersForm;

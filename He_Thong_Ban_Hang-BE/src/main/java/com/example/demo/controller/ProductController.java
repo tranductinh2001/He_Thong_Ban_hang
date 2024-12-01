@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.example.demo.entity.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +32,14 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @GetMapping
+    @Operation(summary = "Lấy danh sách tất cả sản phẩm")
+    public ResponseEntity<List<Product>> getListProduct() {
+        List<Product> products = productService.getListProduct();
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping("/sale")
     @Operation(summary = "lấy danh sách sản phẩm sale có phân trang")
     public ResponseEntity<Map<String, Object>> getSaleProducts(

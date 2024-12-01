@@ -158,7 +158,7 @@ public class ClientServiceImpl implements ClientService {
                 for (CartItem cartItem : cartItems) {
                     products.add(cartItem.getProduct());
                 }
-                order.setProduct(products);
+                order.setProducts(products);
             } else {
                 log.warn("Giỏ hàng trống.");
             }
