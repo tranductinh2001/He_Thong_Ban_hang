@@ -51,7 +51,8 @@ public class User {
     @JsonManagedReference
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<OrderAddress> orderAddresses;
 
     @Column(name = "is_deleted", nullable = false)
