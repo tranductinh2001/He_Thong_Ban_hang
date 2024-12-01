@@ -13,11 +13,11 @@ export default function PaymentCancelPage() {
   const isLoading = useSelector((state) => state.order.loading);
   console.log(session_detail);
 
-  // useEffect(() => {
-  //   if (sessionId) {
-  //     dispatch(checkoutSession(sessionId));
-  //   } else navigate("/");
-  // }, [dispatch, sessionId]);
+  useEffect(() => {
+    if (sessionId) {
+      dispatch(checkoutSession(sessionId));
+    } else navigate("/");
+  }, [dispatch, sessionId]);
 
   useEffect(() => {
     const order_id = session_detail?.session?.metadata?.order_id;

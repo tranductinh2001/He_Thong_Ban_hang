@@ -214,7 +214,7 @@ export default function CheckoutPage() {
 
                       <MDBCard className="mb-4">
                         <MDBCardBody>
-                          <MDBTypography tag="h5" className="fw-bold mb-3">
+                          <MDBTypography tag="h1" className="fw-bold mb-3 text-center">
                             Hướng dẫn chuyển tiền
                           </MDBTypography>
                           <MDBTypography tag="p" className="mb-3">
@@ -250,6 +250,12 @@ export default function CheckoutPage() {
                               !Vui lòng sử dụng chính xác nội dung chuyển khoản{" "}
                             </span>
                             để hệ thống ghi nhận thanh toán.
+                          </MDBTypography>
+                          <MDBTypography tag="p" className="text-muted">
+                            <span className="text-danger fw-bold">
+                              !sau khi chuyển tiền thành công{" "}
+                            </span>
+                            vui lòng chờ ít phút để hệ thống xử lý đơn hàng.
                           </MDBTypography>
 
                           <MDBTypography tag="h5" className="fw-bold mt-4 mb-3">

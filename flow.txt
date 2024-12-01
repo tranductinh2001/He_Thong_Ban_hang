@@ -4,9 +4,10 @@
 - đặt hàng ở cart thì gửi mail xác nhận và cập nhật lại số lượng hàng 
 - ấn xác nhận qua trang thanh toán ở đây là realtime khi quét mã chuyển tiền
 - thành công chuyển hướng về trang thanh toán thành công còn thất bại thì ngược lại
-	+xác nhận dúng người chuyển tiền và thành toán thành công mới cho về trang thành công (chưa làm)
-
+	+ xác nhận dúng người chuyển tiền và thành toán thành công mới cho về trang thành công
+	+ không thành công thì về trang thất bại
  
+
 **BUG - need UPDATE
 - chỉnh lại giao diện room
 - chỉnh lại giao diện product list ( các item vào giữa và có khoảng cách với top)
