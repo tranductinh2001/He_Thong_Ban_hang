@@ -16,6 +16,6 @@ public class ClientSendMailRequest {
     private String orderAddress;    // Địa chỉ đặt hàng
     private List<CartItemDTO> cart; // Danh sách sản phẩm trong giỏ hàng
     private long totalOfPrice;
-private  String name;
+    private String name;
 
 }

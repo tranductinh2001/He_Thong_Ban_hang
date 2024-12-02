@@ -11,7 +11,7 @@ export default function ContactPage() {
           <div className="flex flex-col items-start justify-start h-full gap-2">
             <h1 className="w-full p-2 mb-2 text-xl font-semibold bg-gray-300 rounded-t-lg">Thông tin liên hệ</h1>
             <p>
-              Địa chỉ: 638/45/4 Lê Trọng Tấn - Bình Hưng Hoà - Bình Tân - TPHCM
+              Địa chỉ: 79 biên cương, phường Ngô Mây, TP.Quy Nhơn, tỉnh Bình Định 
             </p>
             <p>
               Điện thoại: 0352911750

@@ -217,7 +217,7 @@ const Dashboard = () => {
 
   const [option, setOption] = useState('day'); // Giá trị mặc định là 'day'
   const [dateRange, setDateRange] = useState([null, null]); // Khoảng ngày được chọn
-
+  const [valueSelectTime, setValueSelectTime] = useState([null, null]); // Khoảng ngày được chọn
   const handleOptionChange = (e) => {
     setOption(e.target.value); // Thay đổi option (day, month, year)
   };
@@ -307,7 +307,7 @@ const Dashboard = () => {
           <CRow>
             <CCol sm={5}>
               <h4 id="traffic" className="mb-0 card-title">
-                Traffic
+                Số liệu thống kê dạng bảng
               </h4>
               <div className="small text-body-secondary">
                 January - July 2023
@@ -317,7 +317,7 @@ const Dashboard = () => {
               <CButton color="primary" className="float-end">
                 <CIcon icon={cilCloudDownload} />
               </CButton>
-              <CButtonGroup className="float-end me-3">
+              {/* <CButtonGroup className="float-end me-3">
                 {["Day", "Month", "Year"].map((value) => (
                   <CButton
                     color="outline-secondary"
@@ -328,12 +328,12 @@ const Dashboard = () => {
                     {value}
                   </CButton>
                 ))}
-              </CButtonGroup>
+              </CButtonGroup> */}
             </CCol>
           </CRow>
           <MainChart />
         </CCardBody>
-        <CCardFooter>
+        {/* <CCardFooter>
           <CRow
             xs={{ cols: 1, gutter: 4 }}
             sm={{ cols: 2 }}
@@ -361,10 +361,10 @@ const Dashboard = () => {
               </CCol>
             ))}
           </CRow>
-        </CCardFooter>
+        </CCardFooter> */}
       </CCard>
       <WidgetsBrand className="mb-4" withCharts />
-      <CRow>
+      {/* <CRow>
         <CCol xs>
           <CCard className="mb-4">
             <CCardHeader>Traffic {" & "} Sales</CCardHeader>
@@ -545,7 +545,7 @@ const Dashboard = () => {
             </CCardBody>
           </CCard>
         </CCol>
-      </CRow>
+      </CRow> */}
     </>
   );
 };

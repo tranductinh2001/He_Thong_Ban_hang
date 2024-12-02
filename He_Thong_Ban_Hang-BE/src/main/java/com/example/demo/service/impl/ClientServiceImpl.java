@@ -219,6 +219,42 @@ public class ClientServiceImpl implements ClientService {
         return false;
     }
 
+    @Override
+    public Boolean createMailAuto(ClientSendMailContactAuto sdi) {
+        System.out.println("Dữ liệu nhận được ClientSendMailContactAuto: " + sdi);
+
+        if (sdi == null) {
+            log.error("Request data (ClientSendMailRequest) is null.");
+            return false;
+        }
+
+        try {
+            // Tạo đối tượng Mail
+            Mail dataMail = new Mail();
+            // Lưu mã xác thực cho người dùng
+
+            dataMail.setTo(sdi.getEmail());
+//            dataMail.setSubject("XÁC NHẬN ĐƠN HÀNG CỦA BẠN");
+
+            Map<String, Object> props = new HashMap<>();
+            props.put("name", sdi.getFullname());
+            props.put("time", new Date());
+            props.put("specialRequest", sdi.getNotes());
+            props.put("Notes", sdi.getNotes());
+            dataMail.setProps(props);
+
+            // Gửi email
+            mailService.sendHtmlMail(dataMail, "contactAuto");
+            log.info("Đã gửi email xác nhận đơn hàng cho: {}", sdi.getEmail());
+            return true;
+
+        } catch (MessagingException exp) {
+            log.error("Lỗi trong quá trình gửi email: {}", exp.getMessage(), exp);
+        } catch (Exception e) {
+            log.error("Lỗi bất ngờ: {}", e.getMessage(), e);
+        }
+        return false;    }
+
 //    public Boolean create(ClientSendMailRequest sdi) {
 //        System.out.println("data   ClientSendMailRequest : " + sdi);
 //

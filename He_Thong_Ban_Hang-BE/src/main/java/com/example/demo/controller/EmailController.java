@@ -24,4 +24,6 @@ public class EmailController {
 	public ResponseEntity<Boolean> create(@RequestBody ClientSendMailRequest sdi) {
 		return ResponseEntity.ok(clientService.create(sdi));
 	}
+
+
 }
