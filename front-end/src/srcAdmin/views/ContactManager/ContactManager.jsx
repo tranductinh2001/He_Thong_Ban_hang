@@ -6,8 +6,7 @@ import { createStyles } from "antd-style";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table, Modal, message } from "antd";
 import Highlighter from "react-highlight-words";
-
-import contactRequests from "../../../redux/request/contactRequests.js";
+import { fetctSendMailContact } from "../../../redux/slices/contactSlice.js";
 
 const useStyle = createStyles(({ css, token }) => {
   const { antCls } = token;
@@ -40,11 +39,6 @@ const ContactManager = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentContact(null);
-  };
-
-  const handleSendReply = () => {
-    message.success("Phản hồi đã được gửi!");
-    handleCloseModal();
   };
 
   // Config search
@@ -126,6 +120,12 @@ const ContactManager = () => {
       ...getColumnSearchProps("fullName"),
     },
     {
+      title: "Nội dung",
+      dataIndex: "notes",
+      key: "notes",
+      ...getColumnSearchProps("notes"),
+    },
+    {
       title: "Email",
       dataIndex: "email",
       key: "email",
@@ -151,10 +151,27 @@ const ContactManager = () => {
   const { styles } = useStyle();
   const dispatch = useDispatch();
   const contacts = useSelector((state) => state.contact.contactList);
+  const [replyContent, setReplyContent] = useState("");
+
+  const handleChange = (e) => {
+    setReplyContent(e.target.value); // Cập nhật giá trị vào state
+  };
 
   useEffect(() => {
     dispatch(fetchContactList());
   }, [dispatch]);
+
+  const handleSendReply = () => {
+    message.success("Phản hồi đã được gửi!");
+    dispatch(
+      fetctSendMailContact({
+        email: currentContact.email,
+        fullName: currentContact.fullName,
+        notes: replyContent,
+      })
+    );
+    handleCloseModal();
+  };
 
   return (
     <CRow>
@@ -180,7 +197,12 @@ const ContactManager = () => {
         cancelText="Hủy"
       >
         <p>Phản hồi đến: {currentContact?.fullName}</p>
-        <Input.TextArea rows={4} placeholder="Nhập nội dung phản hồi..." />
+        <Input.TextArea
+          rows={4}
+          placeholder="Nhập nội dung phản hồi..."
+          value={replyContent} // Liên kết giá trị với state
+          onChange={handleChange} // Lắng nghe sự kiện thay đổi
+        />
       </Modal>
     </CRow>
   );

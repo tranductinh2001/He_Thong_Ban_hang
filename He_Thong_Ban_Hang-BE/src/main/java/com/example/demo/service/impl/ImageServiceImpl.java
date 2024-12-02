@@ -24,7 +24,6 @@ public class ImageServiceImpl implements ImageService {
     public Image getImageById(long id) {
         // TODO Auto-generated method stub
         Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Image not found width id :" + id));
-
         return image;
     }
 

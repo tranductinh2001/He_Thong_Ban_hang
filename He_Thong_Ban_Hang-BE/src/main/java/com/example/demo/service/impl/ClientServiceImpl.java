@@ -220,7 +220,42 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Boolean createMailAuto(ClientSendMailContactAuto sdi) {
+    public void createMailAutoContact(ClientSendMailContactAuto sdi) {
+        System.out.println("Dữ liệu nhận được ClientSendMailContactAuto: " + sdi);
+
+        if (sdi == null) {
+            log.error("Request data (ClientSendMailRequest) is null.");
+            return;
+        }
+
+        try {
+            // Tạo đối tượng Mail
+            Mail dataMail = new Mail();
+            // Lưu mã xác thực cho người dùng
+
+            dataMail.setTo(sdi.getEmail());
+            dataMail.setSubject("TINGMOBILE KÍNH CHÀO");
+
+            Map<String, Object> props = new HashMap<>();
+            props.put("name", sdi.getFullname());
+            props.put("time", new Date());
+            props.put("specialRequest", sdi.getNotes());
+            props.put("Notes", sdi.getNotes());
+            dataMail.setProps(props);
+
+            // Gửi email
+            mailService.sendHtmlMail(dataMail, "contactAuto");
+            log.info("Đã gửi email xác nhận đơn hàng cho: {}", sdi.getEmail());
+
+        } catch (MessagingException exp) {
+            log.error("Lỗi trong quá trình gửi email: {}", exp.getMessage(), exp);
+        } catch (Exception e) {
+            log.error("Lỗi bất ngờ: {}", e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Boolean createMailContact(ClientSendMailContactAuto sdi) {
         System.out.println("Dữ liệu nhận được ClientSendMailContactAuto: " + sdi);
 
         if (sdi == null) {
@@ -234,17 +269,17 @@ public class ClientServiceImpl implements ClientService {
             // Lưu mã xác thực cho người dùng
 
             dataMail.setTo(sdi.getEmail());
-//            dataMail.setSubject("XÁC NHẬN ĐƠN HÀNG CỦA BẠN");
+            dataMail.setSubject("TINGMOBILE TRẢ LỜI");
 
             Map<String, Object> props = new HashMap<>();
             props.put("name", sdi.getFullname());
             props.put("time", new Date());
             props.put("specialRequest", sdi.getNotes());
-            props.put("Notes", sdi.getNotes());
+            props.put("notes", sdi.getNotes());
             dataMail.setProps(props);
 
             // Gửi email
-            mailService.sendHtmlMail(dataMail, "contactAuto");
+            mailService.sendHtmlMail(dataMail, "contact");
             log.info("Đã gửi email xác nhận đơn hàng cho: {}", sdi.getEmail());
             return true;
 
@@ -253,7 +288,8 @@ public class ClientServiceImpl implements ClientService {
         } catch (Exception e) {
             log.error("Lỗi bất ngờ: {}", e.getMessage(), e);
         }
-        return false;    }
+        return false;
+    }
 
 //    public Boolean create(ClientSendMailRequest sdi) {
 //        System.out.println("data   ClientSendMailRequest : " + sdi);

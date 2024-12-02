@@ -6,6 +6,6 @@ import com.example.demo.DTO.ClientSendMailRequest;
 public interface ClientService {
     Boolean create(ClientSendMailRequest sdi);
 
-    Boolean createMailAuto(ClientSendMailContactAuto sdi);
-
+    void createMailAutoContact(ClientSendMailContactAuto sdi);
+    Boolean createMailContact(ClientSendMailContactAuto sdi);
 }

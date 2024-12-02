@@ -66,6 +66,7 @@ const API_ENDPOINTS = {
   CREATE_CONTACT: `/contact/create`,
   UPDATE_CONTACT: `/contact/update/`,
   DELETE_CONTACT: `/contact/delete`,
+  SEND_MAIL: '/contact/send-mail',
 
   //authentication
   LOGIN: `auth/login`,

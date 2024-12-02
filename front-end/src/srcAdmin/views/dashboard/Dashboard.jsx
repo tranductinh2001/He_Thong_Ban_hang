@@ -215,21 +215,22 @@ const Dashboard = () => {
     },
   ];
 
-  const [option, setOption] = useState('day'); // Giá trị mặc định là 'day'
-  const [dateRange, setDateRange] = useState([null, null]); // Khoảng ngày được chọn
-  const [valueSelectTime, setValueSelectTime] = useState([null, null]); // Khoảng ngày được chọn
+  const [option, setOption] = useState('day'); 
+  const [dateRange, setDateRange] = useState([null, null]); 
+  const [selectedDateRange, setSelectedDateRange] = useState(''); 
   const handleOptionChange = (e) => {
-    setOption(e.target.value); // Thay đổi option (day, month, year)
+    setOption(e.target.value); 
   };
 
   const handleDateChange = (dates) => {
-    setDateRange(dates); // Lưu giá trị ngày/tháng/năm đã chọn
+    setDateRange(dates); 
 
     if (dates && dates.length === 2) {
+      let dateRangeString = '';
       if (option === 'day') {
         const startDay = dates[0].format('YYYY-MM-DD');
         const endDay = dates[1].format('YYYY-MM-DD');
-        // Gọi API để lấy dữ liệu theo ngày
+        dateRangeString = `${startDay} - ${endDay}`;
         dispatch(fetchStatisticsByDateRange({
           startDate: startDay,
           endDate: endDay,
@@ -238,7 +239,7 @@ const Dashboard = () => {
       } else if (option === 'month') {
         const startMonth = dates[0].format('YYYY-MM');
         const endMonth = dates[1].format('YYYY-MM');
-        // Gọi API để lấy dữ liệu theo tháng
+        dateRangeString = `${startMonth} - ${endMonth}`;
         dispatch(fetchStatisticsByMonth({
           startMonth: startMonth,
           endMonth: endMonth,
@@ -247,13 +248,14 @@ const Dashboard = () => {
       } else if (option === 'year') {
         const startYear = dates[0].year();
         const endYear = dates[1].year();
-        // Gọi API để lấy dữ liệu theo năm
+        dateRangeString = `${startYear} - ${endYear}`;
         dispatch(fetchStatisticsByYear({
           startYear: startYear,
           endYear: endYear,
         }));
         console.log('Lấy dữ liệu theo năm:', startYear, endYear);
       }
+      setSelectedDateRange(dateRangeString);
     }
   };
 
@@ -285,9 +287,9 @@ const Dashboard = () => {
         </Radio.Group>
 
         <RangePicker
-          picker={option} // "month" cho chọn tháng, "year" cho chọn năm
+          picker={option} 
           value={dateRange}
-          onChange={handleDateChange} // Gọi handleDateChange khi thay đổi ngày
+          onChange={handleDateChange} 
           style={{ marginTop: 16 }}
           placeholder={
             option === 'day'
@@ -297,7 +299,7 @@ const Dashboard = () => {
               : ['Chọn năm bắt đầu', 'Chọn năm kết thúc']
           }
           disabledDate={(current) => {
-            return current && current > dayjs().endOf('day'); // Không cho phép chọn ngày trong tương lai
+            return current && current > dayjs().endOf('day'); 
           }}
         />
       </div>
@@ -310,13 +312,10 @@ const Dashboard = () => {
                 Số liệu thống kê dạng bảng
               </h4>
               <div className="small text-body-secondary">
-                January - July 2023
+              {selectedDateRange || 'January - July 2023'}  
               </div>
             </CCol>
             <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
-                <CIcon icon={cilCloudDownload} />
-              </CButton>
               {/* <CButtonGroup className="float-end me-3">
                 {["Day", "Month", "Year"].map((value) => (
                   <CButton

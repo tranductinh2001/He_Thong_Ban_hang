@@ -1,7 +1,10 @@
 package com.example.demo.controller;
+
 import com.example.demo.entity.Color;
 import com.example.demo.entity.Contact;
+import com.example.demo.request.sendMailRequest;
 import com.example.demo.response.MessageResponse;
+import com.example.demo.service.ClientService;
 import com.example.demo.service.ColorService;
 import com.example.demo.service.ContactService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +22,7 @@ public class ContactController {
 
     @Autowired
     private ContactService contactService;
+
 
     @GetMapping
     @Operation(summary = "Lấy danh sách tất cả liên hệ")
@@ -40,6 +44,13 @@ public class ContactController {
     public ResponseEntity<Contact> createContact(@RequestBody Contact contact) {
         Contact newContact = contactService.createContact(contact);
         return ResponseEntity.ok(newContact);
+    }
+
+    @PostMapping("/send-mail")
+    @Operation(summary = "Tạo mới một liên hệ")
+    public ResponseEntity<?> sendMail(@RequestBody sendMailRequest data) {
+        return ResponseEntity.ok(contactService.sendMailContact(data)
+        );
     }
 
     @PutMapping("/update/{id}")

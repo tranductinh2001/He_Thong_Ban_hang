@@ -1,215 +1,170 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác nhận đơn hàng</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Phản Hồi Liên Hệ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* General Reset */
         body {
             font-family: 'Roboto', sans-serif;
             font-size: 16px;
-            line-height: 1.6;
             color: #333;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-color: #f5f5f5;
         }
 
         .container {
-            width: 60%;
+            max-width: 600px;
             margin: 30px auto;
-            padding: 20px;
+            padding: 20px 25px;
             background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease;
-        }
-
-        .container:hover {
-            transform: scale(1.02);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
             color: #007bff;
+            margin-bottom: 20px;
         }
 
         .header h1 {
+            font-size: 22px;
             margin: 0;
-            font-size: 28px;
-        }
-
-        .content {
-            margin-bottom: 20px;
+            font-weight: 700;
         }
 
         .content p {
             margin: 10px 0;
             color: #555;
+            line-height: 1.6;
         }
 
-        .button {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        .content ul {
+            margin: 15px 0;
+            padding-left: 20px;
         }
 
-        .button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+        .content ul li {
+            margin: 5px 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .map {
             margin-top: 20px;
-            font-size: 14px;
+            text-align: center;
         }
 
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        table th {
-            background-color: #f7f7f7;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #555;
-        }
-
-        table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .table-summary {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f1f1f1;
+        .map img {
             border-radius: 8px;
-            font-size: 15px;
+            max-width: 100%;
+            height: auto;
         }
 
         .footer {
             text-align: center;
             font-size: 14px;
-            color: #888;
+            color: #777;
             margin-top: 20px;
         }
 
         .footer p {
             margin: 5px 0;
         }
-        body {
-            background: linear-gradient(120deg, #f8f9fa, #e3f2fd);
-            background-size: 200% 200%;
-            animation: gradientMove 5s ease infinite;
+
+        a {
+            color: #007bff;
+            text-decoration: none;
         }
 
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .table-summary strong {
-            animation: pulse 1.5s infinite;
+        a:hover {
+            text-decoration: underline;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
+        .map {
+            width: 700px;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 10px;
         }
 
+        .map img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .map img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .map a img {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .map a img:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
     </style>
 </head>
 
 <body>
-<div class="container">
-    <div class="header">
-        <h1>Xác nhận đơn hàng</h1>
-    </div>
-    <div class="content">
-        <p>Xin chào <span th:text="${name}"></span>,</p>
-        <p>Chúng tôi đã nhận được đơn hàng của bạn và cần xác nhận thanh toán.</p>
-        <p>Thông tin đơn hàng của bạn:</p>
-
-        <p><strong>Số điện thoại:</strong> <span th:text="${NumberPhone}"></span></p>
-        <p><strong>Địa chỉ giao hàng:</strong> <span th:text="${OrderAddress}"></span></p>
-        <p><strong>Yêu cầu đặc biệt:</strong> <span th:text="${specialRequest}">Không có</span></p>
-
-        <table>
-            <thead>
-            <tr>
-                <th>Sản phẩm</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
-                <th>Kích thước</th>
-                <th>Tổng giá</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${listCart}">
-                <td th:text="${item.product.name}">Tên sản phẩm</td>
-                <td th:text="${item.product.price}">0</td>
-                <td th:text="${item.count}">0</td>
-                <td th:text="${item.size}">Kích thước</td>
-                <td th:text="${item.formattedTotal}">0</td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="table-summary">
-            <p><strong>Tổng giá trị đơn hàng:</strong> <span th:text="${total}"></span> đồng</p>
-            <p>
-                <strong>Mã thanh toán:</strong> <span th:text="${code}"></span><br>
-                Vui lòng sử dụng mã này khi thực hiện thanh toán.
-            </p>
+    <div class="container">
+        <div class="header">
+            <h1>Phản Hồi Từ Trần Đức Tình</h1>
         </div>
 
-        <p>Vui lòng xác nhận thanh toán bằng cách nhấn nút dưới đây:</p>
-        <a class="button" th:href="@{'http://localhost:5173/payment/' + ${code}}">Xác nhận thanh toán</a>
-    </div>
-    <div class="footer">
-        <p>Đây là email tự động, vui lòng không trả lời.</p>
-        <p>HỆ THỐNG BÁN HÀNG - TÌNH</p>
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script>
-    // Hiệu ứng hoa giấy khi mở email
-    window.onload = () => {
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 }
-        });
-    };
+        <div class="content">
+            <p>Chào bạn,</p>
 
-    // Hiệu ứng hoa giấy khi click nút "Xác nhận thanh toán"
-    function celebrate() {
-        confetti({
-            particleCount: 200,
-            spread: 90,
-            origin: { y: 0.6 },
-            colors: ['#ff0', '#0f0', '#00f', '#f0f', '#0ff']
-        });
-        // Hiển thị thông báo chúc mừng
-        document.getElementById('congratsMessage').style.display = 'block';
-    }
-</script>
+            <div style="margin-bottom: 15px;">
+                <hr style="border: 1px solid #ccc; margin: 15px 0;">
+                <div class="content">
+                    <p><strong>Phản hồi của chúng tôi về bạn:</strong></p>
+                    <p><em th:text="${specialRequest}"></em></p>
+                    <hr style="border: 1px solid #ccc; margin: 15px 0;">
+                    <p>Cảm ơn bạn đã liên hệ với chúng tôi. Dưới đây là thông tin của tôi để bạn dễ dàng liên hệ trực tiếp:</p>
+
+                    <p><strong>Họ và tên: </strong> <span>Trần Đức Tình</span></p>
+                    <p><strong>Email: </strong> <a href="mailto:0352911750@gmail.com">0352911750@gmail.com</a></p>
+                    <p><strong>Số điện thoại: </strong> <span>84352911750</span></p>
+                </div>
+
+                <hr style="border: 1px solid #ccc; margin: 15px 0;">
+                <ul>
+                    <li><strong>Facebook:</strong> <a href="https://www.facebook.com/tinhstart123/" target="_blank">Trần Đức Tình</a></li>
+                    <li><strong>Zalo:</strong> <a href="https://zalo.me/0352911750" target="_blank">Trần Đức Tình</a></li>
+                    <li><strong>Youtube:</strong> <a href="https://www.youtube.com/@tranuctinh-ktpm6943" target="_blank">Trần Đức Tình</a></li>
+                </ul>
+
+                <p>Địa chỉ cửa hàng của chúng tôi:</p>
+                <p><strong>79 Biên Cương, Phường Ngô Mây, TP. Quy Nhơn, Bình Định</strong></p>
+
+                <div class="map">
+                    <a href="https://www.google.com/maps/place/79+Bi%C3%AAn+C%C6%B0%C6%A1ng,+Ng%C3%B4+M%C3%A2y,+Quy+Nh%C6%A1n,+B%C3%ACnh+%C4%90%E1%BB%8Bnh+52000,+Vi%E1%BB%87t+Nam/@13.7668141,109.2158744,17z/data=!3m1!4b1!4m6!3m5!1s0x316f6c938531338b:0x8ad3f1b425f6dc7c!8m2!3d13.7668141!4d109.2184493!16s%2Fg%2F11ljsmg8d8?entry=ttu&g_ep=EgoyMDI0MTEyNC4xIKXMDSoASAFQAw%3D%3D" target="_blank">
+                        <img src="https://scontent.fhan20-1.fna.fbcdn.net/v/t39.30808-6/468875865_122188391264184987_1440036209573051280_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=6Kwt0Br5iH4Q7kNvgHnJiS_&_nc_zt=23&_nc_ht=scontent.fhan20-1.fna&_nc_gid=AMEKX2c9XoF1m-VULFWenXD&oh=00_AYCyPof5ieePWf-07qvh0Q6IycPQ08GqAlXsK4yoyZZZhA&oe=6753BA2F"
+                            alt="Vị trí trên Google Maps">
+                    </a>
+                </div>
+
+                <p>Nếu cần thêm thông tin, đừng ngần ngại liên hệ với tôi qua bất kỳ kênh nào. Rất mong được hỗ trợ bạn!</p>
+
+                <p>Trân trọng,<br>Trần Đức Tình</p>
+            </div>
+
+            <hr style="border: 1px solid #ccc; margin: 15px 0;">
+
+            <div class="footer">
+                <p>Cảm ơn bạn đã tin tưởng dịch vụ của chúng tôi.</p>
+                <p>© 2024 Hệ thống bán hàng - By Tình</p>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -11,6 +11,18 @@ const contactRequests = {
       return errorHandler(error);
     }
   },
+  sendMail: async (mailData) => {
+    try {
+      console.log("data gửi mail contact nè ",mailData);
+      const response = await axiosInstance.post(
+        API_ENDPOINTS.SEND_MAIL,
+        mailData
+      );
+      return response.data;
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
   create: async (body) => {
     try {
       const response = await axiosInstance.post(
