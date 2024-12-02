@@ -43,6 +43,11 @@ const baseOptionProfile = [
     path: "orders",
   },
   {
+    icon: "cart-shopping",
+    title: "Lịch sử thử đồ",
+    path: "model-try-on-history",
+  },
+  {
     icon: "arrow-right-from-bracket",
     title: "Đăng xuất",
     path: "logout",
@@ -82,9 +87,9 @@ export default function UserProfilePage() {
           {/* <span className="font-semibold uppercase">
             {currentUsers?.username}
           </span> */}
-          <span className="font-semibold uppercase">{`${currentUsers?.firstName || ""} ${
-            currentUsers?.lastName || ""
-          }`}</span>
+          <span className="font-semibold uppercase">{`${
+            currentUsers?.firstName || ""
+          } ${currentUsers?.lastName || ""}`}</span>
           <span className="text-base">Email: {currentUsers?.email}</span>
         </div>
         <Divider />

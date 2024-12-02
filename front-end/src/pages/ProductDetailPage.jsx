@@ -5,7 +5,6 @@ import {
   Input,
   InputNumber,
   message,
-  Rate,
   Table,
 } from "antd";
 import { motion } from "framer-motion";
@@ -23,6 +22,7 @@ import {
 } from "../redux/slices/productSlice";
 
 import ClothingRoom from "../components/Room/ClothingRoom";
+import RatingModal from "../components/RateModal/RateModal";
 
 const carouselResponsiveSetting = [
   {
@@ -315,10 +315,7 @@ const ProductDetailPage = () => {
               <span className="text-2xl font-semibold">
                 {product?.name} - {product?.brand?.name.toUpperCase()}
               </span>
-              <div className="flex flex-row items-center gap-1">
-                <Rate defaultValue={0} />{" "}
-                <span className="text-sm">(0 đánh giá)</span>
-              </div>
+              <RatingModal productId={productId} />
               <span className="text-lg font-semibold text-red-500">
                 {isAuthenticated ? (
                   product?.sale ? (

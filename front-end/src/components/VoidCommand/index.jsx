@@ -139,6 +139,9 @@ const VoiceCommand = ({ isVoiceEnabled }) => {
         case "đơn hàng":
           navigate("/profile/orders");
           break;
+        case "lịch sử thử đồ":
+          navigate("/profile/model-try-on-history");
+          break;
         case "liên hệ":
           navigate("/contact");
           break;

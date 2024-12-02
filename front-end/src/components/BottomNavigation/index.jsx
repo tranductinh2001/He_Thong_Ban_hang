@@ -37,6 +37,11 @@ const navLinks = [
     to: "/profile/orders",
   },
   {
+    Icon: CiViewList,
+    title: "Lịch sử thử đồ",
+    to: "/profile/model-try-on-history",
+  },
+  {
     Icon: CiUser,
     title: "Tài khoản",
     to: "/profile",

@@ -13,6 +13,7 @@ import userSlice from "../redux/slices/userSlice";
 import orderSlice from "../redux/slices/orderSlice";
 import reviewSlice from "../redux/slices/reviewSlice";
 import contactSlice from "../redux/slices/contactSlice";
+import modelTryOnHistorySlice from "../redux/slices/modelTryOnHistorySlice";
 
 export default configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export default configureStore({
     order: orderSlice,
     review: reviewSlice,
     contact: contactSlice,
+    modelTryOnHistory: modelTryOnHistorySlice,
   },
 });

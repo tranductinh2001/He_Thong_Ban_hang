@@ -31,4 +31,8 @@ public interface ModelTryOnHistoryService {
 
     List<Image> saveClothesImages(List<FileListClothesDTO> fileListClothes); // Lưu danh sách ảnh quần áo
 
+    List<ModelTryOnHistory> getAllModelTryOnHistoriesByUserId(Long userId);
+
+    void deleteModelTryOnHistory(Long id);
+
 }
