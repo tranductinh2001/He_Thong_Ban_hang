@@ -89,6 +89,11 @@ const API_ENDPOINTS = {
   ADD_ORDER: `/order`,
   UPDATE_ORDER_STATUS: (order_id) => `/order/update/${order_id}`,
 
+  //thống kê tháng năm trong (Order)
+  GET_STATISTIC_PRICE_BY_DATE_RANGE: '/order/total-price-by-date',
+  GET_STATISTIC_PRICE_BY_YEAR: '/order/total-price-by-year',
+  GET_STATISTIC_PRICE_BY_MONTH:'/order/total-price-by-month',
+
   //payment
   CREATE_CHECKOUT_SESSION: `/payment/create-checkout-session`,
   CHECKOUT_SESSION: (session_id) =>

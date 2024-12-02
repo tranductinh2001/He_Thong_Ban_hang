@@ -23,6 +23,20 @@ public class OrderServiceImpl implements OrderService {
     private OrderAddressRepository orderAddressRepository;
 
     @Override
+    public List<Object[]> getTotalPriceByYear(int startYear, int endYear) {
+        return orderRepository.getTotalPriceByYear(startYear, endYear);
+    }
+    public List<Object[]> getTotalOrdersByMonthRange(String startMonth, String endMonth) {
+        // In ra giá trị của startMonth và endMonth
+        System.out.println("getTotalOrdersByMonthRange  startMonth: " + startMonth);
+        System.out.println("endMonth: " + endMonth);
+        return orderRepository.findOrderTotalByMonthRange(startMonth, endMonth);
+    }
+    @Override
+    public List<Object[]> getTotalPriceByDateRange(String startDate, String endDate) {
+        return orderRepository.getTotalPriceByDateRange(startDate, endDate);
+    }
+    @Override
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }

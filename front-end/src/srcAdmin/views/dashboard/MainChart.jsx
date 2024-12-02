@@ -1,32 +1,47 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react';
+import { useSelector } from "react-redux";
 
-import { CChartLine } from '@coreui/react-chartjs'
-import { getStyle } from '@coreui/utils'
+import { CChartLine } from '@coreui/react-chartjs';
+import { getStyle } from '@coreui/utils';
 
 const MainChart = () => {
-  const chartRef = useRef(null)
+  const chartRef = useRef(null);
+  const statisticsByYear = useSelector((state) => state.statistic?.statisticsByYear);
+  const statisticsByDateRange = useSelector((state) => state.statistic?.statisticsByDateRange);
+  const statisticsByMonth = useSelector((state) => state.statistic?.statisticsByMonth);
+
+  const years = Array.isArray(statisticsByYear) ? statisticsByYear.map(item => item[0]) : [];
+  const yearValues = Array.isArray(statisticsByYear) ? statisticsByYear.map(item => item[1]) : [];
+
+  const labelsByDateRange = Array.isArray(statisticsByDateRange) ? statisticsByDateRange.map(item => item[0]) : [];
+  const dateRangeValues = Array.isArray(statisticsByDateRange) ? statisticsByDateRange.map(item => item[1]) : [];
+
+  const labelsByMonth = Array.isArray(statisticsByMonth) ? statisticsByMonth.map(item => item[0]) : [];
+  const monthValues = Array.isArray(statisticsByMonth) ? statisticsByMonth.map(item => item[1]) : [];
+
+  useEffect(() => {
+    if (chartRef.current) {
+      setTimeout(() => {
+        chartRef.current.update();
+      });
+    }
+  }, [statisticsByYear, statisticsByDateRange, statisticsByMonth]);
 
   useEffect(() => {
     document.documentElement.addEventListener('ColorSchemeChange', () => {
       if (chartRef.current) {
         setTimeout(() => {
-          chartRef.current.options.scales.x.grid.borderColor = getStyle(
-            '--cui-border-color-translucent',
-          )
-          chartRef.current.options.scales.x.grid.color = getStyle('--cui-border-color-translucent')
-          chartRef.current.options.scales.x.ticks.color = getStyle('--cui-body-color')
-          chartRef.current.options.scales.y.grid.borderColor = getStyle(
-            '--cui-border-color-translucent',
-          )
-          chartRef.current.options.scales.y.grid.color = getStyle('--cui-border-color-translucent')
-          chartRef.current.options.scales.y.ticks.color = getStyle('--cui-body-color')
-          chartRef.current.update()
-        })
+          chartRef.current.options.scales.x.grid.borderColor = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.x.grid.color = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.x.ticks.color = getStyle('--cui-body-color');
+          chartRef.current.options.scales.y.grid.borderColor = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.y.grid.color = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.y.ticks.color = getStyle('--cui-body-color');
+          chartRef.current.update();
+        });
       }
-    })
-  }, [chartRef])
-
-  const random = () => Math.round(Math.random() * 100)
+    });
+  }, [chartRef]);
 
   return (
     <>
@@ -34,49 +49,36 @@ const MainChart = () => {
         ref={chartRef}
         style={{ height: '300px', marginTop: '40px' }}
         data={{
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+          labels: labelsByMonth.length > 0
+            ? labelsByMonth
+            : labelsByDateRange.length > 0
+            ? labelsByDateRange
+            : years,
           datasets: [
             {
-              label: 'My First dataset',
+              label: 'Dữ liệu theo tháng',
+              backgroundColor: `rgba(${getStyle('--cui-warning-rgb')}, .1)`,
+              borderColor: getStyle('--cui-warning'),
+              pointHoverBackgroundColor: getStyle('--cui-warning'),
+              borderWidth: 2,
+              data: monthValues,
+              fill: true,
+            },
+            {
+              label: 'Dữ liệu theo khoảng ngày',
               backgroundColor: `rgba(${getStyle('--cui-info-rgb')}, .1)`,
               borderColor: getStyle('--cui-info'),
               pointHoverBackgroundColor: getStyle('--cui-info'),
               borderWidth: 2,
-              data: [
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-              ],
-              fill: true,
+              data: dateRangeValues,
             },
             {
-              label: 'My Second dataset',
+              label: 'Dữ liệu theo năm',
               backgroundColor: 'transparent',
               borderColor: getStyle('--cui-success'),
               pointHoverBackgroundColor: getStyle('--cui-success'),
               borderWidth: 2,
-              data: [
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-                random(50, 200),
-              ],
-            },
-            {
-              label: 'My Third dataset',
-              backgroundColor: 'transparent',
-              borderColor: getStyle('--cui-danger'),
-              pointHoverBackgroundColor: getStyle('--cui-danger'),
-              borderWidth: 1,
-              borderDash: [8, 5],
-              data: [65, 65, 65, 65, 65, 65, 65],
+              data: yearValues,
             },
           ],
         }}
@@ -84,7 +86,7 @@ const MainChart = () => {
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false,
+              display: true,
             },
           },
           scales: {
@@ -105,11 +107,11 @@ const MainChart = () => {
               grid: {
                 color: getStyle('--cui-border-color-translucent'),
               },
-              max: 250,
+              max: Math.max(...yearValues, ...dateRangeValues, ...monthValues) + 1000000,
               ticks: {
                 color: getStyle('--cui-body-color'),
                 maxTicksLimit: 5,
-                stepSize: Math.ceil(250 / 5),
+                stepSize: Math.ceil(Math.max(...yearValues, ...dateRangeValues, ...monthValues) / 5),
               },
             },
           },
@@ -127,7 +129,7 @@ const MainChart = () => {
         }}
       />
     </>
-  )
-}
+  );
+};
 
-export default MainChart
+export default MainChart;

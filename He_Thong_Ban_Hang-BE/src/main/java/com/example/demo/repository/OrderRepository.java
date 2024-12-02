@@ -11,8 +11,9 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query(value = "SELECT * FROM orders where verification_code LIKE %:keyword% ",nativeQuery = true)
+    @Query(value = "SELECT * FROM orders where verification_code LIKE %:keyword% ", nativeQuery = true)
     Order getOrderByVerificationCode(String keyword);
+
     List<Order> findByUserId(Long userId);
 
     @Query(value = "WITH RECURSIVE years AS ( " +
@@ -31,19 +32,44 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "ORDER BY y.year", nativeQuery = true)
     List<Object[]> getTotalPriceByYear(@Param("startYear") int startYear, @Param("endYear") int endYear);
 
-    // Truy vấn theo tháng, bạn có thể truyền ngày bắt đầu tháng
-    @Query(value = "WITH RECURSIVE dates AS ( " +
-            "    SELECT DATE(:startDate) AS date " + // Lấy tham số startDate (ví dụ: '2024-11-01')
+    @Query(value = """
+            WITH RECURSIVE dates AS (
+                SELECT DATE(:startDate) AS date
+                UNION ALL
+                SELECT date + INTERVAL 1 DAY
+                FROM dates
+                WHERE date < DATE(:endDate)
+            )
+            SELECT 
+                d.date AS date,
+                COALESCE(SUM(o.total_of_price), 0) AS total_price
+            FROM dates d
+            LEFT JOIN orders o 
+                ON DATE(o.created_at) = d.date
+                AND o.is_deleted = 0
+            GROUP BY d.date
+            ORDER BY d.date
+            """, nativeQuery = true)
+    List<Object[]> getTotalPriceByDateRange(@Param("startDate") String startDate,
+                                            @Param("endDate") String endDate);
+
+
+    @Query(value = "WITH RECURSIVE dates AS (" +
+            "    SELECT DATE(CONCAT(:startMonth, '-01')) AS date " +
             "    UNION ALL " +
-            "    SELECT date + INTERVAL 1 DAY " +
+            "    SELECT date + INTERVAL 1 MONTH " +
             "    FROM dates " +
-            "    WHERE date < LAST_DAY(DATE(:startDate)) " +
-            ") " +
-            "SELECT d.date, COALESCE(SUM(o.total_of_price), 0) AS total_price " +
+            "    WHERE date < DATE(CONCAT(:endMonth, '-01')) " +
+            ")" +
+            "SELECT DATE_FORMAT(d.date, '%Y-%m') AS month, " +
+            "       COALESCE(SUM(o.total_of_price), 0) AS total_price " +
             "FROM dates d " +
-            "LEFT JOIN orders o ON DATE(o.created_at) = d.date " +
+            "LEFT JOIN orders o ON DATE(o.created_at) BETWEEN d.date AND LAST_DAY(d.date) " +
             "    AND o.is_deleted = 0 " +
-            "GROUP BY d.date " +
-            "ORDER BY d.date", nativeQuery = true)
-    List<Object[]> getTotalPriceByMonth(@Param("startDate") String startDate);
+            "GROUP BY DATE_FORMAT(d.date, '%Y-%m') " +
+            "ORDER BY DATE_FORMAT(d.date, '%Y-%m')", nativeQuery = true)
+    List<Object[]> findOrderTotalByMonthRange(@Param("startMonth") String startMonth, @Param("endMonth") String endMonth);
+
+
 }
+

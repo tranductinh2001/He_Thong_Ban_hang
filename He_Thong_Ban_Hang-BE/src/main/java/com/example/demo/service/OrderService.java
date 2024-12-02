@@ -26,4 +26,11 @@ public interface OrderService {
     List<OrderAddress> getAllOrderAddressByUserId(Long userId);
 
     void deleteOrder(Long id);
+
+    List<Object[]> getTotalPriceByYear(int startYear, int endYear);
+
+    List<Object[]> getTotalPriceByDateRange(String startDate, String endDate);
+
+    List<Object[]> getTotalOrdersByMonthRange(String startMonth, String endMonth);
+
 }

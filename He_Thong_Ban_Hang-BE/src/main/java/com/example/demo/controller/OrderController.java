@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderAddress;
 import com.example.demo.entity.ServiceEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/api/order")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,6 +25,35 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @GetMapping("/total-price-by-year")
+    public List<Object[]> getTotalPriceByYear(
+            @RequestParam int startYear,
+            @RequestParam int endYear
+    ) {
+        System.out.println("Nhận request thống kê doanh thu theo năm: từ {} đến {}" + startYear + endYear);
+        return orderService.getTotalPriceByYear(startYear, endYear);
+    }
+
+    @GetMapping("/total-price-by-date")
+    public ResponseEntity<List<Object[]>> getTotalPriceByDateRange(
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate) {
+        System.out.println("Nhận request thống kê doanh thu theo ngày: từ {} đến {}" + startDate + endDate);
+        List<Object[]> result = orderService.getTotalPriceByDateRange(startDate, endDate);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/total-price-by-month")
+    public ResponseEntity<List<Object[]>> getTotalOrdersByMonthRange(
+            @RequestParam String startMonth,
+            @RequestParam String endMonth) {
+        // In ra giá trị của startMonth và endMonth
+        System.out.println("startMonth: " + startMonth);
+        System.out.println("endMonth: " + endMonth);
+        List<Object[]> result = orderService.getTotalOrdersByMonthRange(startMonth, endMonth);
+        return ResponseEntity.ok(result);
+    }
 
     @GetMapping
     @Operation(summary = "Lấy danh sách tất cả đơn hàng")

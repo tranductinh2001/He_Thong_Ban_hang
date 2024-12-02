@@ -6,7 +6,7 @@ const orderRequests = {
   GetOrders: async () => {
     try {
       const response = await axiosInstance.get(API_ENDPOINTS.GET_ORDERS);
-      console.log("data ", response);
+      // console.log("data ", response);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -120,6 +120,55 @@ const orderRequests = {
       throw error;
     }
   },
+  getTotalPriceByYear: async (startYear, endYear) => {
+    try {
+      const response = await axiosInstance.get(API_ENDPOINTS.GET_STATISTIC_PRICE_BY_YEAR, {
+        params: {
+          startYear, 
+          endYear,
+        },
+      });
+      console.log("Data fetched (by year):", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error when fetching data by year:", error.response ? error.response.data : error.message);
+      throw error;
+    }
+  },
+  
+  getTotalPriceByMonth: async (startMonth, endMonth) => {
+    try {
+      const response = await axiosInstance.get(API_ENDPOINTS.GET_STATISTIC_PRICE_BY_MONTH, {
+        params: {
+          startMonth, 
+          endMonth,
+        },
+      });
+      console.log("Data fetched (by month):", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error when fetching data by month:", error.response ? error.response.data : error.message);
+      throw error;
+    }
+  },
+  
+  getTotalPriceByDateRange: async (startDate, endDate) => {
+    try {
+      const response = await axiosInstance.get(API_ENDPOINTS.GET_STATISTIC_PRICE_BY_DATE_RANGE, {
+        params: {
+          startDate, 
+          endDate,
+        },
+      });
+      console.log("Data fetched (by date range):", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error when fetching data by date range:", error.response ? error.response.data : error.message);
+      throw error;
+    }
+  },
+  
+  
 };
 
 export default orderRequests;

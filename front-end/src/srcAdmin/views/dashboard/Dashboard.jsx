@@ -59,6 +59,7 @@ import avatar6 from "../../../srcAdmin/assets/images/avatars/6.jpg";
 import WidgetsBrand from "../widgets/WidgetsBrand";
 import WidgetsDropdown from "../widgets/WidgetsDropdown";
 import MainChart from "./MainChart";
+import { fetchStatisticsByYear, fetchStatisticsByDateRange, fetchStatisticsByMonth } from '../../../redux/slices/statisticSlice.js';
 
 const { RangePicker } = DatePicker;
 
@@ -214,13 +215,11 @@ const Dashboard = () => {
     },
   ];
 
-  const [option, setOption] = useState('day'); // Mặc định chọn "Theo tháng"
-  const [dateRange, setDateRange] = useState(null); // Lưu giá trị ngày/tháng/năm đã chọn
+  const [option, setOption] = useState('day'); // Giá trị mặc định là 'day'
+  const [dateRange, setDateRange] = useState([null, null]); // Khoảng ngày được chọn
 
-  // Hàm xử lý thay đổi lựa chọn của Radio
   const handleOptionChange = (e) => {
-    setOption(e.target.value); // Lưu giá trị được chọn từ Radio
-    setDateRange(null); // Reset giá trị ngày khi thay đổi lựa chọn
+    setOption(e.target.value); // Thay đổi option (day, month, year)
   };
 
   const handleDateChange = (dates) => {
@@ -228,39 +227,79 @@ const Dashboard = () => {
 
     if (dates && dates.length === 2) {
       if (option === 'day') {
-        const startMonth = dates[0].format('YYYY-MM-DD');
-        const endMonth = dates[1].format('YYYY-MM-DD');
+        const startDay = dates[0].format('YYYY-MM-DD');
+        const endDay = dates[1].format('YYYY-MM-DD');
+        // Gọi API để lấy dữ liệu theo ngày
+        dispatch(fetchStatisticsByDateRange({
+          startDate: startDay,
+          endDate: endDay,
+        }));
+        console.log('Lấy dữ liệu theo ngày:', startDay, endDay);
+      } else if (option === 'month') {
+        const startMonth = dates[0].format('YYYY-MM');
+        const endMonth = dates[1].format('YYYY-MM');
+        // Gọi API để lấy dữ liệu theo tháng
+        dispatch(fetchStatisticsByMonth({
+          startMonth: startMonth,
+          endMonth: endMonth,
+        }));
         console.log('Lấy dữ liệu theo tháng:', startMonth, endMonth);
       } else if (option === 'year') {
         const startYear = dates[0].year();
         const endYear = dates[1].year();
+        // Gọi API để lấy dữ liệu theo năm
+        dispatch(fetchStatisticsByYear({
+          startYear: startYear,
+          endYear: endYear,
+        }));
         console.log('Lấy dữ liệu theo năm:', startYear, endYear);
       }
     }
   };
 
+  // Sử dụng useEffect để gọi API mặc định khi component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Lấy dữ liệu theo năm và theo khoảng thời gian mặc định
+        dispatch(fetchStatisticsByYear({ startYear: 2011, endYear: 2025 }));
+        dispatch(fetchStatisticsByDateRange({
+          startDate: "2024-01-01",
+          endDate: "2024-01-31",
+        }));
+      } catch (error) {
+        console.error("Lỗi không lấy được thống kê:", error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
   return (
     <>
       <div className="mb-10">
         <Radio.Group onChange={handleOptionChange} value={option}>
-          <Radio.Button value="day">Theo tháng</Radio.Button>
+          <Radio.Button value="day">Theo ngày</Radio.Button>
+          <Radio.Button value="month">Theo tháng</Radio.Button>
           <Radio.Button value="year">Theo năm</Radio.Button>
         </Radio.Group>
 
         <RangePicker
-            picker={option} // "month" cho chọn tháng, "year" cho chọn năm
-            value={dateRange}
-            onChange={handleDateChange} // Gọi handleDateChange khi thay đổi ngày
-            style={{ marginTop: 16 }}
-            placeholder={
-              option === 'day'
-                ? ['Chọn ngày bắt đầu', 'Chọn ngày kết thúc']
-                : ['Chọn năm bắt đầu', 'Chọn năm kết thúc']
-            }
-            disabledDate={(current) => {
-              return current && current > dayjs().endOf('day'); // Không cho phép chọn ngày trong tương lai
-            }}
-          />
+          picker={option} // "month" cho chọn tháng, "year" cho chọn năm
+          value={dateRange}
+          onChange={handleDateChange} // Gọi handleDateChange khi thay đổi ngày
+          style={{ marginTop: 16 }}
+          placeholder={
+            option === 'day'
+              ? ['Chọn ngày bắt đầu', 'Chọn ngày kết thúc']
+              : option === 'month'
+              ? ['Chọn tháng bắt đầu', 'Chọn tháng kết thúc']
+              : ['Chọn năm bắt đầu', 'Chọn năm kết thúc']
+          }
+          disabledDate={(current) => {
+            return current && current > dayjs().endOf('day'); // Không cho phép chọn ngày trong tương lai
+          }}
+        />
       </div>
       <WidgetsDropdown className="mb-4" />
       <CCard className="mb-4">
