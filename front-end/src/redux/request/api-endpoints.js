@@ -101,6 +101,10 @@ const API_ENDPOINTS = {
 
   //room
   CREATE_MODEL_IN_ROOM: `/room/create-model`,
+
+  //model-try-on-history
+  GET_MODEL_TRY_ON_HISTORY_BY_USER_ID: `/model-try-on-history/user`,
+  DELETE_MODEL_TRY_ON_HISTORY: `/model-try-on-history/delete`,
 };
 
 export default API_ENDPOINTS;

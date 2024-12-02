@@ -16,6 +16,7 @@ const ChangePasswordForm = lazy(() =>
   import("./components/Form/ChangePasswordForm")
 );
 const OrdersForm = lazy(() => import("./components/Form/OdersForm"));
+const ModelTryOnHistoryForm = lazy(() => import("./components/Form/ModelTryOnHistoryForm"));
 const PersonalInformationForm = lazy(() =>
   import("./components/Form/PersonalInformationForm")
 );
@@ -108,6 +109,7 @@ function App() {
                     element={<ChangePasswordForm />}
                   />
                   <Route path="orders" element={<OrdersForm />} />
+                  <Route path="model-try-on-history" element={<ModelTryOnHistoryForm />} />
                 </Route>
               </Route>
             </Route>

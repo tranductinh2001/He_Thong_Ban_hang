@@ -164,4 +164,14 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
         return modelTryOnHistoryRepository.save(tryOnHistory);
     }
 
+    @Override
+    public List<ModelTryOnHistory> getAllModelTryOnHistoriesByUserId(Long userId) {
+        return modelTryOnHistoryRepository.findByUserId(userId);
+    }
+
+    public void deleteModelTryOnHistory(Long id) {
+        Optional<ModelTryOnHistory> tryOnHistory = modelTryOnHistoryRepository.findById(id);
+        tryOnHistory.ifPresent(modelTryOnHistoryRepository::delete);
+    }
+
 }

@@ -14,6 +14,7 @@ import orderSlice from "../redux/slices/orderSlice";
 import reviewSlice from "../redux/slices/reviewSlice";
 import contactSlice from "../redux/slices/contactSlice";
 import statisticSlice from "../redux/slices/statisticSlice";
+import modelTryOnHistorySlice from "../redux/slices/modelTryOnHistorySlice";
 
 export default configureStore({
   reducer: {
@@ -32,6 +33,6 @@ export default configureStore({
     review: reviewSlice,
     contact: contactSlice,
     statistic: statisticSlice,
-
+    modelTryOnHistory: modelTryOnHistorySlice,
   },
 });
