@@ -99,6 +99,7 @@ function AddAddressForm() {
   };
 
   const handleSubmit = async () => {
+    const userId = localStorage.getItem("userId");
     const formData = {
       name,
       address:
@@ -109,6 +110,11 @@ function AddAddressForm() {
         valueDistrict.label +
         ", " +
         valueProvince.label,
+      isDefault: false,
+      isDeleted: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      user_id: userId,
     };
     // console.log("form data", formData)
     try {
@@ -144,7 +150,7 @@ function AddAddressForm() {
     <>
       <button
         onClick={showModal}
-        className="duration-300 h-12 w-40 mb-4 hover:border-2 hover:border-green-600 bg-green-600 hover:bg-white hover:text-green-500 text-white font-bold text-xs py-2 px-4 rounded-xl"
+        className="w-40 h-12 px-4 py-2 mb-4 text-xs font-bold text-white duration-300 bg-green-600 hover:border-2 hover:border-green-600 hover:bg-white hover:text-green-500 rounded-xl"
       >
         THÊM ĐỊA CHỈ
       </button>
@@ -165,7 +171,7 @@ function AddAddressForm() {
         <div className="flex flex-col w-full">
           <Divider />
           <div className="w-full mb-4">
-            <label htmlFor="name" className="mb-2 font-semibold text-sm">
+            <label htmlFor="name" className="mb-2 text-sm font-semibold">
               Họ và tên
             </label>
             <input
@@ -173,12 +179,12 @@ function AddAddressForm() {
               id="name"
               name="name"
               onChange={(e) => setName(e.target.value)}
-              className="border p-2 font-semibold text-sm rounded w-full"
+              className="w-full p-2 text-sm font-semibold border rounded"
             />
           </div>
-          <div className="flex flex-1 flex-row space-x-4 mb-4">
+          <div className="flex flex-row flex-1 mb-4 space-x-4">
             <div className="flex-1">
-              <label htmlFor="address" className="mb-2 font-semibold text-sm">
+              <label htmlFor="address" className="mb-2 text-sm font-semibold">
                 Địa chỉ
               </label>
               <input
@@ -186,11 +192,11 @@ function AddAddressForm() {
                 id="address"
                 name="address"
                 onChange={(e) => setAddress(e.target.value)}
-                className="border p-2 font-semibold text-sm rounded w-full"
+                className="w-full p-2 text-sm font-semibold border rounded"
               />
             </div>
             <div className="flex-1">
-              <label htmlFor="province" className="mb-2 font-semibold text-sm">
+              <label htmlFor="province" className="mb-2 text-sm font-semibold">
                 Tỉnh thành
               </label>
               <Select
@@ -201,9 +207,9 @@ function AddAddressForm() {
               />
             </div>
           </div>
-          <div className="flex flex-1 flex-row space-x-4 mb-4 w-full">
+          <div className="flex flex-row flex-1 w-full mb-4 space-x-4">
             <div className="flex-1">
-              <label htmlFor="district" className="mb-2 font-semibold text-sm">
+              <label htmlFor="district" className="mb-2 text-sm font-semibold">
                 Quận huyện
               </label>
               <Select
@@ -215,7 +221,7 @@ function AddAddressForm() {
               />
             </div>
             <div className="flex-1">
-              <label htmlFor="ward" className="mb-2 font-semibold text-sm">
+              <label htmlFor="ward" className="mb-2 text-sm font-semibold">
                 Phường xã
               </label>
               <Select

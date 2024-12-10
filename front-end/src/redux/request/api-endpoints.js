@@ -95,6 +95,9 @@ const API_ENDPOINTS = {
   GET_STATISTIC_PRICE_BY_YEAR: '/order/total-price-by-year',
   GET_STATISTIC_PRICE_BY_MONTH:'/order/total-price-by-month',
 
+  //thống kê tổng
+  GET_STATISTIC_ALL: '/statistics/all',
+
   //payment
   CREATE_CHECKOUT_SESSION: `/payment/create-checkout-session`,
   CHECKOUT_SESSION: (session_id) =>

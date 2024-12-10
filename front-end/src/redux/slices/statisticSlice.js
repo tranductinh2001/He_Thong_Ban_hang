@@ -1,9 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import orderRequests from "../request/orderRequests";
+import statisticRequests from "../request/statisticRequests";
 
 const initialState = {
   orders: [],
   orderByUser: [],
+  statisticAll: {
+    brands: [],
+    users: [],
+    products: [],
+    contacts: [],
+  },
   statisticsByYear: [],
   statisticsByDateRange: [],
   statisticsByMonth: [],
@@ -11,16 +18,30 @@ const initialState = {
   error: null,
 };
 
+export const fetchStatisticAll = createAsyncThunk(
+  "statistic/fetchStatisticAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await statisticRequests.getAll();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 export const fetchStatisticsByYear = createAsyncThunk(
   "statistic/fetchStatisticsByYear",
   async ({ startYear, endYear }, { rejectWithValue }) => {
     try {
-        console.log("vào rồi ",startYear, endYear);
-      const response = await orderRequests.getTotalPriceByYear(startYear, endYear);
-      return response; 
+      console.log("vào rồi ", startYear, endYear);
+      const response = await orderRequests.getTotalPriceByYear(
+        startYear,
+        endYear
+      );
+      return response;
     } catch (error) {
-      return rejectWithValue(error.message); 
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -29,12 +50,12 @@ export const fetchStatisticsByDateRange = createAsyncThunk(
   "statistic/fetchStatisticsByDateRange",
   async ({ startDate, endDate }, { rejectWithValue }) => {
     try {
-        console.log("vào rồi ",startDate, endDate);
+      console.log("vào rồi ", startDate, endDate);
       const response = await orderRequests.getTotalPriceByDateRange(
         startDate,
         endDate
       );
-      return response; 
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -42,18 +63,20 @@ export const fetchStatisticsByDateRange = createAsyncThunk(
 );
 
 export const fetchStatisticsByMonth = createAsyncThunk(
-    "statistic/fetchStatisticsByMonth",
-    async ({ startMonth, endMonth }, { rejectWithValue }) => {
-      try {
-        console.log("Fetching data for months:", startMonth, endMonth);
-        const response = await orderRequests.getTotalPriceByMonth(startMonth, endMonth);
-        return response;
-      } catch (error) {
-        return rejectWithValue(error.message);
-      }
+  "statistic/fetchStatisticsByMonth",
+  async ({ startMonth, endMonth }, { rejectWithValue }) => {
+    try {
+      console.log("Fetching data for months:", startMonth, endMonth);
+      const response = await orderRequests.getTotalPriceByMonth(
+        startMonth,
+        endMonth
+      );
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
-  );
-  
+  }
+);
 
 const statisticSlice = createSlice({
   name: "statistic",
@@ -106,6 +129,18 @@ const statisticSlice = createSlice({
       .addCase(fetchStatisticsByMonth.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(fetchStatisticAll.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchStatisticAll.fulfilled, (state, action) => {
+        state.loading = false;
+        state.statisticAll = action.payload;
+      })
+      .addCase(fetchStatisticAll.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });
