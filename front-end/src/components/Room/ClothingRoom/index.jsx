@@ -6,10 +6,10 @@ import imagBackgroundRoom from "../../../assets/room/room.jpg";
 import { Carousel, Image } from "antd";
 import { useWebSocket } from "../../../WebSocket/WebSocketContext";
 
-export default function ClothingRoom({ imageList }) {
+export default function ClothingRoom({ imageList, productId }) {
   const { receivedData } = useWebSocket();
   const [MessageSocket, setMessageSocket] = useState("");
-  // console.log("MessageSocket   ", MessageSocket);
+
   useEffect(() => {
     if (receivedData) {
       // Tách dữ liệu từ đối tượng
@@ -135,7 +135,7 @@ export default function ClothingRoom({ imageList }) {
           </div>
 
           <div className="flex w-[300px] flex-wrap hover:cursor-pointer my-10 rounded-lg">
-            <UserInfoForm selectedImages={selectedImages} />
+            <UserInfoForm selectedImages={selectedImages} productId={productId}/>
           </div>
         </div>
       </Drawer>
@@ -151,4 +151,5 @@ ClothingRoom.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
+  productId: PropTypes.any.isRequired,
 };

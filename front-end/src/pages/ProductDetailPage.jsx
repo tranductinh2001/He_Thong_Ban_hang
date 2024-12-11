@@ -388,7 +388,7 @@ const ProductDetailPage = () => {
               <span className="text-sm font-medium">
                 Quý khách vui lòng để lại số điện thoại để được tư vấn sỉ
               </span>
-              <ClothingRoom imageList={product?.images} />
+              <ClothingRoom imageList={product?.images} productId={product?.id}/>
               <div className="flex flex-row items-center gap-1">
                 <Input
                   className="border-2 border-blue-500"

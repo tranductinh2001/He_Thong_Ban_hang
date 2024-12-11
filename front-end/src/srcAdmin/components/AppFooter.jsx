@@ -13,7 +13,7 @@ const AppFooter = () => {
       <div className="ms-auto">
         <span className="me-1">web by</span>
         <a href="https://www.facebook.com/tinhstart123/" target="_blank" rel="noopener noreferrer">
-         Tình sexy
+         Tình K43
         </a>
       </div>
     </CFooter>

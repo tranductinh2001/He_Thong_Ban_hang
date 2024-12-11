@@ -2,10 +2,12 @@ import { Table, Button } from "antd";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchModelTryOnHistoryList } from "../../redux/slices/modelTryOnHistorySlice";
+import { useNavigate } from 'react-router-dom';
 
 import modelTryOnHistoryRequests from "../../redux/request/modelTryOnHistoryRequests";
 
 const ModelTryOnHistoryForm = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const modelTryOnHistories = useSelector(
     (state) => state?.modelTryOnHistory?.modelTryOnHistoryList
@@ -155,6 +157,15 @@ const ModelTryOnHistoryForm = () => {
         onChange={onChange}
         rowKey="id"
         scroll={{ x: 1200 }}
+        onRow={(record) => ({
+          onClick: () => {
+            if (record?.product?.id) {
+              navigate(`/product/${record?.product?.id}`);
+            } else {
+              console.error('No product_id found for this record.', record);
+            }
+          },
+        })}
       />
     </div>
   );

@@ -77,12 +77,12 @@ const _nav = [
     to: "/admin/product",
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: "Dịch vụ",
-    to: "/admin/service",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: "Dịch vụ",
+  //   to: "/admin/service",
+  //   icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
     name: "Đặt hàng",

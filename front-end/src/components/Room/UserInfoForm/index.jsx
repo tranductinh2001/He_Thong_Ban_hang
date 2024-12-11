@@ -30,8 +30,8 @@ const formSchema = z.object({
   selectedImage: z.array(z.string()).optional(), // Changed to array for selected images
 });
 
-export default function UserInfoForm({ selectedImages }) {
-  // console.log("ảnh được chọn trong UserInfoForm   ", selectedImages);
+export default function UserInfoForm({ selectedImages, productId }) {
+  console.log("productId   ", productId);
   const dispatch = useDispatch();
 
   const [filesFace, setFilesFace] = useState([]);
@@ -94,6 +94,7 @@ export default function UserInfoForm({ selectedImages }) {
       formData.append("chest", values.chest || "");
       formData.append("wc", values.wc || "");
       formData.append("hip", values.hip || "");
+      formData.append("product_id", productId || "");
 
       // Thêm ảnh khuôn mặt vào FormData
       if (filesFace) {
@@ -265,4 +266,5 @@ export default function UserInfoForm({ selectedImages }) {
 }
 UserInfoForm.propTypes = {
   selectedImages: PropTypes.arrayOf(PropTypes.object),
+  productId: PropTypes.any.isRequired, // Bắt buộc và phải là chuỗi
 };
