@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;  // Thư viện Jackson
 import org.springframework.web.multipart.MultipartFile;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -53,6 +54,7 @@ public class RoomController {
             @RequestParam(value = "chest", required = false) String chest,
             @RequestParam(value = "wc", required = false) String wc,
             @RequestParam(value = "hip", required = false) String hip,
+            @RequestParam(value = "product_id", required = false) Long ProductId,
             @RequestParam("image_face") MultipartFile imageFace,  // Đảm bảo hình ảnh khuôn mặt
             @RequestParam("fileListClothes") String fileListClothesJson) {
         // Log ra các tham số nhận được
@@ -71,10 +73,13 @@ public class RoomController {
         System.out.println("Hip: " + hip);
         System.out.println("Image Face: " + (imageFace != null ? imageFace.getOriginalFilename() : "No image"));
         System.out.println("File List Clothes JSON: " + fileListClothesJson);
+        System.out.println("ProductId: " + ProductId);
+
         try {
             // Chuyển đổi danh sách quần áo từ JSON
             ObjectMapper objectMapper = new ObjectMapper();
-            List<FileListClothesDTO> fileListClothes = objectMapper.readValue(fileListClothesJson, new TypeReference<List<FileListClothesDTO>>() {});
+            List<FileListClothesDTO> fileListClothes = objectMapper.readValue(fileListClothesJson, new TypeReference<List<FileListClothesDTO>>() {
+            });
 
             // Lưu thông tin lịch sử thử đồ
             ModelTryOnHistory tryOnHistory = ModelTryOnHistoryService.saveTryOnHistory(
@@ -91,6 +96,7 @@ public class RoomController {
                     wc,
                     hip,
                     imageFace,
+                    ProductId,
                     fileListClothes
             );
 
@@ -152,7 +158,6 @@ public class RoomController {
                     tryOnHistory.getId() // Truyền ID lịch sử thử đồ
             ));
 //            System.out.println("generatedImage url   : " + generatedImage);
-
 
 
             // Trả về phản hồi thành công

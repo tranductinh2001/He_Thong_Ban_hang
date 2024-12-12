@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.OrderAddressDTO;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderAddress;
 import com.example.demo.response.MessageResponse;
@@ -97,19 +98,6 @@ public class OrderController {
         return ResponseEntity.ok(newOrder);
     }
 
-    @GetMapping("/order-address/user/{userId}")
-    @Operation(summary = "Lấy danh sách tất cả địa chỉ đơn hàng của user")
-    public ResponseEntity<List<OrderAddress>> getAllOrderAddressByUserId(@PathVariable Long userId) {
-        List<OrderAddress> orderAddress = orderService.getAllOrderAddressByUserId(userId);
-        return ResponseEntity.ok(orderAddress);
-    }
-
-    @PostMapping(value = "/create/order-address", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Tạo địa chỉ đơn hàng")
-    public ResponseEntity<OrderAddress> createOrderAddress(@RequestBody OrderAddress orderAddress) {
-        OrderAddress newOrderAddress = orderService.createOrderAddress(orderAddress);
-        return ResponseEntity.ok(newOrderAddress);
-    }
 
     @PutMapping(value = "/update/{id}", consumes = {"application/json"})
     @Operation(summary = "Cập nhật trạng thái đơn hàng")

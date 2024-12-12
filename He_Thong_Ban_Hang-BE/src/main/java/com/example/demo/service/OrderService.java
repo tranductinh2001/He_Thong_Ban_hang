@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.OrderAddressDTO;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderAddress;
 import com.example.demo.entity.User;
@@ -17,13 +18,9 @@ public interface OrderService {
 
     Order createOrder(Order order);
 
-    OrderAddress createOrderAddress(OrderAddress orderAddress);
-
     Order updateOrder(Order order, Long id);
 
     List<Order> getOrdersByUserId(Long userId);
-
-    List<OrderAddress> getAllOrderAddressByUserId(Long userId);
 
     void deleteOrder(Long id);
 

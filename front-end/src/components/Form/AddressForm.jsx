@@ -13,12 +13,27 @@ const AddressForm = () => {
   const order_addresses = useSelector(
     (state) => state.orderAddress?.order_addresses
   );
+  
+  const [dataSource, setdataSource] = useState([]); // Khởi tạo state là mảng trống
+  
+  useEffect(() => {
+    if (order_addresses) {
+      const updatedDataSource = order_addresses.map(item => ({
+        ...item,
+        key: item.id, // Đảm bảo `id` là duy nhất
+      }));
+      setdataSource(updatedDataSource);
+    }
+  }, [order_addresses]);
+  
+    
+  
 
   const columns = [
     {
       title: "ID",
-      dataIndex: "_id",
-      key: "_id",
+      dataIndex: "id",
+      key: "id",
     },
     {
       title: "Họ và tên",
@@ -32,8 +47,8 @@ const AddressForm = () => {
     },
     {
       title: "Đặt làm mặc định",
-      dataIndex: "is_default",
-      key: "is_default",
+      dataIndex: "isDefault",
+      key: "isDefault",
       sorter: (a, b) => b - a,
       render: (isDefault) =>
         isDefault ? (
@@ -48,7 +63,7 @@ const AddressForm = () => {
       key: "action",
       render: (_, record) =>
         !record.is_default && (
-          <Button type="primary" onClick={() => handleEdit(record._id)}>
+          <Button type="primary" onClick={() => handleEdit(record.id)}>
             Đặt làm mặc định
           </Button>
         ),
@@ -78,10 +93,10 @@ const AddressForm = () => {
         </div>
         <Table
           columns={columns}
-          dataSource={order_addresses}
+          dataSource={dataSource}
           pagination={{ pageSize: 5 }}
           onChange={onChange}
-          scroll={{ y: 240 }}
+          scroll={{ y: 500 }}
         />
       </div>
     </>

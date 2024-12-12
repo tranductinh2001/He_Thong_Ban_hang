@@ -1,14 +1,19 @@
 ******************chức năng**********************
 *thanh toán
 - trước khi ấn thì check lại giỏ hàng còn đủ sản phẩm để thực hiện đặt hàng hay không.
-- đặt hàng ở cart thì gửi mail xác nhận và cập nhật lại số lượng hàng 
+- đặt hàng ở cart thì gửi mail xác nhận và cập nhật lại số lượng hàng(nếu không thanh toán thì sẽ xoá order theo thời gian và update lại số lượng hàng(chưa làm))
 - ấn xác nhận qua trang thanh toán ở đây là realtime khi quét mã chuyển tiền
 - thành công chuyển hướng về trang thanh toán thành công còn thất bại thì ngược lại
 	+ xác nhận dúng người chuyển tiền và thành toán thành công mới cho về trang thành công
 	+ không thành công thì về trang thất bại
  
 
+* thử đồ
+- danh sách lịch sử thử đồ click vào row nào thì tới được chi tiết product đã thử
+
 **BUG - need UPDATE
+- thêm địa chỉ đặt hàng lỗi
+- thêm phần đặt hàng sổ list địa chỉ đặt hàng
 - chỉnh lại giao diện room
 - chỉnh lại giao diện product list ( các item vào giữa và có khoảng cách với top)
 - thanh điều hướng thêm các chức năng hiển thị ... và cho nó vào giữa 
@@ -19,6 +24,8 @@
 - show danh sách đơn hàng
 - khoảng trắng phần dưới home quá nhiều
 - show image lên taskbar khi login
+- thông báo khi xoá lịch sử thử đồ
+- chỉnh lại giao diện thông báo bị che mất
 
 **test chức năng
 - lazyloading search

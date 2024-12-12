@@ -74,10 +74,10 @@ const API_ENDPOINTS = {
   RIGISTER: `/auth/register`,
 
   //order address
-  CREATE_ORDER_ADDRESS: `/order/create/order-address`,
-  GET_ORDER_ADDRESS: `/order/order-address/user`,
+  CREATE_ORDER_ADDRESS: `/orderAddress/create/order-address`,
+  GET_ORDER_ADDRESS: `/orderAddress/order-address/user`,
   SET_DEFAULT_ORDER_ADDRESS: (order_address_id) =>
-    `/order-address/set-default/${order_address_id}`,
+    `/orderAddress/set-default/${order_address_id}`,
 
   // cart
   GET_CART_BY_ID_USER: `/cart/my-cart`,

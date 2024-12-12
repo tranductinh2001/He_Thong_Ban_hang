@@ -94,7 +94,7 @@ const OrdersForm = () => {
     }
   }, [dispatch]);
 
-  console.log(orders)
+  // console.log(orders)
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);

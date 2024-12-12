@@ -20,6 +20,8 @@ const ModelTryOnHistoryForm = () => {
 
   const handleDelete = async (id) => {
     await modelTryOnHistoryRequests.delete(id);
+    const userId = localStorage.getItem("userId");
+    dispatch(fetchModelTryOnHistoryList(userId));
   };
 
   const onChange = (pagination, filters, sorter, extra) => {

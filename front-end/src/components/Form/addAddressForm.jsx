@@ -114,7 +114,7 @@ function AddAddressForm() {
       isDeleted: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      user_id: userId,
+      userId: userId,
     };
     // console.log("form data", formData)
     try {

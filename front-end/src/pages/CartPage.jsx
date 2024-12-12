@@ -31,7 +31,7 @@ export default function CartPage() {
   // tổng số lượng sản phẩm có trong giỏ hàng (tính cả size)
   const totalProduct = useSelector((state) => state.cart?.number_of_product);
 
-  console.log("cartData ", cartData);
+  // console.log("cartData ", cartData);
   // Tính tổng tiền giỏ hàng
   const calculatedTotal = cartData.reduce((total, item) => {
     // Kiểm tra xem có giảm giá hay không và sử dụng giá phù hợp
@@ -42,7 +42,7 @@ export default function CartPage() {
 
     return total + price * item.count; // Tính tổng
   }, 0);
-  console.log("calculatedTotal ", calculatedTotal);
+  // console.log("calculatedTotal ", calculatedTotal);
 
   const priceSale = total - calculatedTotal;
 
@@ -81,7 +81,7 @@ export default function CartPage() {
   const default_address = useSelector(
     (state) => state.orderAddress?.defaultOrderAddress
   );
-  // console.log(default_address)
+  console.log("default_address   ", default_address);
 
   // xử lý thêm sản phẩm vào giỏ hàng trên strapi
   const handleAddToCart = (product) => {
@@ -133,7 +133,7 @@ export default function CartPage() {
         totalOfPrice: total,
         name: orderForm.name,
       };
-      console.log("data oderr nè:   ", order);
+      // console.log("data oderr nè:   ", order);
       // dispatch(createOrder(order));
       dispatch(createCheckoutSession(order));
       if (messageError) {

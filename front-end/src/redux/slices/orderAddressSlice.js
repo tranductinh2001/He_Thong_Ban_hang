@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { request } from "../request";
-import orderRequests from "../request/orderRequests";
+import orderAddressRequests from "../request/orderAddressRequests";
 
 export const fetchCreateOrderAddress = createAsyncThunk(
   "orderAddress/fetchCreateOrderAddress",
   async (order_address, { rejectWithValue }) => {
     try {
-      const response = await orderRequests.createOrderAddress(order_address);
+      const response = await orderAddressRequests.createOrderAddress(
+        order_address
+      );
       return response;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -18,8 +19,11 @@ export const setDefaultOrderAddress = createAsyncThunk(
   "orderAddress/setDefaultOrderAddress",
   async (order_address_id, { rejectWithValue }) => {
     try {
-      const response = await orderRequests.SetDefaultOrderAddress(order_address_id);
-      return response.data;
+      const response = await orderAddressRequests.SetDefaultOrderAddress(
+        order_address_id
+      );
+      // console.log(response);
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -30,7 +34,7 @@ export const fetchOrderAddress = createAsyncThunk(
   "orderAddress/fetchOrderAddress",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await request.fetchOrderAddress(userId);
+      const response = await orderAddressRequests.fetchOrderAddress(userId);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -42,7 +46,7 @@ const OrderAddressSlice = createSlice({
   name: "orderAddress",
   initialState: {
     order_addresses: [],
-    orderAddress: null,
+    orderAddress: [],
     defaultOrderAddress: null,
     loading: false,
     error: null,
@@ -57,6 +61,9 @@ const OrderAddressSlice = createSlice({
       .addCase(fetchCreateOrderAddress.fulfilled, (state, action) => {
         state.loading = false;
         state.orderAddress = action.payload;
+        if (!Array.isArray(state.order_addresses)) {
+          state.order_addresses = [];
+        }
         state.order_addresses = [...state.order_addresses, state.orderAddress];
       })
       .addCase(fetchCreateOrderAddress.rejected, (state, action) => {
@@ -83,11 +90,22 @@ const OrderAddressSlice = createSlice({
         state.error = null;
       })
       .addCase(setDefaultOrderAddress.fulfilled, (state, action) => {
+        // console.log(action.payload);
+
         state.loading = false;
-        state.order_addresses = action.payload;
+        state.isDefault = action.payload;
         state.defaultOrderAddress = action.payload?.find(
-          (item) => item.is_default === true
+          (item) => item.isDefault === true
         );
+        console.log(state.defaultOrderAddress);
+        state.orderAddress = action.payload;
+        if (!Array.isArray(state.order_addresses)) {
+          state.order_addresses = [];
+        }
+        state.order_addresses = [];
+        
+        state.order_addresses = [...state.order_addresses, ...state.orderAddress];
+        // console.log(state.order_addresses);
       })
       .addCase(setDefaultOrderAddress.rejected, (state, action) => {
         state.loading = false;
