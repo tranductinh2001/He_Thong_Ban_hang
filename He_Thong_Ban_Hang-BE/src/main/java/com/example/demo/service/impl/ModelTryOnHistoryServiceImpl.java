@@ -3,9 +3,11 @@ package com.example.demo.service.impl;
 import com.example.demo.DTO.FileListClothesDTO;
 import com.example.demo.entity.Image;
 import com.example.demo.entity.ModelTryOnHistory;
+import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.ModelTryOnHistoryRepository;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ModelTryOnHistoryService;
 import lombok.Value;
@@ -37,6 +39,10 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ProductRepository ProductRepository;
+
+
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !(authentication.getPrincipal() instanceof UserDetails)) {
@@ -61,6 +67,7 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
             String wc,
             String hip,
             MultipartFile imageFace,
+            Long ProductId,
             List<FileListClothesDTO> fileListClothes
     ) {
         // Lưu hình ảnh khuôn mặt
@@ -72,6 +79,9 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
         String username = getCurrentUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<Product> product = ProductRepository.findById(ProductId);
+        Product productEntity = product.orElseThrow(() -> new IllegalArgumentException("Product not found for ID: " + ProductId));
 
         // Tạo đối tượng ModelTryOnHistory
         ModelTryOnHistory tryOnHistory = new ModelTryOnHistory();
@@ -90,6 +100,7 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
         tryOnHistory.setWc(wc);
         tryOnHistory.setNationality(nationality);
         tryOnHistory.setUser(user);
+        tryOnHistory.setProduct(productEntity);
 
         // Nếu cần, có thể thêm nationality, hairColor, bodyShape, hoặc các trường khác
 

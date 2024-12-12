@@ -17,6 +17,13 @@ public class StatisticsController {
     @Autowired
     private StatisticsService statisticsService;
 
+    @GetMapping("/all")
+    @Operation(summary = "Get all statistics for users, products, brands and contacts")
+    public ResponseEntity<Map<String, Object>> getAllEntities() {
+        Map<String, Object> result = statisticsService.getAllEntities();
+        return ResponseEntity.ok(result);
+    }
+
 //    @GetMapping("/total-revenue")
 //    @Operation(summary = "Thống kê tổng doanh thu")
 //    public ResponseEntity<Long> getTotalRevenue() {
@@ -38,4 +45,5 @@ public class StatisticsController {
 //        List<Map<String, Object>> monthlyIncomeList = statisticsService.sumPriceOfMonth(year);
 //        return ResponseEntity.ok(monthlyIncomeList);
 //    }
+
 }

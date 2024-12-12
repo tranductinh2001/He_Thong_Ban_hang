@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.entity.Image;
 import com.example.demo.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,6 +46,10 @@ public class ModelTryOnHistory {
 
     @OneToMany
     private List<Image> clothesImages;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+    private Product product;
 
     private LocalDateTime triedAt; // Thời điểm thử
 }

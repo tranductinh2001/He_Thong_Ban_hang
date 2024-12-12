@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.DTO.OrderAddressDTO;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderAddress;
 import com.example.demo.entity.User;
@@ -52,12 +53,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
-    @Override
-    public OrderAddress createOrderAddress(OrderAddress orderAddress) {
-        System.out.println("orderAddress uid nef "+ orderAddress.getUser());
-        return orderAddressRepository.save(orderAddress);
-    }
-
 
     @Override
     public Order getOrderByVerificationCode(String code) {
@@ -78,10 +73,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findByUserId(userId);
     }
 
-    @Override
-    public List<OrderAddress> getAllOrderAddressByUserId(Long userId) {
-        return orderAddressRepository.findByUserId(userId);
-    }
     @Override
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);

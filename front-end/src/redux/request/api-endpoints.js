@@ -74,10 +74,10 @@ const API_ENDPOINTS = {
   RIGISTER: `/auth/register`,
 
   //order address
-  CREATE_ORDER_ADDRESS: `/order/create/order-address`,
-  GET_ORDER_ADDRESS: `/order/order-address/user`,
+  CREATE_ORDER_ADDRESS: `/orderAddress/create/order-address`,
+  GET_ORDER_ADDRESS: `/orderAddress/order-address/user`,
   SET_DEFAULT_ORDER_ADDRESS: (order_address_id) =>
-    `/order-address/set-default/${order_address_id}`,
+    `/orderAddress/set-default/${order_address_id}`,
 
   // cart
   GET_CART_BY_ID_USER: `/cart/my-cart`,
@@ -94,6 +94,9 @@ const API_ENDPOINTS = {
   GET_STATISTIC_PRICE_BY_DATE_RANGE: '/order/total-price-by-date',
   GET_STATISTIC_PRICE_BY_YEAR: '/order/total-price-by-year',
   GET_STATISTIC_PRICE_BY_MONTH:'/order/total-price-by-month',
+
+  //thống kê tổng
+  GET_STATISTIC_ALL: '/statistics/all',
 
   //payment
   CREATE_CHECKOUT_SESSION: `/payment/create-checkout-session`,

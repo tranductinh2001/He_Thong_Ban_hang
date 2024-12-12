@@ -7,21 +7,17 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 axiosInstance.interceptors.request.use(
   (config) => {
-    if (config.data instanceof FormData) {
-      // Nếu là FormData, dùng "multipart/form-data"
-      config.headers["Content-Type"] = "multipart/form-data";
-    } else {
-      // Mặc định là JSON
-      config.headers["Content-Type"] = "application/json";
-    }
+    // Thêm token từ localStorage vào request headers
     const token = localStorage.getItem("jwt");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     } else {
       delete config.headers["Authorization"];
     }
+
     return config;
   },
   (error) => {
@@ -29,11 +25,8 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
 axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     const { response } = error;
 
@@ -41,9 +34,12 @@ axiosInstance.interceptors.response.use(
       console.error("API error response:", response);
 
       if (response.status === 401 || response.status === 403) {
-        // alert("Your session has expired. Please log in again.");
-        // window.location.href = "/login";
+        console.error("Authentication error - redirecting to login...");
+        localStorage.removeItem("jwt"); // Xóa token nếu hết hạn
+        window.location.href = "/login"; // Điều hướng về trang đăng nhập
       }
+    } else {
+      console.error("Network error:", error);
     }
 
     return Promise.reject(error);

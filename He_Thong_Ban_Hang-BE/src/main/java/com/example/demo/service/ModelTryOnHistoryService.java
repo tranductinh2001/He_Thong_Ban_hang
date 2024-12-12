@@ -22,6 +22,7 @@ public interface ModelTryOnHistoryService {
             String wc,
             String hip,
             MultipartFile imageFace,
+            Long ProductId,
             List<FileListClothesDTO> fileListClothes
     );
 
