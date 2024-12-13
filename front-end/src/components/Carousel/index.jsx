@@ -3,7 +3,6 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import carousel1 from "../../assets/carousel1.jpg";
 import carousel2 from "../../assets/carousel2.jpg";
 import carousel3 from "../../assets/carousel3.jpg";
-import carousel4 from "../../assets/carousel4.jpg";
 
 function CustomArrow({ className, style, onClick, direction }) {
   return (
@@ -40,8 +39,8 @@ export default function _Carousel() {
         arrows
         autoplay
         pauseOnHover
-        nextArrow={<CustomArrow direction="right" />}
-        prevArrow={<CustomArrow direction="left" />}
+        // nextArrow={<CustomArrow direction="right" />}
+        // prevArrow={<CustomArrow direction="left" />}
         fade
         customPaging={(i) => {
           return (
@@ -72,13 +71,6 @@ export default function _Carousel() {
         <div key="3" className="flex items-center justify-center bg-red-100">
           <img
             src={carousel3}
-            alt=""
-            className="object-cover w-full rounded-lg h-[500px]"
-          />
-        </div>
-        <div key="4" className="flex items-center justify-center bg-red-100">
-          <img
-            src={carousel4}
             alt=""
             className="object-cover w-full rounded-lg h-[500px]"
           />

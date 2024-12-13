@@ -78,7 +78,7 @@ const OrderAddressSlice = createSlice({
         state.loading = false;
         state.order_addresses = action.payload;
         state.defaultOrderAddress = action.payload?.find(
-          (item) => item.is_default === true
+          (item) => item.isDefault === true
         );
       })
       .addCase(fetchOrderAddress.rejected, (state, action) => {

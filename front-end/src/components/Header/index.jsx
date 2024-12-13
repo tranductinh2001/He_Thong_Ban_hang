@@ -227,7 +227,7 @@ export default function Header() {
 
       {/* Navigation Menu */}
       <div className="flex items-center justify-between w-full px-2 overflow-hidden bg-white">
-        <Link to="/">
+        {/* <Link to="/">
           <motion.img
             initial={{ opacity: 0, scale: 0 }}
             animate={{
@@ -240,20 +240,21 @@ export default function Header() {
             src={logo}
             alt=""
           />
-        </Link>
-        <div className="flex flex-col items-end justify-end w-full gap-6 grow">
-          <div className="flex flex-row items-center">
-            {menuItems.map((item, index) => (
-              <MenuLink
-                key={index}
-                Icon={item.Icon}
-                title={item.title}
-                to={item.to}
-                dropdownContent={item.dropdownContent}
-              />
-            ))}
-          </div>
-        </div>
+        </Link> */}
+        <div className="flex flex-col items-center justify-center w-full gap-6 grow h-18">
+  <div className="flex flex-row items-center justify-center">
+    {menuItems.map((item, index) => (
+      <MenuLink
+        key={index}
+        Icon={item.Icon}
+        title={item.title}
+        to={item.to}
+        dropdownContent={item.dropdownContent}
+      />
+    ))}
+  </div>
+</div>
+
       </div>
     </div>
   );

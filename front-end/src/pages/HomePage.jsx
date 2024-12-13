@@ -57,7 +57,7 @@ export default function HomePage() {
 
         <div className="flex flex-col items-center justify-around order-2 w-full h-full col-span-1 md:col-span-4 md:order-1">
           <div className="flex flex-col items-center justify-center">
-            <span className="text-red-500">Quần áo thể thao KAWIN</span>
+            {/* <span className="text-red-500">Quần áo thể thao KAWIN</span> */}
             <span className="text-2xl font-semibold text-center text-neutral-700">
               Chào mừng quý khách đã đến trang đặt hàng.
             </span>

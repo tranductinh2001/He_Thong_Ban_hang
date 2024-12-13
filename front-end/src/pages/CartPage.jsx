@@ -1,4 +1,4 @@
-import { Button, Divider, Input, notification } from "antd";
+import { Button, Divider, Input, notification, Select } from "antd";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import { createCheckoutSession, createOrder } from "../redux/slices/orderSlice";
 import { WebSocketProvider, useWebSocket } from "../WebSocket/WebSocketContext";
 
 const { TextArea } = Input;
+const { Option } = Select;
 
 export default function CartPage() {
   const { receivedData } = useWebSocket();
@@ -25,14 +26,15 @@ export default function CartPage() {
   const userId = useSelector((state) => state.auth?.currentUser);
   const cartData = useSelector((state) => state.cart?.products);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
-  //tổng giá tiền sản phẩm của giỏ hàng
   const total = useSelector((state) => state.cart?.total);
-  // console.log("total   ", total);
-  // tổng số lượng sản phẩm có trong giỏ hàng (tính cả size)
   const totalProduct = useSelector((state) => state.cart?.number_of_product);
 
-  // console.log("cartData ", cartData);
-  // Tính tổng tiền giỏ hàng
+  const order_addresses = useSelector(
+    (state) => state.orderAddress?.order_addresses
+  );
+
+  // console.log("địa chỉ trong cart ", order_addresses);
+
   const calculatedTotal = cartData.reduce((total, item) => {
     // Kiểm tra xem có giảm giá hay không và sử dụng giá phù hợp
     const price =
@@ -42,7 +44,6 @@ export default function CartPage() {
 
     return total + price * item.count; // Tính tổng
   }, 0);
-  // console.log("calculatedTotal ", calculatedTotal);
 
   const priceSale = total - calculatedTotal;
 
@@ -81,7 +82,7 @@ export default function CartPage() {
   const default_address = useSelector(
     (state) => state.orderAddress?.defaultOrderAddress
   );
-  console.log("default_address   ", default_address);
+  // console.log("default_addresss   ", default_address);
 
   // xử lý thêm sản phẩm vào giỏ hàng trên strapi
   const handleAddToCart = (product) => {
@@ -128,12 +129,12 @@ export default function CartPage() {
         email: orderForm.email,
         numberPhone: orderForm.number_phone,
         notes: orderForm.notes || "",
-        orderAddress: default_address ?? currentUser?.address,
+        orderAddress: orderForm.order_address ?? currentUser?.address,
         cart: cartData,
         totalOfPrice: total,
         name: orderForm.name,
       };
-      // console.log("data oderr nè:   ", order);
+      console.log("data oderr nè:   ", order);
       // dispatch(createOrder(order));
       dispatch(createCheckoutSession(order));
       if (messageError) {
@@ -185,6 +186,31 @@ export default function CartPage() {
       window.location.href = paymentUrl;
     }
   }, [paymentUrl]);
+
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  useEffect(() => {
+    // Lấy địa chỉ mặc định từ danh sách
+    const defaultAddr = order_addresses?.find((item) => item.isDefault);
+    if (defaultAddr) {
+      setSelectedAddress(defaultAddr);
+      orderForm.order_address = defaultAddr.address;
+      orderForm.name = defaultAddr.name;
+    }
+  }, [order_addresses]);
+
+  const handleAddressChange = (value) => {
+    const address = order_addresses.find((item) => item.id === value);
+    setSelectedAddress(address);
+    orderForm.order_address = address.address;
+    console.log("orderForm.order_address   ", orderForm.order_address);
+  };
+  const handleNameChange = (value) => {
+    const address = order_addresses.find((item) => item.id === value);
+    setSelectedAddress(address);
+    orderForm.name = address.name;
+    console.log("orderForm.order_address   ", orderForm.order_address);
+  };
 
   return (
     <>
@@ -246,24 +272,32 @@ export default function CartPage() {
                   />
                 </div>
               </div>
-              {/* Địa chỉ  */}
               <div className="flex flex-col gap-2 text-xs">
-                <span className="text-sm">Địa chỉ</span>
-                <TextArea
-                  name="address"
-                  allowClear
+                <span className="text-sm">Chọn địa chỉ</span>
+                <Select
+                  placeholder="Chọn tên"
                   className="rounded-lg"
-                  onChange={handleChange}
-                />
-                {/* <Link to="" className="text-blue-600">
-                    Địa chỉ khác
-                  </Link> */}
-                <span className="text-lg font-semibold">
-                  {default_address?.name}
-                </span>
-                <p className="text-base text-gray-500">
-                  {default_address?.address}
-                </p>
+                  value={orderForm?.name}
+                  onChange={handleNameChange}
+                >
+                  {order_addresses?.map((item) => (
+                    <Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Option>
+                  ))}
+                </Select>
+                <Select
+                  placeholder="Chọn địa chỉ"
+                  className="rounded-lg"
+                  value={orderForm?.address}
+                  onChange={handleAddressChange}
+                >
+                  {order_addresses?.map((item) => (
+                    <Option key={item.id} value={item.id}>
+                      {item.address}
+                    </Option>
+                  ))}
+                </Select>
               </div>
               {/* Ghi chú */}
               <div>
@@ -271,6 +305,7 @@ export default function CartPage() {
                 <TextArea
                   name="notes"
                   allowClear
+                  value={orderForm?.notes}
                   className="rounded-lg"
                   onChange={handleChange}
                 />
