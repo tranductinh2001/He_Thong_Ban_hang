@@ -289,7 +289,7 @@ export default function CartPage() {
                 <Select
                   placeholder="Chọn địa chỉ"
                   className="rounded-lg"
-                  value={orderForm?.address}
+                  value={orderForm?.order_address}
                   onChange={handleAddressChange}
                 >
                   {order_addresses?.map((item) => (

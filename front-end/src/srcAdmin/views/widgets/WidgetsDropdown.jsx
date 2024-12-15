@@ -66,7 +66,7 @@ const WidgetsDropdown = (props) => {
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="success"
-          value={<>{totalRevenue.toLocaleString()} VND</>}
+          value={<>{totalRevenue?.toLocaleString()} VND</>}
           title="Tổng doanh thu"
         />
       </CCol>

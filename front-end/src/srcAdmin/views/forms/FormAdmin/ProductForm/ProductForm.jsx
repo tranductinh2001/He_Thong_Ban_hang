@@ -145,6 +145,7 @@ const ProductForm = ({ type, product }) => {
     }
   };
 
+
   return (
     <Form
       name={`${type}_product`}

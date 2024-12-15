@@ -1,15 +1,31 @@
 import { useEffect, useState, useRef } from "react";
 import { CCardBody, CCardHeader, CRow, CButton } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
+import * as XLSX from "xlsx";
 import {
   fetchProductList,
   setActiveFilter,
 } from "../../../redux/slices/productSlice";
 import { createStyles } from "antd-style";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag, Popconfirm, Modal, message } from "antd";
+import {
+  Button,
+  Input,
+  Space,
+  Table,
+  Tag,
+  Popconfirm,
+  Modal,
+  message,
+  Upload,
+  Tooltip,
+  Layout,
+} from "antd";
+const { Header, Footer, Content } = Layout;
+
 import Highlighter from "react-highlight-words";
 import ProductForm from "../forms/FormAdmin/ProductForm/ProductForm.jsx";
+import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 
 import productRequests from "../../../redux/request/productRequests.js";
 
@@ -35,6 +51,13 @@ const ProductManager = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [csvData, setCsvData] = useState([]); // State để lưu dữ liệu CSV đã phân tích
+  const categories = useSelector((state) => state.category.categoryList);
+  const brands = useSelector((state) => state.brand.brandList);
+  const colors = useSelector((state) => state.color.colorList);
+  const sizes = useSelector((state) => state.size.sizeList);
+  const [size, setSize] = useState("large"); // default is 'middle'
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -150,6 +173,33 @@ const ProductManager = () => {
       ),
   });
 
+  const headerStyle = {
+    textAlign: "center",
+    color: "#fff",
+    height: 64,
+    paddingInline: 48,
+    lineHeight: "64px",
+    backgroundColor: "#4096ff",
+  };
+  const contentStyle = {
+    textAlign: "center",
+    minHeight: 120,
+    lineHeight: "120px",
+    color: "#fff",
+    backgroundColor: "#0958d9",
+  };
+  const footerStyle = {
+    textAlign: "center",
+    color: "#fff",
+    backgroundColor: "#4096ff",
+  };
+  const layoutStyle = {
+    borderRadius: 8,
+    overflow: "hidden",
+    width: "calc(50% - 8px)",
+    maxWidth: "calc(50% - 8px)",
+  };
+
   const columns = [
     {
       title: "ID",
@@ -210,7 +260,7 @@ const ProductManager = () => {
       ...getColumnSearchProps("colors"),
       render: (colors) => (
         <>
-          {colors.map((color) => (
+          {colors?.map((color) => (
             <Tag key={color.id}>{color.name}</Tag>
           ))}
         </>
@@ -220,7 +270,7 @@ const ProductManager = () => {
       title: "Kích cỡ",
       dataIndex: "sizeList",
       key: "sizeList",
-      ...getColumnSearchProps("sizeList"),
+      ...getColumnSearchProps("sizelist"),
       render: (sizes) => (
         <>
           {sizes?.map((size) => (
@@ -300,7 +350,7 @@ const ProductManager = () => {
               label: "Xóa",
               isDelete: true,
             },
-          ].map((item, index) =>
+          ]?.map((item, index) =>
             item.isDelete ? (
               <Popconfirm
                 key={index}
@@ -343,8 +393,13 @@ const ProductManager = () => {
   const productListByPage = useSelector(
     (state) => state.products.combinedProductList
   );
-  const totalProductItems = useSelector((state) => state.products.totalProductItems);
-  const pageSize = 15
+
+  console.log(productListByPage);
+
+  const totalProductItems = useSelector(
+    (state) => state.products.totalProductItems
+  );
+  const pageSize = 15;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -382,6 +437,83 @@ const ProductManager = () => {
     setIsModalVisible(false); // Đóng modal
   };
 
+  const handleExcelUpload = (file) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const binaryStr = event.target.result;
+
+      const workbook = XLSX.read(binaryStr, { type: "binary" });
+      const sheetName = workbook.SheetNames[0]; // Lấy tên sheet đầu tiên
+      const sheet = workbook.Sheets[sheetName];
+      let data = XLSX.utils.sheet_to_json(sheet); // Chuyển sheet thành JSON
+
+      // Lấy đường dẫn thư mục chứa ảnh từ cột 'url' (giả sử là 'C:/Images/')
+      const imageFolderPath = data[0].url || ""; // Đường dẫn thư mục chứa ảnh
+
+      // Duyệt qua từng dòng dữ liệu và cập nhật cột url
+      data.forEach((row) => {
+        const imageNames = row.images; // Lấy tên ảnh từ cột 'images'
+        if (imageNames) {
+          const imageArray = imageNames.split(","); // Tách các tên ảnh nếu có nhiều ảnh
+          row.url = imageArray
+            ?.map((imageName) => `${imageFolderPath}${imageName.trim()}`)
+            .join(", "); // Tạo URL cho từng ảnh và gán vào cột 'url'
+        } else {
+          row.url = imageFolderPath; // Nếu không có tên ảnh, gán đường dẫn thư mục gốc
+        }
+      });
+
+      // In ra dữ liệu đã được cập nhật
+      console.log("Dữ liệu từ Excel với cột url:", data);
+
+      // Thực hiện các xử lý với dữ liệu
+      processExcelData(data);
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+  const processExcelData = async (data) => {
+    for (const item of data) {
+      const product = {
+        name: item.name,
+        price: parseFloat(item.price),
+        description: item.description,
+        categoryId: categories.find((c) => c.name === item.category)?.id,
+        brandId: brands.find((b) => b.name === item.brand)?.id,
+        sizes: item.sizes
+          .split(",")
+          ?.map((size) => sizes.find((s) => s.name === size)?.id),
+        colors: item.colors
+          .split(",")
+          ?.map((color) => colors.find((c) => c.name === color)?.id),
+        images: item.images.split(",")?.map((image) => image.trim()),
+        hot: item.hot === "true",
+        sale: item.sale === "true",
+        salePrice: item.salePrice ? parseFloat(item.salePrice) : null,
+        status: item.status || "active",
+      };
+
+      // await productRequests.create(product); // Gửi API để tạo sản phẩm
+    }
+
+    message.success("Thêm sản phẩm từ Excel thành công!");
+  };
+
+  const beforeUpload = (file) => {
+    const isExcel =
+      file.type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    if (!isExcel) {
+      message.error("Chỉ được upload file Excel (.xlsx)!");
+      return Upload.LIST_IGNORE;
+    }
+
+    handleExcelUpload(file);
+    return false; // Ngăn mặc định upload file
+  };
+
   return (
     <CRow>
       <CCardHeader className="justifil-conter">
@@ -389,17 +521,38 @@ const ProductManager = () => {
       </CCardHeader>
       <CCardBody>
         <div>
-          <Button
-            type="primary"
-            style={{
-              marginBottom: 16,
-              float: "right",
-              size: 100,
-            }}
-            onClick={() => showModal("create", null)}
-          >
-            Thêm sản phẩm
-          </Button>
+          <div className="flex flex-col ">
+            <div className="flex justify-between items-center p-2">
+              {/* Nút "Thêm sản phẩm" ở đầu hàng */}
+              <Button
+                type="primary"
+                className="mr-4" // Khoảng cách phải của nút "Thêm sản phẩm"
+                onClick={() => showModal("create", null)}
+              >
+                Thêm sản phẩm
+              </Button>
+
+              <div className="flex gap-4">
+                <Upload beforeUpload={beforeUpload} accept=".xlsx">
+                  <Tooltip title="Đọc lưu ý gì trước khi tải lên">
+                    <Button icon={<UploadOutlined />}>Upload CSV</Button>
+                  </Tooltip>
+                </Upload>
+                <div className="flex flex-col items-center">
+                  <Tooltip title="Tải xuống công cụ">
+                    <Button
+                      type="primary"
+                      shape="circle"
+                      icon={<DownloadOutlined />}
+                      size={size}
+                      href="http://localhost:8080/photos/download/rename_tool_image.exe"
+                      className="bg-blue-500 text-white hover:bg-blue-600"
+                    />
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+          </div>
           <Table
             scroll={{
               x: "max-content",
@@ -419,6 +572,7 @@ const ProductManager = () => {
             className={styles.customTable}
           />
         </div>
+
         <Modal
           title={
             typeModal === "edit" ? "Chỉnh sửa sản phẩm" : "Tạo mới sản phẩm"

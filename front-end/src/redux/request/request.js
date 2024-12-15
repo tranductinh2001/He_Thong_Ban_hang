@@ -209,8 +209,8 @@ const request = {
       //check product is in cart (size === size and id === id)
       let existingProduct = userCart?.data?.items.find((item) => {
         return (
-          item.product?._id === cartItem?.product?._id &&
-          item?._id === cartItem?._id &&
+          item.product?.id === cartItem?.product?.id &&
+          item?.id === cartItem?.id &&
           item.product?.size_list?.some(
             (sizeItem) => sizeItem.size_name === cartItem?.size
           )
@@ -225,8 +225,8 @@ const request = {
           count: existingProduct.count + 1,
         };
         updatedProducts = userCart.data.items.map((item) =>
-          item.product._id === existingProduct.product._id &&
-          item._id === existingProduct._id
+          item.product.id === existingProduct.product.id &&
+          item.id === existingProduct.id
             ? existingProduct
             : item
         );
@@ -275,8 +275,8 @@ const request = {
       //check product is in cart (size === size and id === id)
       let existingProduct = userCart?.data?.items.find((item) => {
         return (
-          item.product?._id === cartItem?.product?._id &&
-          item?._id === cartItem?._id &&
+          item.product?.id === cartItem?.product?.id &&
+          item?.id === cartItem?.id &&
           item.product?.size_list?.some(
             (sizeItem) => sizeItem.size_name === cartItem?.size
           )
@@ -291,8 +291,8 @@ const request = {
           count: existingProduct.count - 1,
         };
         updatedProducts = userCart.data.items.map((item) =>
-          item.product._id === existingProduct.product._id &&
-          item._id === existingProduct._id
+          item.product.id === existingProduct.product.id &&
+          item.id === existingProduct.id
             ? existingProduct
             : item
         );
