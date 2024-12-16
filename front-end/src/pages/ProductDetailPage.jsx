@@ -416,9 +416,9 @@ const ProductDetailPage = () => {
           </span>
           <div className="flex flex-col gap-2 p-6 overflow-auto bg-white">
             {viewedProducts.reverse().map((item, index) => (
-              <Link key={item?._id || index} to={`/product/${item?.id}`}>
+              <Link key={item?.id || index} to={`/product/${item?.id}`}>
                 <div
-                  key={item?._id || index}
+                  key={item?.id || index}
                   className="flex flex-row items-start gap-2"
                 >
                   {/* <img className="w-20 h-auto" src={item?.images[0]} alt="" /> */}
@@ -458,8 +458,8 @@ const ProductDetailPage = () => {
           initialSlide={currentSlide}
         >
           {saleProducts.map((item, index) => (
-            <div key={item._id || index} className="flex justify-center">
-              <ProductCard key={item._id || index} product={item} />
+            <div key={item.id || index} className="flex justify-center">
+              <ProductCard key={item.id || index} product={item} />
             </div>
           ))}
         </Carousel>

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { CCardBody, CCardHeader, CRow, CButton } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import * as XLSX from "xlsx";
+import imageRequests from "../../../redux/request/imageRequests.js";
 import {
   fetchProductList,
   setActiveFilter,
@@ -22,6 +23,10 @@ import {
   Layout,
 } from "antd";
 const { Header, Footer, Content } = Layout;
+import { fetchCategoryList } from "../../../redux/slices/categorySlice.js";
+import { fetchBrandList } from "../../../redux/slices/brandSlice.js";
+import { fetchColorList } from "../../../redux/slices/colorSlice.js";
+import { fetchSizeList } from "../../../redux/slices/sizeSlice.js";
 
 import Highlighter from "react-highlight-words";
 import ProductForm from "../forms/FormAdmin/ProductForm/ProductForm.jsx";
@@ -47,7 +52,7 @@ const useStyle = createStyles(({ css, token }) => {
   };
 });
 const ProductManager = () => {
-  //config search
+  const dispatch = useDispatch();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -57,7 +62,16 @@ const ProductManager = () => {
   const colors = useSelector((state) => state.color.colorList);
   const sizes = useSelector((state) => state.size.sizeList);
   const [size, setSize] = useState("large"); // default is 'middle'
+  useEffect(() => {
+    dispatch(fetchCategoryList());
+    dispatch(fetchBrandList());
+    dispatch(fetchColorList());
+    dispatch(fetchSizeList());
+  }, [dispatch]);
 
+  console.log("sizes:", sizes);
+
+  
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -389,7 +403,6 @@ const ProductManager = () => {
 
   //config table
   const { styles } = useStyle();
-  const dispatch = useDispatch();
   const productListByPage = useSelector(
     (state) => state.products.combinedProductList
   );
@@ -437,70 +450,126 @@ const ProductManager = () => {
     setIsModalVisible(false); // Đóng modal
   };
 
-  const handleExcelUpload = (file) => {
+  const handleExcelUpload = async (file) => {
     const reader = new FileReader();
+  
+    reader.onload = async (event) => {
+      try {
+        // Đọc file Excel
+        const binaryStr = event.target.result;
+        const workbook = XLSX.read(binaryStr, { type: "binary" });
+  
+        // Chọn sheet đầu tiên
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        let data = XLSX.utils.sheet_to_json(sheet); // Chuyển đổi thành JSON
+  
+        // Gợi ý chọn thư mục chứa ảnh
+        const directoryHandle = await window.showDirectoryPicker();
+  
+        // Xử lý từng dòng dữ liệu từ file Excel
+        data = await Promise.all(
+          data.map(async (row) => {
+            const imageNames = row.images ? row.images.split(",") : []; // Tên các ảnh
+            const uploadedImages = [];
+  
+            for (let imageName of imageNames) {
+              imageName = imageName.trim();
+              try {
+                const fileHandle = await directoryHandle.getFileHandle(imageName, { create: false });
+                const file = await fileHandle.getFile();
+                uploadedImages.push(file); // Lưu file vào danh sách nếu tồn tại
+              } catch (err) {
+                console.warn(`Không tìm thấy file: ${imageName}`);
+              }
+            }
+  
+            // Tải lên tất cả ảnh
+            const formData = new FormData();
+            uploadedImages.forEach((image) => {
+              formData.append("file", image);
+            });
+  
+            const uploadResponse = formData.has("file")
+              ? await imageRequests.upload(formData) // API upload ảnh
+              : [];
+  
+            // Lấy danh sách ID của ảnh đã upload
+            const imageUrls = uploadResponse?.map((img) => img.id);
+  
+            return {
+              ...row, // Dữ liệu khác từ file Excel
+              images: imageUrls, // Danh sách ID của ảnh
+            };
+          })
+        );
 
-    reader.onload = (event) => {
-      const binaryStr = event.target.result;
-
-      const workbook = XLSX.read(binaryStr, { type: "binary" });
-      const sheetName = workbook.SheetNames[0]; // Lấy tên sheet đầu tiên
-      const sheet = workbook.Sheets[sheetName];
-      let data = XLSX.utils.sheet_to_json(sheet); // Chuyển sheet thành JSON
-
-      // Lấy đường dẫn thư mục chứa ảnh từ cột 'url' (giả sử là 'C:/Images/')
-      const imageFolderPath = data[0].url || ""; // Đường dẫn thư mục chứa ảnh
-
-      // Duyệt qua từng dòng dữ liệu và cập nhật cột url
-      data.forEach((row) => {
-        const imageNames = row.images; // Lấy tên ảnh từ cột 'images'
-        if (imageNames) {
-          const imageArray = imageNames.split(","); // Tách các tên ảnh nếu có nhiều ảnh
-          row.url = imageArray
-            ?.map((imageName) => `${imageFolderPath}${imageName.trim()}`)
-            .join(", "); // Tạo URL cho từng ảnh và gán vào cột 'url'
-        } else {
-          row.url = imageFolderPath; // Nếu không có tên ảnh, gán đường dẫn thư mục gốc
-        }
-      });
-
-      // In ra dữ liệu đã được cập nhật
-      console.log("Dữ liệu từ Excel với cột url:", data);
-
-      // Thực hiện các xử lý với dữ liệu
-      processExcelData(data);
+        console.log("data trước khi lưu product ", data);
+  
+        // Gửi dữ liệu sản phẩm lên backend
+        await processExcelData(data);
+        message.success("Thêm sản phẩm từ Excel thành công!");
+      } catch (err) {
+        console.error("Lỗi khi xử lý file Excel hoặc thư mục:", err);
+        message.error("Có lỗi xảy ra khi xử lý file Excel!");
+      }
     };
-
+  
     reader.readAsBinaryString(file);
   };
-
+  
   const processExcelData = async (data) => {
-    for (const item of data) {
-      const product = {
-        name: item.name,
-        price: parseFloat(item.price),
-        description: item.description,
-        categoryId: categories.find((c) => c.name === item.category)?.id,
-        brandId: brands.find((b) => b.name === item.brand)?.id,
-        sizes: item.sizes
-          .split(",")
-          ?.map((size) => sizes.find((s) => s.name === size)?.id),
-        colors: item.colors
-          .split(",")
-          ?.map((color) => colors.find((c) => c.name === color)?.id),
-        images: item.images.split(",")?.map((image) => image.trim()),
-        hot: item.hot === "true",
-        sale: item.sale === "true",
-        salePrice: item.salePrice ? parseFloat(item.salePrice) : null,
-        status: item.status || "active",
-      };
-
-      // await productRequests.create(product); // Gửi API để tạo sản phẩm
+    try {
+      for (const item of data) {
+        const product = {
+          name: item["Tên"],
+          price: parseFloat(item["Giá(VND)"]),
+          description: item["Mô tả"],
+          categoryId: categories.find((c) => c.name === item["Thể loại"])?.id || null,
+          brandId: brands.find((b) => b.name === item["Nhãn hàng"])?.id || null,
+        
+          // Chuyển đổi dữ liệu cho "sizes" thành danh sách các đối tượng SizeRequest
+          sizes: item["Kích cỡ"]
+            ? item["Kích cỡ"]
+                .split(",")
+                .map((size) => {
+                  const foundSize = sizes.find((s) => s.sizeName === size.trim());
+                  return foundSize ? { id: foundSize.id, sizeName: foundSize.sizeName, quantity: foundSize.quantity } : null;
+                }).filter((size) => size !== null) // Lọc các phần tử null ra khỏi mảng
+            : [], // Nếu không có kích cỡ, trả về mảng rỗng
+        
+          // Chuyển đổi dữ liệu cho "colors" thành danh sách ID màu sắc
+          colors: item["Màu sắc"]
+            ? item["Màu sắc"]
+                .split(",")
+                .map((color) => colors.find((c) => c.name === color.trim())?.id)
+                .filter((id) => id !== undefined) // Lọc ra các màu không tìm thấy
+            : [],
+        
+          images: item.images || [], // Đảm bảo images có giá trị hợp lệ
+          hot: item["Hot"] === 1, // So sánh với 1 để lấy giá trị boolean
+          sale: item["Sale"] === 1, // So sánh với 1 để lấy giá trị boolean
+          salePrice: item["Giá sale(VND)"]
+            ? parseFloat(item["Giá sale(VND)"])
+            : null,
+          status: item["Trạng thái"] || null,
+          createdAt: item["Ngày tạo"] || null,
+          updatedAt: item["Ngày cập nhật"] || null,
+        };
+        
+        console.log("product  ", product);
+        // Gửi request tạo sản phẩm
+        await productRequests.create(product);        
+      }
+  
+      message.success("Tạo sản phẩm thành công!");
+    } catch (err) {
+      console.error("Lỗi khi tạo sản phẩm:", err);
+      message.error("Không thể tạo sản phẩm từ Excel!");
     }
-
-    message.success("Thêm sản phẩm từ Excel thành công!");
   };
-
+  
+  
   const beforeUpload = (file) => {
     const isExcel =
       file.type ===
@@ -535,7 +604,7 @@ const ProductManager = () => {
               <div className="flex gap-4">
                 <Upload beforeUpload={beforeUpload} accept=".xlsx">
                   <Tooltip title="Đọc lưu ý gì trước khi tải lên">
-                    <Button icon={<UploadOutlined />}>Upload CSV</Button>
+                    <Button icon={<UploadOutlined />}>Upload Excel</Button>
                   </Tooltip>
                 </Upload>
                 <div className="flex flex-col items-center">

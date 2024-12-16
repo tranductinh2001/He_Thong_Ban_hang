@@ -97,7 +97,7 @@ export default function BottomNavigation({ className }) {
     }
   };
   // useEffect(() => {
-  //   if (currentUser) dispatch(fetchCartData(currentUser?._id));
+  //   if (currentUser) dispatch(fetchCartData(currentUser?.id));
   // }, [dispatch, currentUser]);
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 flex flex-row justify-between gap-2 p-1 overflow-hidden bg-white border-t border-black sm:hidden">

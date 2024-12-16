@@ -161,8 +161,8 @@ export default function SearchBar({ keyWord }) {
                     split={true}
                     renderItem={(item, index) => (
                       <Link
-                        to={`/product/${item?._id}`}
-                        key={item?._id}
+                        to={`/product/${item?.id}`}
+                        key={item?.id}
                         onClick={handleInputBlur}
                       >
                         <motion.div
