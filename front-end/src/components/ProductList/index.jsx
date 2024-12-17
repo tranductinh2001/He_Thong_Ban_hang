@@ -12,7 +12,6 @@ import {
 import ProductCard from "../ProductCard/";
 
 function ProductList({ sortParam, titleParam, searchParam }) {
-  // console.log("ProductList -==========");
 
   const dispatch = useDispatch();
   const productListByPage = useSelector(
@@ -20,7 +19,9 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   );
   const error = useSelector((state) => state.products?.error);
   const [hasMore, setHasMore] = useState(true);
-  const pageSize = useSelector((state) => state.products?.pageSize) || 3;
+  // const pageSize = useSelector((state) => state.products?.pageSize) || 3;
+  const pageSize = 3;
+
   const totalProductItems = useSelector(
     (state) => state.products?.totalProductItems
   );
@@ -68,6 +69,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         titleParam === "brand" ||
         titleParam === "category"
       ) {
+        dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
         dispatch(
           fetchProductListWithSortOrTitle({
             sortParam,
@@ -77,6 +79,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
           })
         );
       } else {
+        dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
         dispatch(
           fetchProductListWithSortOrTitle({
             sortParam,
@@ -87,6 +90,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         );
       }
     } else if (searchParam) {
+      dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
       // console.log("fetchProductListWithSearch  -====");
       dispatch(
         fetchProductListWithSearch({
@@ -96,6 +100,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         })
       );
     } else {
+      dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
       // console.log("fetchProductList");
       dispatch(
         fetchProductList({
@@ -128,10 +133,10 @@ function ProductList({ sortParam, titleParam, searchParam }) {
           }
         >
           <div className="grid justify-center grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-3">
-            {Array.isArray(productListByPage) &&
-              productListByPage.map((product, index) => (
+            {Array?.isArray(productListByPage) &&
+              productListByPage?.map((product, index) => (
                 <ProductCard
-                  key={product.id || index}
+                  key={`${product?.id}-${index}`}
                   product={product}
                   displayQuantity={true}
                 />

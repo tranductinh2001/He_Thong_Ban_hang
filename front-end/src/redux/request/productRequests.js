@@ -62,6 +62,7 @@ const productRequests = {
         url += API_ENDPOINTS.LIST_SORT(sort, currentPage, pageSize);
       } else {
         title = title === "Hot" ? "hot" : title;
+        console.log("======= ", title, sort);
         url += API_ENDPOINTS.LIST_FILLTER(title, sort, currentPage, pageSize);
       }
       const response = await axiosInstance.get(url);
