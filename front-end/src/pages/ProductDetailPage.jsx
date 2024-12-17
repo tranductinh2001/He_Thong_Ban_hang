@@ -112,7 +112,7 @@ const ProductDetailPage = () => {
   const product = useSelector(
     (state) => state.products?.productDetails?.product
   );
-  console.log("p=iamge produc  ", product?.images);
+  // console.log("p=iamge produc  ", product?.images);
   const saleProducts = useSelector((state) => state.products?.saleProductList);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
 
