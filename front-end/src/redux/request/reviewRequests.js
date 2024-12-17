@@ -29,7 +29,7 @@ const reviewRequests = {
   },
   delete: async (reviewId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_REVIEW}?id=${reviewId}`);
+      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_REVIEW}/${reviewId}`);
       return response.data;
     } catch (error) {
       return errorHandler(error);

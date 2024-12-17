@@ -13,12 +13,15 @@ export default function ClothingRoom({ imageList, productId }) {
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("right");
   const [selectedImages, setSelectedImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (receivedData) {
+      setIsLoading(true);
       const messageKey = Object.keys(receivedData)[0];
       const messageValue = receivedData[messageKey];
       setMessageSocket(messageValue);
+      setIsLoading(false);
     }
   }, [receivedData]);
 
@@ -64,9 +67,8 @@ export default function ClothingRoom({ imageList, productId }) {
           height: "100%",
         }}
       >
-        <div className="flex flex-col items-start justify-between h-full space-y-4 md:space-x-4 md:flex-row">
-          {/* Image Selection Panel */}
-          <div className="relative md:sticky top-0 w-full md:w-1/4 bg-white bg-opacity-75 p-4 rounded-lg shadow-lg overflow-y-auto max-h-[calc(100vh-200px)]">
+        <div className="flex flex-col items-start justify-between h-full space-x-4 md:flex-row">
+          <div className="relative top-0 md:sticky w-1/4 bg-white bg-opacity-75 p-4 rounded-lg shadow-lg overflow-y-auto max-h-[calc(100vh-200px)]">
             <h3 className="mb-4 text-lg font-semibold">Chọn trang phục</h3>
             <div className="grid grid-cols-2 gap-4">
               {imageList?.map((image) => (
@@ -92,17 +94,21 @@ export default function ClothingRoom({ imageList, productId }) {
             </div>
           </div>
 
-          {/* Main Display Area */}
           <div className="relative top-0 flex items-center justify-center flex-grow w-full md:sticky md:w-auto">
-            <Image
-              className="max-w-full max-h-[calc(100vh-200px)] object-contain rounded-lg shadow-xl"
-              src={MessageSocket || "placeholder-image-url.jpg"}
-              alt="Ảnh thử đồ"
-            />
+            {isLoading ? (
+              <div className="flex items-center justify-center w-full h-full">
+                <div className="w-32 h-32 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              <Image
+                className="max-w-full max-h-[calc(100vh-200px)] object-contain rounded-lg shadow-xl"
+                src={MessageSocket || "placeholder-image-url.jpg"}
+                alt="Ảnh thử đồ"
+              />
+            )}
           </div>
 
-          {/* User Info Form */}
-          <div className="w-full p-4 bg-white bg-opacity-75 rounded-lg shadow-lg md:w-1/4">
+          <div className="w-1/4 p-4 bg-white bg-opacity-75 rounded-lg shadow-lg">
             <h3 className="mb-4 text-lg font-semibold">Thông tin người dùng</h3>
             <UserInfoForm
               selectedImages={selectedImages}

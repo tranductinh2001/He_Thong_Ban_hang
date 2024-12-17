@@ -29,7 +29,7 @@ const colorRequests = {
   },
   delete: async (colorId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_COLOR}?id=${colorId}`);
+      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_COLOR}/${colorId}`);
       return response.data;
     } catch (error) {
       return errorHandler(error);

@@ -8,9 +8,12 @@ import {
 } from "antd";
 
 import categoryRequests from "../../../../../redux/request/categoryRequests.js";
+import { fetchCategoryList } from "../../../../../redux/slices/categorySlice.js";
+import { useDispatch } from "react-redux";
 
-const CategoryForm = ({ type, category }) => {
+const CategoryForm = ({ setIsModalVisible, type, category }) => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (category && type === "edit") {
@@ -35,6 +38,8 @@ const CategoryForm = ({ type, category }) => {
         await categoryRequests.create(body);
         message.success("Tạo thể loại thành công!");
       }
+      dispatch(fetchCategoryList());
+      setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
       message.error("Đã xảy ra lỗi trong quá trình xử lý!");

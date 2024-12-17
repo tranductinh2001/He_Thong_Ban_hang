@@ -111,7 +111,7 @@ export default function SearchBar({ keyWord }) {
     <div className="flex flex-row items-center justify-between flex-auto gap-10">
       <div className="relative flex flex-col">
         <motion.div
-          className="h-auto w-fit"
+          className="h-auto min-w-96"
           initial={{ scale: 1 }}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3 }}

@@ -29,7 +29,7 @@ const brandRequests = {
   },
   delete: async (brandId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_BRAND}?id=${brandId}`);
+      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_BRAND}/${brandId}`);
       return response.data;
     } catch (error) {
       return errorHandler(error);

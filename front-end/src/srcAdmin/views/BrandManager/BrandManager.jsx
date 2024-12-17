@@ -242,6 +242,7 @@ const BrandManager = () => {
   //handle delete
   const handleDelete = async (colorId) => {
     await brandRequests.delete(colorId);
+    dispatch(fetchBrandList());
     message.success("Xoá nhãn hàng thành công!");
   };
 
@@ -305,7 +306,7 @@ const BrandManager = () => {
           onCancel={handleCancel}
           footer={null} // Nếu không muốn có nút footer
         >
-          <BrandForm type={typeModal} brand={selectedRecord} />
+          <BrandForm setIsModalVisible={setIsModalVisible} type={typeModal} brand={selectedRecord} />
         </Modal>
       </CCardBody>
     </CRow>
