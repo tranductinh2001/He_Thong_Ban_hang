@@ -110,7 +110,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   };
 
   return (
-    <div className="p-2 md:p-4">
+    <div className="p-4 md:p-8 w-80%">
       {productListByPage.length === 0 ? (
         <p className="p-5 text-sm text-center">
           Không có sản phẩm nào trong danh sách.
@@ -131,7 +131,8 @@ function ProductList({ sortParam, titleParam, searchParam }) {
             {Array.isArray(productListByPage) &&
               productListByPage.map((product, index) => (
                 <ProductCard
-                  key={product.id || index}
+                  // key={product.id || index}
+                  key={`${product?.id}-${index}`} // Kết hợp ID và index để đảm bảo key duy nhất
                   product={product}
                   displayQuantity={true}
                 />
