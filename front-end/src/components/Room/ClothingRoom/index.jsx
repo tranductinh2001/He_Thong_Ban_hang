@@ -1,6 +1,8 @@
 import { Drawer, Button } from "antd";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import Confetti from "react-confetti";
 import UserInfoForm from "../UserInfoForm";
 import imagBackgroundRoom from "../../../assets/room/room.jpg";
 import { Image } from "antd";
@@ -12,6 +14,8 @@ export default function ClothingRoom({ imageList, productId }) {
   const [MessageSocket, setMessageSocket] = useState("");
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("right");
+  const [isConfettiVisible, setConfettiVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,6 +26,7 @@ export default function ClothingRoom({ imageList, productId }) {
       const messageValue = receivedData[messageKey];
       setMessageSocket(messageValue);
       setIsLoading(false);
+      setConfettiVisible(true);
     }
   }, [receivedData]);
 
@@ -95,22 +100,43 @@ export default function ClothingRoom({ imageList, productId }) {
           </div>
 
           <div className="relative top-0 flex items-center justify-center flex-grow w-full md:sticky md:w-auto">
-            {isLoading ? (
-              <div className="flex items-center justify-center w-full h-full">
-                <div className="w-32 h-32 border-t-2 border-b-2 border-blue-500 rounded-full animate-spin"></div>
-              </div>
-            ) : (
-              <Image
-                className="max-w-full max-h-[calc(100vh-200px)] object-contain rounded-lg shadow-xl"
-                src={MessageSocket || "placeholder-image-url.jpg"}
-                alt="Ảnh thử đồ"
-              />
-            )}
+            <div className="relative top-0 flex items-center justify-center flex-grow w-full md:sticky md:w-auto">
+              {isLoading || isSubmitting ? (
+                <div className="w-full flex justify-center items-center text-2xl h-[calc(100vh-200px)] bg-white bg-opacity-75 rounded-lg shadow-xl animate-pulse">
+                  Đang tải...
+                </div>
+              ) : (
+                <motion.div
+                  className="max-w-full max-h-[calc(100vh-200px)] flex justify-center items-center rounded-lg shadow-xl border-4 border-gradient-to-r from-blue-500 to-pink-500"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 1 }}
+                >
+                  {isConfettiVisible && (
+                    <Confetti
+                      width={window.innerWidth}
+                      height={window.innerHeight}
+                      numberOfPieces={200}
+                      recycle={false}
+                    />
+                  )}
+                  <Image
+                    className="object-contain h-full max-w-lg rounded-lg"
+                    src={
+                      MessageSocket ||
+                      "https://cdn.sanity.io/images/hvisvj7q/production/26d2af036d7c08461ebde22c775230ee753880e1-1920x1080.jpg"
+                    }
+                    alt="Ảnh thử đồ"
+                  />
+                </motion.div>
+              )}
+            </div>
           </div>
 
           <div className="w-1/4 p-4 bg-white bg-opacity-75 rounded-lg shadow-lg">
             <h3 className="mb-4 text-lg font-semibold">Thông tin người dùng</h3>
             <UserInfoForm
+              setIsSubmitting={setIsSubmitting}
               selectedImages={selectedImages}
               productId={productId}
             />

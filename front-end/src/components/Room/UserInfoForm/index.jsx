@@ -29,7 +29,11 @@ const formSchema = z.object({
   selectedImage: z.array(z.string()).optional(),
 });
 
-export default function UserInfoForm({ selectedImages, productId }) {
+export default function UserInfoForm({
+  setIsSubmitting,
+  selectedImages,
+  productId,
+}) {
   const dispatch = useDispatch();
   const [filesFace, setFilesFace] = useState([]);
   const [fileListClothes, setFileListClothes] = useState([]);
@@ -63,6 +67,8 @@ export default function UserInfoForm({ selectedImages, productId }) {
 
   async function onSubmit(values) {
     try {
+      setIsSubmitting(true);
+
       const formData = new FormData();
       Object.entries(values).forEach(([key, value]) => {
         if (value !== undefined && value !== "") {
@@ -76,11 +82,16 @@ export default function UserInfoForm({ selectedImages, productId }) {
       }
       formData.append("fileListClothes", JSON.stringify(fileListClothes));
 
-      dispatch(createModelInRoom({ data: formData }));
+      await dispatch(createModelInRoom({ data: formData }));
+
       toast.success("Dữ liệu đã được gửi thành công!");
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Không thể gửi biểu mẫu. Vui lòng thử lại.");
+    } finally {
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 2000);
     }
   }
 
@@ -199,6 +210,7 @@ export default function UserInfoForm({ selectedImages, productId }) {
 }
 
 UserInfoForm.propTypes = {
+  setIsSubmitting: PropTypes.any,
   selectedImages: PropTypes.arrayOf(PropTypes.object),
   productId: PropTypes.any.isRequired,
 };
