@@ -1,31 +1,43 @@
-import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
-import logo from "../assets/logo.jpg";
-import BottomNavigation from "../components/BottomNavigation";
-import { Suspense } from "react";
 import Header from "../components/Header";
+import BottomNavigation from "../components/BottomNavigation";
 import Loading from "../components/Loading";
 import FloatMenuButton from "../components/FloatMenuButton";
 import ResponsiveHeader from "../components/ResponsiveHeader";
 
 export default function CartLayout() {
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <Header />
       <ResponsiveHeader />
-      <div className="min-h-screen">
+
+      <main className="flex-grow">
         <Suspense fallback={<Loading />}>
-          <div className="flex items-center justify-center w-full gap-5 py-2 text-white bg-gray-500 md:sticky top-24 z-[999]">
-            <span>1 Giỏ Hàng</span>
-            <span>2 Thanh toán</span>
-            <span>3 Hoàn tất</span>
-          </div>
-          <div className="p-2">
+          <nav className="sticky z-50 text-white shadow-md top-16 bg-gradient-to-r from-[#3FA2F6] to-[#0F67B1]">
+            <div className="container flex items-center justify-center px-4 py-3 mx-auto space-x-8 text-sm md:text-base">
+              <span className="flex items-center">
+                <div className="flex items-center justify-center w-6 h-6 mr-2 font-bold text-blue-600 bg-white rounded-full">1</div>
+                Giỏ Hàng
+              </span>
+              <span className="flex items-center opacity-70">
+                <div className="flex items-center justify-center w-6 h-6 mr-2 font-bold text-blue-600 bg-white rounded-full">2</div>
+                Thanh toán
+              </span>
+              <span className="flex items-center opacity-70">
+                <div className="flex items-center justify-center w-6 h-6 mr-2 font-bold text-blue-600 bg-white rounded-full">3</div>
+                Hoàn tất
+              </span>
+            </div>
+          </nav>
+
+          <div className="container px-4 py-6 mx-auto">
             <Outlet />
           </div>
         </Suspense>
-      </div>
+      </main>
+
       <BottomNavigation />
       <FloatMenuButton />
       <Footer />

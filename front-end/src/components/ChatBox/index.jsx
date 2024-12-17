@@ -25,13 +25,13 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="z-50 fixed flex flex-col">
+    <div className="fixed z-50 flex flex-col">
       <AnimatePresence>
         {/* {isChatBoxVisible && ( */}
           <>
             {/* Overlay mờ nền */}
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              className="fixed inset-0 z-40 bg-black bg-opacity-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -47,14 +47,14 @@ export default function ChatBox() {
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex flex-col h-full border rounded-2xl shadow-lg w-full">
-                <div className="flex justify-between items-center p-3 border-b rounded-t-2xl">
+              <div className="flex flex-col w-full h-full border shadow-lg rounded-2xl">
+                <div className="flex items-center justify-between p-3 border-b rounded-t-2xl">
                   <h5 className="text-lg font-semibold">Chat</h5>
                   <button type="button" className="btn btn-primary btn-sm">
                     Let's Chat App
                   </button>
                 </div>
-                <div className="flex-1 overflow-auto p-2">
+                <div className="flex-1 p-2 overflow-auto">
                   <div className="flex items-start mb-4">
                     <img
                       src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
@@ -62,24 +62,24 @@ export default function ChatBox() {
                       className="w-10 h-10 rounded-full"
                     />
                     <div className="ml-3">
-                      <p className="p-2 mb-1 rounded-lg bg-gray-200">Hi</p>
+                      <p className="p-2 mb-1 bg-gray-200 rounded-lg">Hi</p>
                       <p className="text-sm text-gray-500">23:58</p>
                     </div>
                   </div>
 
                   <div className="flex items-center mb-4">
-                    <div className="flex-grow border-b border-gray-300 mx-3"></div>
+                    <div className="flex-grow mx-3 border-b border-gray-300"></div>
                     <span className="text-gray-400">Today</span>
-                    <div className="flex-grow border-b border-gray-300 mx-3"></div>
+                    <div className="flex-grow mx-3 border-b border-gray-300"></div>
                   </div>
 
                   <div className="flex items-start mb-4">
                     <div className="mr-3 text-left">
-                      <p className="p-2 mb-1 rounded-lg text-white bg-blue-400">
+                      <p className="p-2 mb-1 rounded-lg text-white bg-[#6EACDA]">
                         Long time no see! Tomorrow office. will be free on
                         Sunday.
                       </p>
-                      <p className="text-sm text-gray-500 text-right">00:06</p>
+                      <p className="text-sm text-right text-gray-500">00:06</p>
                     </div>
                     <img
                       src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
@@ -91,24 +91,24 @@ export default function ChatBox() {
                   {/* Các tin nhắn khác */}
                   {/* Lặp lại các khối tin nhắn như trên với các dữ liệu khác */}
                 </div>
-                <div className="flex items-center p-3 border-t border-gray-200 bg-gray-100 rounded-b-2xl">
+                <div className="flex items-center p-3 bg-gray-100 border-t border-gray-200 rounded-b-2xl">
                   <img
                     src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
                     alt="avatar 3"
-                    className="w-10 h-10 rounded-full flex-shrink-0"
+                    className="flex-shrink-0 w-10 h-10 rounded-full"
                   />
                   <input
                     type="text"
-                    className="form-control flex-grow p-2 mx-2 border-none rounded-lg focus:ring-0"
+                    className="flex-grow p-2 mx-2 border-none rounded-lg form-control focus:ring-0"
                     placeholder="Type message"
                   />
-                  <a className="ml-2 text-gray-500 flex-shrink-0" href="#!">
+                  <a className="flex-shrink-0 ml-2 text-gray-500" href="#!">
                     <FaPaperclip />
                   </a>
-                  <a className="ml-2 text-gray-500 flex-shrink-0" href="#!">
+                  <a className="flex-shrink-0 ml-2 text-gray-500" href="#!">
                     <FaRegSmileBeam />
                   </a>
-                  <a className="ml-2 text-gray-500 flex-shrink-0" href="#!">
+                  <a className="flex-shrink-0 ml-2 text-gray-500" href="#!">
                     <FaPaperPlane />
                   </a>
                 </div>
@@ -118,7 +118,7 @@ export default function ChatBox() {
         {/* )} */}
       </AnimatePresence>
       {/* <motion.div
-        className="fixed bottom-1/2 -left-3 p-3 rounded-xl cursor-pointer border-neutral-600"
+        className="fixed p-3 cursor-pointer bottom-1/2 -left-3 rounded-xl border-neutral-600"
         initial={{ scale: 1 }}
         whileHover={{ scale: 1.2 }}
         transition={{ duration: 0.3 }}
@@ -128,7 +128,7 @@ export default function ChatBox() {
         {!isChatBoxVisible && <MdArrowForwardIos size={30} />}
       </motion.div> */}
       {/* <motion.div
-        className="fixed bottom-16 right-6 p-3 rounded-xl cursor-pointer border-neutral-600"
+        className="fixed p-3 cursor-pointer bottom-16 right-6 rounded-xl border-neutral-600"
         initial={{ scale: 1 }}
         whileHover={{ scale: 1.2 }}
         transition={{ duration: 0.3 }}

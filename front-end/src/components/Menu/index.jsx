@@ -29,7 +29,7 @@ export default function _Menu() {
   );
 
   return (
-    <div className="hidden sm:flex flex-row items-center justify-evenly gap-5 mt-5 sticky top-0 z-40 bg-white">
+    <div className="sticky top-0 z-40 flex-row items-center hidden gap-5 mt-5 bg-white sm:flex justify-evenly">
       <Dropdown
         dropdownRender={() => menu}
         placement="bottomLeft"
@@ -39,7 +39,7 @@ export default function _Menu() {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           to="/categories"
-          className="bg-blue-500 text-white text-sm p-3 rounded-md flex flex-row gap-2 items-center"
+          className="flex flex-row items-center gap-2 p-3 text-sm text-white bg-blue-500 rounded-md"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@ export default function _Menu() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6 text-black"
+            className="text-black size-6"
           >
             <path
               strokeLinecap="round"
@@ -61,7 +61,7 @@ export default function _Menu() {
 
       <NavLink
         to=""
-        className="bg-blue-500 hover:bg-white hover:text-blue-400 text-white text-sm p-3 rounded-md flex flex-row gap-2 items-center"
+        className="flex flex-row items-center gap-2 p-3 text-sm text-white bg-blue-500 rounded-md hover:bg-white hover:text-blue-400"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +69,7 @@ export default function _Menu() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="size-6 text-black"
+          className="text-black size-6"
         >
           <path
             strokeLinecap="round"
@@ -81,7 +81,7 @@ export default function _Menu() {
       </NavLink>
       <NavLink
         to=""
-        className="bg-blue-500 hover:bg-white hover:text-blue-400 text-white text-sm p-3 rounded-md flex flex-row gap-2 items-center"
+        className="flex flex-row items-center gap-2 p-3 text-sm text-white bg-blue-500 rounded-md hover:bg-white hover:text-blue-400"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +89,7 @@ export default function _Menu() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="size-6 text-black"
+          className="text-black size-6"
         >
           <path
             strokeLinecap="round"
@@ -101,7 +101,7 @@ export default function _Menu() {
       </NavLink>
       <NavLink
         to=""
-        className="bg-blue-500 hover:bg-white hover:text-blue-400 text-white text-sm p-3 rounded-md flex flex-row gap-2 items-center"
+        className="flex flex-row items-center gap-2 p-3 text-sm text-white bg-blue-500 rounded-md hover:bg-white hover:text-blue-400"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +109,7 @@ export default function _Menu() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="size-6 text-black"
+          className="text-black size-6"
         >
           <path
             strokeLinecap="round"
@@ -121,7 +121,7 @@ export default function _Menu() {
       </NavLink>
       <NavLink
         to="#"
-        className="bg-blue-500 hover:bg-white hover:text-blue-400 text-white text-sm p-3 rounded-md flex flex-row gap-2 items-center"
+        className="flex flex-row items-center gap-2 p-3 text-sm text-white bg-blue-500 rounded-md hover:bg-white hover:text-blue-400"
       >
         <IoIosMenu size={20} className="text-black" />
         GIAO HÀNG NHANH CHÓNG

@@ -41,8 +41,8 @@ export default function ChangPasswordForm() {
   }, [isSuccessChangePassword]);
   return (
     <>
-      <div className="flex flex-col p-4 w-full sm:w-1/3">
-        <h1 className="text-xl font-semibold mb-4">ĐỔI MẬT KHẨU</h1>
+      <div className="flex flex-col w-full p-4 sm:w-1/3">
+        <h1 className="mb-4 text-xl font-semibold">ĐỔI MẬT KHẨU</h1>
         {isLoadingChangePassword ? (
           <Button type="primary" loading className="ml-2">
             Đang đổi mật khẩu.
@@ -77,7 +77,7 @@ export default function ChangPasswordForm() {
         <br />
 
         <div className="flex flex-col mb-4">
-          <label htmlFor="oldPassword" className="mb-2 font-semibold text-sm">
+          <label htmlFor="oldPassword" className="mb-2 text-sm font-semibold">
             Mật khẩu cũ
           </label>
           <Input.Password
@@ -90,7 +90,7 @@ export default function ChangPasswordForm() {
         </div>
 
         <div className="flex flex-col mb-4">
-          <label htmlFor="newPassword" className="mb-2 font-semibold text-sm">
+          <label htmlFor="newPassword" className="mb-2 text-sm font-semibold">
             Mật khẩu mới
           </label>
           <Input.Password
@@ -105,7 +105,7 @@ export default function ChangPasswordForm() {
         <div className="flex flex-col mb-4">
           <label
             htmlFor="confirmPassword"
-            className="mb-2 font-semibold text-sm"
+            className="mb-2 text-sm font-semibold"
           >
             Nhập lại mật khẩu mới
           </label>
@@ -120,7 +120,7 @@ export default function ChangPasswordForm() {
 
         <button
           onClick={handleChangePassword}
-          className="flex items-center justify-center align-self bg-blue-500 text-white w-32 h-11 rounded -xl p-3 border-2 font-semibold text-sm border-blue-500 hover:bg-white hover:text-blue-600 duration-300"
+          className="flex items-center justify-center align-self bg-[#3FA2F6] text-white w-32 h-11 rounded -xl p-3 border-2 font-semibold text-sm border-blue-500 hover:bg-white hover:text-blue-600 duration-300"
         >
           Cập nhật
         </button>

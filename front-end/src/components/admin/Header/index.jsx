@@ -18,7 +18,7 @@ const Header = () => {
         <meta property="og:type" content="Website" />
         <meta property="og:site_name" content="Bootstrap Gallery" />
         <link rel="shortcut icon" href="/assets1/img/favicon.svg" />
-        
+
         {/* CSS Files */}
         <link rel="stylesheet" href="/assets1/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets1/fonts/style.css" />
@@ -34,7 +34,7 @@ const Header = () => {
       </head>
 
       {/* Header Component */}
-      <header className="bg-blue-800 p-4 flex justify-between items-center">
+      <header className="flex items-center justify-between p-4 bg-blue-800">
         <Link to="/">
           <img src={logo} alt="Logo" className="h-16" />
         </Link>

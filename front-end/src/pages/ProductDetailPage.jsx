@@ -312,9 +312,15 @@ const ProductDetailPage = () => {
               transition={{ duration: 0.5 }}
               className="flex flex-col flex-1 w-full gap-2 mt-24 md:mt-0"
             >
-              <span className="text-2xl font-semibold">
-                {product?.name} - {product?.brand?.name.toUpperCase()}
-              </span>
+              <div className="flex items-center justify-start gap-4">
+                <span className="text-2xl font-semibold">
+                  {product?.name} - {product?.brand?.name.toUpperCase()}
+                </span>
+                <ClothingRoom
+                  imageList={product?.images}
+                  productId={product?.id}
+                />
+              </div>
               <RatingModal productId={productId} />
               <span className="text-lg font-semibold text-red-500">
                 {isAuthenticated ? (
@@ -388,7 +394,6 @@ const ProductDetailPage = () => {
               <span className="text-sm font-medium">
                 Quý khách vui lòng để lại số điện thoại để được tư vấn sỉ
               </span>
-              <ClothingRoom imageList={product?.images} productId={product?.id}/>
               <div className="flex flex-row items-center gap-1">
                 <Input
                   className="border-2 border-blue-500"
@@ -403,15 +408,15 @@ const ProductDetailPage = () => {
 
       <div className="flex flex-col justify-between w-full gap-5 sm:flex-row">
         <div className="flex flex-col basis-2/3">
-          <div className="flex justify-start w-full p-3 bg-gray-500 rounded-t-lg sm:block">
+          <div className="flex justify-start w-full p-3 bg-[#0F67B1] rounded-t-lg sm:block">
             <span className="text-lg font-semibold text-white">
               Nội dung Chi Tiết
             </span>
           </div>
           <span className="p-2 bg-white">{product?.description}</span>
         </div>
-        <div className="flex flex-col rounded-lg shadow-xl sm:w-1/3 basis-1/3">
-          <span className="p-3 text-center text-white bg-gray-500 rounded-t-lg">
+        <div className="flex flex-col rounded-lg shadow-lg sm:w-1/3 basis-1/3">
+          <span className="p-3 text-center text-white bg-[#0F67B1] rounded-t-lg">
             Sản phẩm đã xem
           </span>
           <div className="flex flex-col gap-2 p-6 overflow-auto bg-white">
@@ -437,7 +442,7 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col bg-gray-500 border-b rounded-lg shadow-xl">
+      <div className="flex flex-col bg-[#0F67B1] rounded-lg">
         <span className="p-2 text-lg font-semibold text-white">
           SẢN PHẨM SALE
         </span>
@@ -458,7 +463,7 @@ const ProductDetailPage = () => {
           initialSlide={currentSlide}
         >
           {saleProducts.map((item, index) => (
-            <div key={item.id || index} className="flex justify-center">
+            <div key={item.id || index} className="flex justify-center py-4">
               <ProductCard key={item.id || index} product={item} />
             </div>
           ))}

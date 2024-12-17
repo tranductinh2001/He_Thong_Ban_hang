@@ -41,10 +41,10 @@ export default function ContactPage() {
   return (
     <div>
       <_Breadcrumb title={"Liên hệ"} />
-      <div className="w-full h-full p-4">
-        <div className="flex flex-wrap items-start justify-center gap-2 px-2 mx-4 bg-white rounded-xl">
+      <div className="w-full h-full px-2 py-4">
+        <div className="flex flex-col items-start justify-center gap-4 mx-4 bg-white md:flex-row rounded-xl">
           <div className="flex flex-col items-start justify-start h-full gap-2">
-            <h1 className="w-full p-2 mb-2 text-xl font-semibold bg-gray-300 rounded-t-lg">
+            <h1 className="w-full p-2 mb-2 text-xl font-semibold bg-[#0F67B1] text-white rounded-t-lg">
               Thông tin liên hệ
             </h1>
             <p>
@@ -74,7 +74,7 @@ export default function ContactPage() {
             </div>
           </div>
           <div className="flex flex-col w-full md:w-3/5">
-            <h1 className="w-full p-2 mb-4 text-xl font-semibold bg-gray-300 rounded-t-lg">
+            <h1 className="w-full p-2 mb-4 text-xl font-semibold bg-[#0F67B1] text-white rounded-t-lg">
               Liên hệ với chúng tôi
             </h1>
             <div className="grid grid-cols-2 gap-4 mb-4">

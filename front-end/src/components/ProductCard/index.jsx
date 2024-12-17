@@ -35,7 +35,7 @@ const ProductCard = React.memo(function ProductCard({
       transition={{ duration: 0.1 }}
       whileHover={{ y: -10 }}
       viewport={{ once: true }}
-      className="inline-flex flex-row items-start justify-center h-full gap-4 p-4 text-center duration-500 bg-white shadow-md hover:shadow-black rounded-xl ring-1 ring-gray-300 ring-opacity-50"
+      className="inline-flex flex-row items-start justify-center h-full gap-4 p-3 text-center duration-500 bg-white shadow-md hover:shadow-black rounded-xl ring-1 ring-gray-300 ring-opacity-50"
     >
       <div className="flex flex-col w-full gap-3 flex-basis-2/3 flex-grow-2">
         <div className="relative block w-full">

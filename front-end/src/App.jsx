@@ -16,7 +16,9 @@ const ChangePasswordForm = lazy(() =>
   import("./components/Form/ChangePasswordForm")
 );
 const OrdersForm = lazy(() => import("./components/Form/OdersForm"));
-const ModelTryOnHistoryForm = lazy(() => import("./components/Form/ModelTryOnHistoryForm"));
+const ModelTryOnHistoryForm = lazy(() =>
+  import("./components/Form/ModelTryOnHistoryForm")
+);
 const PersonalInformationForm = lazy(() =>
   import("./components/Form/PersonalInformationForm")
 );
@@ -40,7 +42,11 @@ const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 
 function App() {
   //config web socket topic
-  const SendMaiTtopics = ["/topic/gmail/send", "/topic/room/createImage", "/topic/payment"];
+  const SendMaiTtopics = [
+    "/topic/gmail/send",
+    "/topic/room/createImage",
+    "/topic/payment",
+  ];
 
   //config admin
   const { isColorModeSet, setColorMode } = useColorModes(
@@ -80,8 +86,22 @@ function App() {
           <Routes>
             {/* Client Routes */}
             <Route path="/" element={<LayoutClient />}>
-              <Route index element={<HomePage />} />
-              <Route path="products" element={<ProductListPage />} />
+              <Route
+                index
+                element={
+                  <ScrollToTop>
+                    <HomePage />
+                  </ScrollToTop>
+                }
+              />
+              <Route
+                path="products"
+                element={
+                  <ScrollToTop>
+                    <ProductListPage />
+                  </ScrollToTop>
+                }
+              />
               <Route
                 path="product/:productId"
                 element={
@@ -92,7 +112,14 @@ function App() {
               />
               <Route path="categories" element={<CategoryPage />} />
               <Route path="search" element={<SearchPage />} />
-              <Route path="contact" element={<ContactPage />} />
+              <Route
+                path="contact"
+                element={
+                  <ScrollToTop>
+                    <ContactPage />
+                  </ScrollToTop>
+                }
+              />
               <Route element={<RequireAuth />}>
                 <Route path="profile" element={<UserProfilePage />}>
                   <Route
@@ -109,7 +136,10 @@ function App() {
                     element={<ChangePasswordForm />}
                   />
                   <Route path="orders" element={<OrdersForm />} />
-                  <Route path="model-try-on-history" element={<ModelTryOnHistoryForm />} />
+                  <Route
+                    path="model-try-on-history"
+                    element={<ModelTryOnHistoryForm />}
+                  />
                 </Route>
               </Route>
             </Route>

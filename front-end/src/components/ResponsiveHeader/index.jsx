@@ -108,7 +108,7 @@ export default function ResponsiveHeader() {
     setSearchOpen(false);
   }, [location]);
   return (
-    <div className="sticky top-0 z-50 flex flex-row items-center justify-between w-full h-auto pl-4 pr-4 text-white sm:hidden bg-sky-500">
+    <div className="sticky top-0 z-50 flex flex-row items-center justify-between w-full h-auto pl-4 pr-4 text-white sm:hidden bg-[#0F67B1]">
       {/* MENU */}
       <div className="cursor-pointer" onClick={showMenuDrawer}>
         <svg

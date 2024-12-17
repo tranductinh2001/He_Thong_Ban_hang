@@ -10,15 +10,15 @@ export default function _Breadcrumb({ title }) {
   const brand_name = searchParams.get("sort");
 
   return (
-    <div className="flex flex-col items-center justify-center w-full gap-3 bg-gray-500 min-h-24 bg-[url('/src/assets/background_products.jpg')] bg-cover bg-center bg-no-repeat">
-      <motion.span
+    <div className="flex flex-col items-center justify-center w-full gap-3 bg-gray-500 min-h-56 bg-[url('/src/assets/background_products.jpg')] bg-cover bg-center bg-no-repeat">
+      <motion.h1
         initial={{ opacity: 0, y: -80 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="text-4xl font-bold text-white"
+        className="text-4xl font-bold text-white uppercase"
       >
         {title}
-      </motion.span>
+      </motion.h1>
       <motion.div
         initial={{ opacity: 0, y: 80 }}
         animate={{ opacity: 1, y: 0 }}

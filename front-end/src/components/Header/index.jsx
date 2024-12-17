@@ -29,8 +29,8 @@ const menuCategories = (
           to="/categories"
           className={({ isActive }) =>
             isActive
-              ? "text-blue-400 font-medium flex items-center"
-              : "text-black hover:text-blue-400 font-medium flex items-center"
+              ? "text-[#0F67B1] font-medium flex items-center"
+              : "text-black hover:text-[#0F67B1] font-medium flex items-center"
           }
         >
           Danh mục sản phẩm
@@ -70,11 +70,11 @@ function MenuLink({ Icon, title, to, dropdownContent }) {
       to={to}
       className={({ isActive }) =>
         isActive
-          ? "text-blue-400 p-2 flex items-center gap-2 duration-200 font-medium"
-          : "hover:text-blue-400 p-2 flex items-center gap-2 text-black duration-200 font-medium"
+          ? "text-[#0F67B1] p-2 flex items-center gap-2 duration-200 font-medium"
+          : "hover:text-[#0F67B1] p-2 flex items-center gap-2 text-black duration-200 font-medium"
       }
     >
-      {Icon && <Icon className="text-black" size={20} />}
+      {Icon && <Icon className="text-[#0F67B1]" size={24} />}
       {title}
     </NavLink>
   );
@@ -165,27 +165,9 @@ export default function Header() {
   ];
 
   return (
-    <div className="sticky top-0 flex-col items-center justify-start hidden w-full h-auto border-b border-b-slate-300 sm:flex z-[99999]">
+    <div className="sticky top-0 flex-col items-center justify-start hidden w-full h-auto border-b border-b-slate-300 sm:flex z-[100]">
       {/* Top Bar */}
-      <div className="flex items-start justify-start w-full p-2 text-white bg-sky-500">
-        <div className="flex items-center justify-start w-full gap-3">
-          <Link to="/">
-            <motion.img
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: [0.7, 0.8, 0.9, 1],
-                scale: [1.4, 1.3, 1.2, 1],
-              }}
-              whileHover={{ scale: 1.4 }}
-              transition={{ duration: 0.4 }}
-              className="object-cover w-12 h-auto"
-              src={logo}
-              alt=""
-            />
-          </Link>
-          <SearchBar />
-        </div>
-
+      <div className="flex items-start justify-start w-full p-2 text-white bg-[#0F67B1]">
         <div className="items-center justify-end hidden w-full h-full gap-4 pt-1 lg:flex">
           <NavigationLink
             title="Kiểm tra đơn hàng"
@@ -226,8 +208,8 @@ export default function Header() {
       </div>
 
       {/* Navigation Menu */}
-      <div className="flex items-center justify-between w-full px-2 overflow-hidden bg-white">
-        {/* <Link to="/">
+      <div className="flex items-center justify-between w-full px-2 py-2 bg-white">
+        <Link to="/">
           <motion.img
             initial={{ opacity: 0, scale: 0 }}
             animate={{
@@ -236,25 +218,23 @@ export default function Header() {
             }}
             whileHover={{ scale: 1.4 }}
             transition={{ duration: 0.4 }}
-            className="object-cover w-20 h-full ml-8 grow"
+            className="object-cover w-24 h-full ml-8 grow"
             src={logo}
             alt=""
           />
-        </Link> */}
-        <div className="flex flex-col items-center justify-center w-full gap-6 grow h-18">
-  <div className="flex flex-row items-center justify-center">
-    {menuItems.map((item, index) => (
-      <MenuLink
-        key={index}
-        Icon={item.Icon}
-        title={item.title}
-        to={item.to}
-        dropdownContent={item.dropdownContent}
-      />
-    ))}
-  </div>
-</div>
-
+        </Link>
+          <div className="flex flex-row items-center justify-end">
+            {menuItems.map((item, index) => (
+              <MenuLink
+                key={index}
+                Icon={item.Icon}
+                title={item.title}
+                to={item.to}
+                dropdownContent={item.dropdownContent}
+              />
+            ))}
+            <SearchBar />
+        </div>
       </div>
     </div>
   );

@@ -82,7 +82,7 @@ export default function UserProfilePage() {
   return (
     <div className="grid justify-center w-full grid-cols-1 gap-2 p-2 md:grid-cols-4">
       {/* left side */}
-      <div className="flex flex-col w-full h-full col-span-1 p-5 bg-white rounded-lg shadow-xl">
+      <div className="flex flex-col w-full h-full col-span-1 p-4 bg-white">
         <div className="flex flex-col w-full text-center text-neutral-500">
           {/* <span className="font-semibold uppercase">
             {currentUsers?.username}
@@ -133,7 +133,7 @@ export default function UserProfilePage() {
         </div>
       </div>
       {/* right side */}
-      <div className="w-full col-span-1 bg-white rounded-lg shadow-xl md:col-span-3">
+      <div className="w-full col-span-1 bg-white border-l md:col-span-3">
         <Outlet />
       </div>
     </div>

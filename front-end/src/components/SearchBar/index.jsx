@@ -111,7 +111,7 @@ export default function SearchBar({ keyWord }) {
     <div className="flex flex-row items-center justify-between flex-auto gap-10">
       <div className="relative flex flex-col">
         <motion.div
-          className="h-auto w-96"
+          className="h-auto w-fit"
           initial={{ scale: 1 }}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3 }}
@@ -129,13 +129,13 @@ export default function SearchBar({ keyWord }) {
         <AnimatePresence>
           {isOpenDropDown && keyWordSearch && (
             <motion.div
-              className="absolute z-50 w-full bg-white border rounded-lg opacity-100 top-10"
+              className="absolute z-[99999] w-full bg-white border rounded-lg opacity-100 top-10"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="sticky top-0 z-10 w-full p-2 bg-gray-500 rounded-t-lg">
+              <div className="sticky top-0 z-10 w-full p-2 bg-[#0F67B1] text-white rounded-t-lg">
                 Sản phẩm gợi ý
               </div>
               <div
@@ -177,7 +177,7 @@ export default function SearchBar({ keyWord }) {
                               avatar={
                                 <Avatar
                                   src={urlImg(item)}
-                                  className="w-20 h-20 border-4 rounded-full shadow-xl border-neutral-100"
+                                  className="w-12 h-12 border-4 rounded-full shadow-xl border-neutral-100"
                                 />
                               }
                               title={<p>{item?.name}</p>}

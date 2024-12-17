@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button } from "antd";
 import { motion } from "framer-motion";
+import ProductCard from "../components/ProductCard";
 
 const adsList = [
   {
@@ -40,8 +41,11 @@ const adsList = [
 ];
 
 export default function HomePage() {
-  const currentUser = useSelector((state) => state.auth.currentUser);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const productListByPage = useSelector(
+    (state) => state.products?.combinedProductList
+  );
 
   return (
     <motion.div
@@ -49,6 +53,12 @@ export default function HomePage() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.2 }}
     >
+      <div className="flex flex-col items-center justify-center mb-4">
+        <h1 className="text-2xl font-bold text-center uppercase md:text-4xl text-neutral-700">
+          Chào mừng quý khách đã đến trang đặt hàng.
+        </h1>
+      </div>
+
       <div className="grid items-start justify-center grid-cols-1 gap-2 md:grid-cols-8">
         <div className="flex flex-col order-1 w-full col-span-1 gap-2 md:col-span-2 md:order-2">
           <CategoryDropdown isbordered={true} className="hidden md:block" />
@@ -56,33 +66,42 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-col items-center justify-around order-2 w-full h-full col-span-1 md:col-span-4 md:order-1">
-          <div className="flex flex-col items-center justify-center">
-            {/* <span className="text-red-500">Quần áo thể thao KAWIN</span> */}
-            <span className="text-2xl font-semibold text-center text-neutral-700">
-              Chào mừng quý khách đã đến trang đặt hàng.
-            </span>
-          </div>
           <_Carousel />
         </div>
 
         <div className="order-3 w-full h-full col-span-1 md:col-span-2">
-          <img
-            src={homeImage2}
-            alt=""
-            className="w-full h-full rounded-lg"
-          />
+          <img src={homeImage2} alt="" className="w-full h-full rounded-lg" />
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-between w-full gap-3 mt-5 sm:flex-row sm:items-stretch">
-        {adsList.map((item, index) => (
-          <AdsCard
-            key={index}
-            Icon={item.icon}
-            title={item.title}
-            description={item.description}
-          />
-        ))}
+      <div className="flex flex-col items-start justify-start w-full gap-4 my-10">
+        <h1 className="text-xl md:text-3xl">Sản phẩm mới nhất</h1>
+        <div className="flex flex-wrap items-center justify-center w-full gap-4 md:justify-start">
+          {Array.isArray(productListByPage) &&
+            productListByPage
+              .slice(0, 4)
+              .map((product, index) => (
+                <ProductCard
+                  key={product.id || index}
+                  product={product}
+                  displayQuantity={true}
+                />
+              ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col items-start justify-start w-full gap-4 my-10">
+        <h1 className="text-xl md:text-3xl">Ưu đãi khách hàng</h1>
+        <div className="flex flex-col items-center justify-between w-full gap-3 sm:flex-row sm:items-stretch">
+          {adsList.map((item, index) => (
+            <AdsCard
+              key={index}
+              Icon={item.icon}
+              title={item.title}
+              description={item.description}
+            />
+          ))}
+        </div>
       </div>
 
       {!isAuthenticated ? (

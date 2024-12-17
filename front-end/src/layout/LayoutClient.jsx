@@ -16,7 +16,7 @@ export default function LayoutClient() {
     <div className="flex flex-col w-full h-full scroll-smooth">
       <Header />
       <ResponsiveHeader />
-      <div className="min-h-screen p-2">
+      <div className="h-full px-8 py-2">
         <Suspense fallback={<Loading />}>
           <Outlet />
         </Suspense>

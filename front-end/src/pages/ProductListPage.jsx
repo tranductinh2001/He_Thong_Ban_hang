@@ -62,7 +62,7 @@ export default function ProductPage() {
       transition={{ duration: 0.2 }}
     >
       <_Breadcrumb title={"Sản phẩm"}></_Breadcrumb>
-      <div className="sticky flex gap-5 text-xs border-b md:gap-10 sm:text-base">
+      <div className="sticky z-50 flex gap-5 pt-2 mb-3 text-xs bg-white border-b top-24 md:top-28 md:gap-10 sm:text-base">
         <span className="hidden py-3 ml-1 sm:block">Sắp xếp theo</span>
         {FilterOption.map((item, index) => {
           return (
