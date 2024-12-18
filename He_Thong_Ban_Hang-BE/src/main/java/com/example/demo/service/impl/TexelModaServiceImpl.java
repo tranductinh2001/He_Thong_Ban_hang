@@ -92,35 +92,35 @@ public class TexelModaServiceImpl implements TexelModaService {
         for (String key : Objects.requireNonNull(entity.getBody()).keySet()) {
             System.out.println("Key: " + key + ", Values: " + entity.getBody().get(key));
         }
-            byte[] imageBytes = null;
+//            byte[] imageBytes = null;
 
         // Gửi yêu cầu API dưới dạng multipart/form-data và nhận phản hồi
-//        ResponseEntity<byte[]> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, byte[].class);
+        ResponseEntity<byte[]> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, byte[].class);
 
         // Kiểm tra nếu phản hồi thành công
-//        if (response.getStatusCode().is2xxSuccessful()) {
-//            byte[] imageBytes = response.getBody();
-//
-//            // Lấy đối tượng ModelTryOnHistory từ repository bằng ID
-//            Optional<ModelTryOnHistory> optionalHistory = modelTryOnHistoryRepository.findById(tryOnHistoryId);
-//
-//            if (optionalHistory.isPresent()) {
-//                ModelTryOnHistory history = optionalHistory.get();
-//
-//                // Kiểm tra và khởi tạo danh sách nếu nó là null
-//                if (history.getCreatedImageGenerateAI() == null) {
-//                    history.setCreatedImageGenerateAI(new ArrayList<>());
-//                }
-//                modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
-//            }
-//
-//            saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
-//
-//            // Trả về ảnh đã được tạo
-//            return imageBytes;
-//        } else {
-//            throw new RuntimeException("Error while trying on clothes: " + response.getStatusCode());
-//        }
+        if (response.getStatusCode().is2xxSuccessful()) {
+            byte[] imageBytes = response.getBody();
+
+            // Lấy đối tượng ModelTryOnHistory từ repository bằng ID
+            Optional<ModelTryOnHistory> optionalHistory = modelTryOnHistoryRepository.findById(tryOnHistoryId);
+
+            if (optionalHistory.isPresent()) {
+                ModelTryOnHistory history = optionalHistory.get();
+
+                // Kiểm tra và khởi tạo danh sách nếu nó là null
+                if (history.getCreatedImageGenerateAI() == null) {
+                    history.setCreatedImageGenerateAI(new ArrayList<>());
+                }
+                modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
+            }
+
+            saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
+
+            // Trả về ảnh đã được tạo
+            return imageBytes;
+        } else {
+            throw new RuntimeException("Error while trying on clothes: " + response.getStatusCode());
+        }
 
 //        File imageFile = new File(clothingImageUrl);
 //
@@ -147,7 +147,7 @@ public class TexelModaServiceImpl implements TexelModaService {
 //        saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
 //
 //        // Trả về ảnh đã được tạo
-        return imageBytes;
+//        return imageBytes;
     }
 
 
@@ -178,18 +178,20 @@ public class TexelModaServiceImpl implements TexelModaService {
             img.setSize((long) imageBytes.length); // Kích thước file
             img.setType(extension); // Định dạng file
             img.setUrl("http://localhost:8080/photos/" + uid + "." + extension); // URL truy cập ảnh
-
+            img.setData(imageBytes);
             Image savedImg = imageRepository.save(img);
 
-            String messageSK = savedImg.getUrl();
+            String messageSKURL = savedImg.getUrl();
+            String messageSKBase64 = Arrays.toString(savedImg.getData());
 
             int retryCount = 0;
             while (retryCount < 300) { // Tối đa 10 lần thử
-                if (isImagePublic(messageSK) && retryCount >= 10) {
+                if (isImagePublic(messageSKURL) && retryCount >= 10) {
                     System.out.println("Ảnh đã được lưu vào server. " + "http://localhost:8080/photos/" + uid + "." + extension);
 
                     // Ảnh đã public, bắn WebSocket
-                    messagingTemplate.convertAndSend("/topic/room/createImage", messageSK);
+                    messagingTemplate.convertAndSend("/topic/room/createImage", messageSKURL);
+                    messagingTemplate.convertAndSend("/topic/room/createImage", messageSKBase64);
                     break;
                 }
                 retryCount++;

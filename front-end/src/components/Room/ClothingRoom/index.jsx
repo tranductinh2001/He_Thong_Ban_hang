@@ -24,18 +24,15 @@ export default function ClothingRoom({ imageList, productId }) {
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState("right");
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageSelect = (image) => {
-    if (selectedImages.some((selectedImage) => selectedImage?.id === image?.id)) {
-      // Nếu ảnh đã được chọn, bỏ chọn
-      setSelectedImages((prevSelectedImages) =>
-        prevSelectedImages.filter(
-          (selectedImage) => selectedImage?.id !== image?.id
-        )
-      );
+    // Nếu ảnh đã được chọn, bỏ chọn
+    if (selectedImage?.id === image?.id) {
+      setSelectedImage(null);
     } else {
       // Nếu ảnh chưa được chọn, chọn ảnh
-      setSelectedImages((prevSelectedImages) => [...prevSelectedImages, image]);
+      setSelectedImage(image);
     }
   };
 
@@ -88,9 +85,7 @@ export default function ClothingRoom({ imageList, productId }) {
               <div
                 key={image?.id}
                 className={`flex flex-col items-center p-2 cursor-pointer rounded-lg ${
-                  selectedImages?.some(
-                    (selectedImage) => selectedImage?.id === image?.id
-                  )
+                  selectedImage?.id === image?.id
                     ? "border-2 border-blue-500"
                     : ""
                 }`}
@@ -135,7 +130,7 @@ export default function ClothingRoom({ imageList, productId }) {
           </div>
 
           <div className="flex w-[300px] flex-wrap hover:cursor-pointer my-10 rounded-lg">
-            <UserInfoForm selectedImages={selectedImages} productId={productId}/>
+            <UserInfoForm selectedImage={selectedImage} productId={productId} />
           </div>
         </div>
       </Drawer>
@@ -143,13 +138,11 @@ export default function ClothingRoom({ imageList, productId }) {
   );
 }
 
-ClothingRoom.propTypes = {
-  imageList: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, // id có thể là string hoặc number
-      url: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, // Điều chỉnh thêm cho productId
+UserInfoForm.propTypes = {
+  selectedImage: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    url: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+  productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };

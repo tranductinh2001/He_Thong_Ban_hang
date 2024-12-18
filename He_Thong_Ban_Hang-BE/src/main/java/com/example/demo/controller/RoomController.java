@@ -42,14 +42,14 @@ public class RoomController {
 
     @PostMapping("/create-model")
     public ResponseEntity<MessageResponse> createModelInRoomRequest(
-            @RequestParam("weight") String weight,
-            @RequestParam("height") String height,
+            @RequestParam(value = "weight", required = false) String weight,
+            @RequestParam(value = "height", required = false) String height,
             @RequestParam(value = "skin_tone", required = false) String skinTone,
             @RequestParam(value = "nationality", required = false) String nationality,
             @RequestParam(value = "hair_color", required = false) String hairColor,
             @RequestParam(value = "body_shape", required = false) String bodyShape,
             @RequestParam(value = "hair_style", required = false) String hairStyle,
-            @RequestParam("gender") String gender,
+            @RequestParam(value = "gender", required = false) String gender,
             @RequestParam(value = "age", required = false) String age,
             @RequestParam(value = "chest", required = false) String chest,
             @RequestParam(value = "wc", required = false) String wc,
@@ -116,6 +116,7 @@ public class RoomController {
             System.out.println("WC: " + tryOnHistory.getWc());
             System.out.println("Hip: " + tryOnHistory.getHip());
             System.out.println("Face Image URL: " + tryOnHistory.getFaceImage().getUrl());
+
             tryOnHistory.getClothesImages().forEach(image -> {
                 System.out.println("Clothes Image URL: " + image.getUrl());
             });
@@ -123,13 +124,13 @@ public class RoomController {
 
             // Chuyển đổi URL cho ảnh nếu cần thiết
             // Chuyển đổi URL cho ảnh nếu cần thiết
-// Chuyển đổi URL cho ảnh nếu cần thiết
+            // Chuyển đổi URL cho ảnh nếu cần thiết
             String faceImageUrl = tryOnHistory.getFaceImage().getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos");
             List<String> updatedClothesImageUrls = tryOnHistory.getClothesImages().stream()
                     .map(image -> image.getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"))
                     .collect(Collectors.toList());
 
-// Lấy phần tử đầu tiên trong danh sách quần áo (nếu có)
+            // Lấy phần tử đầu tiên trong danh sách quần áo (nếu có)
             String updatedClothesImageUrl = updatedClothesImageUrls.isEmpty() ? "" : updatedClothesImageUrls.get(0);
 
 

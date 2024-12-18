@@ -30,22 +30,24 @@ const formSchema = z.object({
   selectedImage: z.array(z.string()).optional(), // Changed to array for selected images
 });
 
-export default function UserInfoForm({ selectedImages, productId }) {
+export default function UserInfoForm({ selectedImage, productId }) {
   console.log("productId   ", productId);
   const dispatch = useDispatch();
 
   const [filesFace, setFilesFace] = useState([]);
-  const [fileListClothes, setFileListClothes] = useState([]);
+  const [fileListClothes, setFileListClothes] = useState(null);
+  const [fileFace, setFileFace] = useState(null);
+  const [fileClothes, setFileClothes] = useState(null);
   const formData1 = new FormData();
 
   useEffect(() => {
-    if (selectedImages && selectedImages.length > 0) {
+    if (selectedImage) {
       // Xóa dữ liệu cũ trong formData
       formData1.delete("fileListClothes");
-      setFileListClothes(selectedImages)
+      setFileListClothes(selectedImage)
       // Chuyển đối tượng thành JSON string và append vào formData
     }
-  }, [selectedImages]);
+  }, [selectedImage]);
 
 
   // Xử lý upload file
@@ -108,7 +110,7 @@ export default function UserInfoForm({ selectedImages, productId }) {
         console.log(`Key: ${key}, Value:`, value);
       });
 
-      dispatch(createModelInRoom({ data: formData }));
+      // dispatch(createModelInRoom({ data: formData }));
 
       toast.success("Dữ liệu đã được gửi thành công!");
     } catch (error) {
@@ -265,6 +267,6 @@ export default function UserInfoForm({ selectedImages, productId }) {
   );
 }
 UserInfoForm.propTypes = {
-  selectedImages: PropTypes.arrayOf(PropTypes.object),
-  productId: PropTypes.any, // Bắt buộc và phải là chuỗi
+  selectedImage: PropTypes.arrayOf(PropTypes.string), // Sửa tên và kiểu dữ liệu
+  productId: PropTypes.any.isRequired, // Thêm `.isRequired` để đảm bảo giá trị không null
 };
