@@ -29,15 +29,21 @@ export default function ClothingRoom({ imageList, productId }) {
       setConfettiVisible(true);
     }
   }, [receivedData]);
+  // console.log("selectedImage nè: ", imageList);
+
+  const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState("right");
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageSelect = (image) => {
-    setSelectedImages((prevSelectedImages) =>
-      prevSelectedImages.some((selectedImage) => selectedImage.id === image.id)
-        ? prevSelectedImages.filter(
-            (selectedImage) => selectedImage.id !== image.id
-          )
-        : [...prevSelectedImages, image]
-    );
+    // Nếu ảnh đã được chọn, bỏ chọn
+    if (selectedImage?.id === image?.id) {
+      setSelectedImage(null);
+    } else {
+      // Nếu ảnh chưa được chọn, chọn ảnh
+      setSelectedImage(image);
+    }
   };
 
   const showDrawer = () => setOpen(true);
@@ -140,6 +146,28 @@ export default function ClothingRoom({ imageList, productId }) {
               selectedImages={selectedImages}
               productId={productId}
             />
+
+            {/* </div> */}
+
+            {/* } */}
+            {/* <Carousel arrows infinite={false}>
+              <div>
+                <h3 style={contentStyle}>1</h3>
+              </div>
+              <div>
+                <h3 style={contentStyle}>2</h3>
+              </div>
+              <div>
+                <h3 style={contentStyle}>3</h3>
+              </div>
+              <div>
+                <h3 style={contentStyle}>4</h3>
+              </div>
+            </Carousel> */}
+          </div>
+
+          <div className="flex w-[300px] flex-wrap hover:cursor-pointer my-10 rounded-lg">
+            <UserInfoForm selectedImage={selectedImage} productId={productId} />
           </div>
         </div>
       </Drawer>
@@ -147,13 +175,11 @@ export default function ClothingRoom({ imageList, productId }) {
   );
 }
 
-ClothingRoom.propTypes = {
-  imageList: PropTypes.arrayOf(
-    PropTypes.shape({
-      uid: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  productId: PropTypes.any.isRequired,
+UserInfoForm.propTypes = {
+  selectedImage: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    url: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+  productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };

@@ -1,5 +1,6 @@
 package com.example.demo.DTO;
 
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,8 @@ public class FileListClothesDTO {
     private String uploadedBy;  // Thêm trường uploadedBy
     private String url;
 
-
+    @Lob
+    private byte[] data;
     @Override
     public String toString() {
         return "FileListClothesDTO{id='" + id + "', name='" + name + "', type='" + type + "', size=" + size + ", uploadedBy='" + uploadedBy + "', url='" + url + "'}";

@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
             case "hot":
                 pagedResult = productRepository.findByIsHot(Boolean.parseBoolean(filterValue), paging);
                 break;
-            case "sale":
+            case "Sale":
                 pagedResult = productRepository.findByIsSale(Boolean.parseBoolean(filterValue), paging);
                 break;
             default:

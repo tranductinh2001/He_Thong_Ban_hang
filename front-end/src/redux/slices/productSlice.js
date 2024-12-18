@@ -23,7 +23,7 @@ export const fetchProductListWithSortOrTitle = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      // console.log(" ------ ", sortParam, titleParam);
+      console.log(" ------ ", sortParam, titleParam);
       return await productRequests.ListSort({
         sort: sortParam,
         title: titleParam,
@@ -122,6 +122,7 @@ const productSlice = createSlice({
   reducers: {
     setActiveFilter(state, action) {
       const { title, sort } = action.payload;
+      console.log(title, sort);
       state.activeFilter = { title: title, sort: sort };
       state.productList = [];
       state.newProductList = [];

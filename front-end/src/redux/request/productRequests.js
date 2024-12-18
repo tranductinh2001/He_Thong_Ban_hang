@@ -62,6 +62,7 @@ const productRequests = {
         url += API_ENDPOINTS.LIST_SORT(sort, currentPage, pageSize);
       } else {
         title = title === "Hot" ? "hot" : title;
+        console.log("======= ", title, sort);
         url += API_ENDPOINTS.LIST_FILLTER(title, sort, currentPage, pageSize);
       }
       const response = await axiosInstance.get(url);
@@ -85,6 +86,7 @@ const productRequests = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.PRODUCT_DETAIL(productId)
       );
+      console.log("ProductDetail requaeets   ",response.data );
       return response.data;
     } catch (error) {
       console.error("Error fetching product detail data:", error);

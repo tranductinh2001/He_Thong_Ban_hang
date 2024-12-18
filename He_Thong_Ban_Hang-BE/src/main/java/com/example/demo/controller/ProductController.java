@@ -69,7 +69,7 @@ public class ProductController {
                 .findFirst()
                 .orElse(null);
         String filterValue = allParams.get(filterBy);
-
+System.out.println("filterValue   "+ filterValue+" == "+filterBy);
         // Gọi service để xử lý lọc sản phẩm
         Map<String, Object> response = productService.filterProducts(filterBy, filterValue, currentPage-1, pageSize);
         return ResponseEntity.ok(response);
