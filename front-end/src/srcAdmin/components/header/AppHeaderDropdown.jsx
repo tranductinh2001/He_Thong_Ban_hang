@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CAvatar,
   CBadge,
@@ -8,7 +8,7 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-} from '@coreui/react'
+} from "@coreui/react";
 import {
   cilBell,
   cilCreditCard,
@@ -19,19 +19,35 @@ import {
   cilSettings,
   cilTask,
   cilUser,
-} from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
-
-import avatar8 from './../../assets/images/avatars/8.jpg'
-
+} from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
+import avatar8 from "./../../assets/images/avatars/8.jpg";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchUserDetail } from "../../../redux/slices/userSlice";
+import { useSelector } from "react-redux";
+import { logout } from "../../../redux/slices/authSlice";
 const AppHeaderDropdown = () => {
+  const dispatch = useDispatch();
+  const currentUsers = useSelector((state) => state.auth?.currentUser);
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+  useEffect(() => {
+    dispatch(fetchUserDetail());
+  }, [dispatch]);
+
   return (
     <CDropdown variant="nav-item">
-      <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+      <CDropdownToggle
+        placement="bottom-end"
+        className="py-0 pe-0"
+        caret={false}
+      >
+        <CAvatar src={currentUsers?.avatarUrl} size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Account</CDropdownHeader>
+        {/* <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Account</CDropdownHeader>
         <CDropdownItem href="#">
           <CIcon icon={cilBell} className="me-2" />
           Updates
@@ -83,14 +99,14 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem>
-        <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownDivider /> */}
+        <CDropdownItem href="#" onClick={handleLogout}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Lock Account
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
-  )
-}
+  );
+};
 
-export default AppHeaderDropdown
+export default AppHeaderDropdown;

@@ -3,6 +3,8 @@ import { CCardBody, CCardHeader, CRow, CButton } from "@coreui/react";
 import { useDispatch, useSelector } from "react-redux";
 import * as XLSX from "xlsx";
 import imageRequests from "../../../redux/request/imageRequests.js";
+import ReactPlayer from "react-player";
+
 import {
   fetchProductList,
   setActiveFilter,
@@ -31,7 +33,7 @@ import { fetchSizeList } from "../../../redux/slices/sizeSlice.js";
 import Highlighter from "react-highlight-words";
 import ProductForm from "../forms/FormAdmin/ProductForm/ProductForm.jsx";
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
-
+import backgroundYTB from "../../../assets/backgroundYTB.png";
 import productRequests from "../../../redux/request/productRequests.js";
 
 const useStyle = createStyles(({ css, token }) => {
@@ -70,7 +72,6 @@ const ProductManager = () => {
   }, [dispatch]);
 
   console.log("sizes:", sizes);
-
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -478,7 +479,10 @@ const ProductManager = () => {
             for (let imageName of imageNames) {
               imageName = imageName.trim();
               try {
-                const fileHandle = await directoryHandle.getFileHandle(imageName, { create: false });
+                const fileHandle = await directoryHandle.getFileHandle(
+                  imageName,
+                  { create: false }
+                );
                 const file = await fileHandle.getFile();
                 uploadedImages.push(file); // Lưu file vào danh sách nếu tồn tại
               } catch (err) {
@@ -527,7 +531,8 @@ const ProductManager = () => {
           name: item["Tên"],
           price: parseFloat(item["Giá(VND)"]),
           description: item["Mô tả"],
-          categoryId: categories.find((c) => c.name === item["Thể loại"])?.id || null,
+          categoryId:
+            categories.find((c) => c.name === item["Thể loại"])?.id || null,
           brandId: brands.find((b) => b.name === item["Nhãn hàng"])?.id || null,
 
           // Chuyển đổi dữ liệu cho "sizes" thành danh sách các đối tượng SizeRequest
@@ -535,9 +540,18 @@ const ProductManager = () => {
             ? item["Kích cỡ"]
                 .split(",")
                 .map((size) => {
-                  const foundSize = sizes.find((s) => s.sizeName === size.trim());
-                  return foundSize ? { id: foundSize.id, sizeName: foundSize.sizeName, quantity: foundSize.quantity } : null;
-                }).filter((size) => size !== null) // Lọc các phần tử null ra khỏi mảng
+                  const foundSize = sizes.find(
+                    (s) => s.sizeName === size.trim()
+                  );
+                  return foundSize
+                    ? {
+                        id: foundSize.id,
+                        sizeName: foundSize.sizeName,
+                        quantity: foundSize.quantity,
+                      }
+                    : null;
+                })
+                .filter((size) => size !== null) // Lọc các phần tử null ra khỏi mảng
             : [], // Nếu không có kích cỡ, trả về mảng rỗng
 
           // Chuyển đổi dữ liệu cho "colors" thành danh sách ID màu sắc
@@ -570,7 +584,6 @@ const ProductManager = () => {
       message.error("Không thể tạo sản phẩm từ Excel!");
     }
   };
-
 
   const beforeUpload = (file) => {
     const isExcel =
@@ -644,6 +657,28 @@ const ProductManager = () => {
           />
         </div>
 
+        <CCardHeader className="justifil-conter">
+          <strong>Hướng dẫn thêm sản phẩm số lượng lớn</strong>
+        </CCardHeader>
+
+        {/* Container video */}
+        <div
+          className="relative pb-[56.25%] bg-cover bg-center rounded-lg shadow-lg hover:shadow-2xl transition-all duration-100 mt-16"
+          style={{ backgroundImage: `url(${backgroundYTB})` }}
+        >
+          {/* Lớp phủ mờ cho ảnh nền, không ảnh hưởng đến video */}
+          <div className="absolute inset-0 bg-black opacity-20 rounded-lg"></div>
+
+          {/* ReactPlayer */}
+          <ReactPlayer
+            url="https://www.youtube.com/watch?v=s4v9vDGd4Ic"
+            controls
+            width="100%"
+            height="100%"
+            className="absolute top-0 left-0 rounded-lg z-10"
+          />
+        </div>
+
         <Modal
           title={
             typeModal === "edit" ? "Chỉnh sửa sản phẩm" : "Tạo mới sản phẩm"
@@ -652,7 +687,11 @@ const ProductManager = () => {
           onCancel={handleCancel}
           footer={null} // Nếu không muốn có nút footer
         >
-          <ProductForm setIsModalVisible={setIsModalVisible} type={typeModal} product={selectedRecord} />
+          <ProductForm
+            setIsModalVisible={setIsModalVisible}
+            type={typeModal}
+            product={selectedRecord}
+          />
         </Modal>
       </CCardBody>
     </CRow>
