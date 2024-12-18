@@ -127,7 +127,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
             </p>
           }
         >
-          <div className="flex flex-wrap items-center justify-center w-full gap-4">
+          <div className="grid items-center justify-center w-full grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-5">
             {Array.isArray(productListByPage) &&
               productListByPage.map((product, index) => (
                 <ProductCard
