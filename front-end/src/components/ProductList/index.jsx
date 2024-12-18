@@ -21,7 +21,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   const error = useSelector((state) => state.products?.error);
   const [hasMore, setHasMore] = useState(true);
   // const pageSize = useSelector((state) => state.products?.pageSize) || 3;
-  const pageSize = 3;
+  const pageSize = 5;
 
   const totalProductItems = useSelector(
     (state) => state.products?.totalProductItems

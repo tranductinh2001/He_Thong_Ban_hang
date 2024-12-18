@@ -31,9 +31,6 @@ export default function ClothingRoom({ imageList, productId }) {
   }, [receivedData]);
   // console.log("selectedImage nè: ", imageList);
 
-  const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState("right");
-  const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageSelect = (image) => {
@@ -166,9 +163,9 @@ export default function ClothingRoom({ imageList, productId }) {
             </Carousel> */}
           </div>
 
-          <div className="flex w-[300px] flex-wrap hover:cursor-pointer my-10 rounded-lg">
+          {/* <div className="flex w-[300px] flex-wrap hover:cursor-pointer my-10 rounded-lg">
             <UserInfoForm selectedImage={selectedImage} productId={productId} />
-          </div>
+          </div> */}
         </div>
       </Drawer>
     </div>
