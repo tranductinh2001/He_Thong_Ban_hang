@@ -21,7 +21,6 @@ import {
   cilUser,
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import avatar8 from "./../../assets/images/avatars/8.jpg";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchUserDetail } from "../../../redux/slices/userSlice";
