@@ -1,15 +1,12 @@
 import { useEffect } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Space,
-  message,
-} from "antd";
+import { Button, Form, Input, Space, message } from "antd";
 
 import brandRequests from "../../../../../redux/request/brandRequests.js";
+import { fetchBrandList } from "../../../../../redux/slices/brandSlice.js";
+import { useDispatch } from "react-redux";
 
-const BrandForm = ({ type, brand }) => {
+const BrandForm = ({ setIsModalVisible, type, brand }) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -35,6 +32,8 @@ const BrandForm = ({ type, brand }) => {
         await brandRequests.create(body);
         message.success("Tạo nhãn hàng thành công!");
       }
+      dispatch(fetchBrandList());
+      setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
       message.error("Đã xảy ra lỗi trong quá trình xử lý!");

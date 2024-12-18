@@ -243,6 +243,7 @@ const ColorManager = () => {
   //handle delete
   const handleDelete = async (colorId) => {
     await colorRequests.delete(colorId);
+    dispatch(fetchColorList());
     message.success("Xoá màu sắc thành công!");
   };
 
@@ -306,7 +307,7 @@ const ColorManager = () => {
           onCancel={handleCancel}
           footer={null} // Nếu không muốn có nút footer
         >
-          <ColorForm type={typeModal} color={selectedRecord} />
+          <ColorForm setIsModalVisible={setIsModalVisible} type={typeModal} color={selectedRecord} />
         </Modal>
       </CCardBody>
     </CRow>

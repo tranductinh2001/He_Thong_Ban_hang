@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/size")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,6 +26,14 @@ public class SizeController {
         List<Size> sizes = sizeService.getAllSizes();
         return ResponseEntity.ok(sizes);
     }
+
+    @GetMapping("/get-by-product-id/{id}")
+    @Operation(summary = "Lấy danh sách size theo id sản phẩm")
+    public ResponseEntity<List<Size>> getSizesByProductId(@PathVariable Long id) {
+        List<Size> sizes = sizeService.getSizesByProductId(id);
+        return ResponseEntity.ok(sizes);
+    }
+
 
     @PostMapping("/create")
     @Operation(summary = "Tạo mới một kích thước")

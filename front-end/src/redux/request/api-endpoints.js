@@ -47,7 +47,8 @@ const API_ENDPOINTS = {
 
   //size
   GET_SIZE: `/size`,
-
+  GET_SIZE_BY_PRODUCT_ID: (id) => `/size/get-by-product-id/${id}`,
+ 
   //user
   GET_USER: `/user`,
   UPDATE_USER_PROFILE: (id) => `/user/updateProfile/${id}`,

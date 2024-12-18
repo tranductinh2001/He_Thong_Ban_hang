@@ -29,7 +29,7 @@ const categoryRequests = {
   },
   delete: async (categoryId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_CATEGORY}?id=${categoryId}`);
+      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_CATEGORY}/${categoryId}`);
       return response.data;
     } catch (error) {
       return errorHandler(error);

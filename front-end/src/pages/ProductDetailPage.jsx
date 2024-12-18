@@ -23,7 +23,7 @@ import {
 
 import ClothingRoom from "../components/Room/ClothingRoom";
 import RatingModal from "../components/RateModal/RateModal";
-
+import { fetchSizesByProductId } from "../redux/slices/sizeSlice";
 const carouselResponsiveSetting = [
   {
     breakpoint: 640,
@@ -112,16 +112,21 @@ const ProductDetailPage = () => {
   const product = useSelector(
     (state) => state.products?.productDetails?.product
   );
+  const sizeByProduct = useSelector(
+    (state) => state.size?.sizeListByIdProduct
+  );
   // console.log("p=iamge produc  ", product?.images);
   const saleProducts = useSelector((state) => state.products?.saleProductList);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
 
   const loading = useSelector((state) => state.products?.loading);
-  const dataSource = product?.sizeList?.map((item, index) => ({
+  const dataSource = sizeByProduct?.map((item, index) => ({
     ...item,
     key: `${index}`,
     count: 0,
   }));
+
+  console.log("sizeByProduct   ", sizeByProduct);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
@@ -151,6 +156,7 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     dispatch(fetchProductDetail(productId));
+    dispatch(fetchSizesByProductId(productId));
   }, [dispatch, productId]);
 
   //check viewed product
@@ -388,7 +394,7 @@ const ProductDetailPage = () => {
               <span className="text-sm font-medium">
                 Quý khách vui lòng để lại số điện thoại để được tư vấn sỉ
               </span>
-              <ClothingRoom imageList={product?.images} productId={product?.id}/>
+              <ClothingRoom imageList={product?.images || []} productId={product?.id || 0}/>
               <div className="flex flex-row items-center gap-1">
                 <Input
                   className="border-2 border-blue-500"

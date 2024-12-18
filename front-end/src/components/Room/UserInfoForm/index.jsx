@@ -266,5 +266,5 @@ export default function UserInfoForm({ selectedImages, productId }) {
 }
 UserInfoForm.propTypes = {
   selectedImages: PropTypes.arrayOf(PropTypes.object),
-  productId: PropTypes.any.isRequired, // Bắt buộc và phải là chuỗi
+  productId: PropTypes.any, // Bắt buộc và phải là chuỗi
 };

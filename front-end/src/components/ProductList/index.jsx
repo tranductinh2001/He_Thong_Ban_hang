@@ -12,6 +12,7 @@ import {
 import ProductCard from "../ProductCard/";
 
 function ProductList({ sortParam, titleParam, searchParam }) {
+  // console.log("ProductList -==========");
 
   const dispatch = useDispatch();
   const productListByPage = useSelector(
@@ -69,7 +70,6 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         titleParam === "brand" ||
         titleParam === "category"
       ) {
-        dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
         dispatch(
           fetchProductListWithSortOrTitle({
             sortParam,
@@ -79,7 +79,6 @@ function ProductList({ sortParam, titleParam, searchParam }) {
           })
         );
       } else {
-        dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
         dispatch(
           fetchProductListWithSortOrTitle({
             sortParam,
@@ -90,7 +89,6 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         );
       }
     } else if (searchParam) {
-      dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
       // console.log("fetchProductListWithSearch  -====");
       dispatch(
         fetchProductListWithSearch({
@@ -100,7 +98,6 @@ function ProductList({ sortParam, titleParam, searchParam }) {
         })
       );
     } else {
-      dispatch(setActiveFilter({ title: titleParam, sort: sortParam }));
       // console.log("fetchProductList");
       dispatch(
         fetchProductList({
@@ -115,7 +112,7 @@ function ProductList({ sortParam, titleParam, searchParam }) {
   };
 
   return (
-    <div className="p-2 md:p-4">
+    <div className="p-4 md:p-8 w-80%">
       {productListByPage.length === 0 ? (
         <p className="p-5 text-sm text-center">
           Không có sản phẩm nào trong danh sách.
@@ -132,11 +129,12 @@ function ProductList({ sortParam, titleParam, searchParam }) {
             </p>
           }
         >
-          <div className="grid justify-center grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-3">
-            {Array?.isArray(productListByPage) &&
-              productListByPage?.map((product, index) => (
+          <div className="grid justify-center grid-cols-1 gap-5 m-4 md:grid-cols-3 lg:grid-cols-3">
+            {Array.isArray(productListByPage) &&
+              productListByPage.map((product, index) => (
                 <ProductCard
-                  key={`${product?.id}-${index}`}
+                  // key={product.id || index}
+                  key={`${product?.id}-${index}`} // Kết hợp ID và index để đảm bảo key duy nhất
                   product={product}
                   displayQuantity={true}
                 />

@@ -26,6 +26,10 @@ public class SizeServiceImpl implements SizeService {
         return Optional.ofNullable(sizeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Size not found with id: " + id)));
     }
+    @Override
+    public List<Size> getSizesByProductId(Long id) {
+        return sizeRepository.findByProduct_Id(id);
+    }
 
     @Override
     public Size createSize(Size size) {

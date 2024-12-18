@@ -242,6 +242,7 @@ const CategoryManager = () => {
   //handle delete
   const handleDelete = async (categoryId) => {
     await categoryRequests.delete(categoryId);
+    dispatch(fetchCategoryList());
     message.success("Xoá thể loại thành công!");
   };
 
@@ -305,7 +306,7 @@ const CategoryManager = () => {
           onCancel={handleCancel}
           footer={null} // Nếu không muốn có nút footer
         >
-          <CategoryForm type={typeModal} category={selectedRecord} />
+          <CategoryForm setIsModalVisible={setIsModalVisible} type={typeModal} category={selectedRecord} />
         </Modal>
       </CCardBody>
     </CRow>

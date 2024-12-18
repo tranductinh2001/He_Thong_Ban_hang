@@ -1,12 +1,20 @@
 import CIcon from "@coreui/icons-react";
 import {
+    cilBasket,
   cilCalculator,
+  cilCart,
   cilChartPie,
+  cilColorPalette,
+  cilCommentSquare,
   cilCursor,
   cilDescription,
+  cilEnvelopeOpen,
+  cilList,
   cilNotes,
   cilPuzzle,
   cilSpeedometer,
+  cilTag,
+  cilUser,
 } from "@coreui/icons";
 import { CNavGroup, CNavItem, CNavTitle } from "@coreui/react";
 
@@ -25,7 +33,7 @@ const _nav = [
     component: CNavItem,
     name: "Người dùng",
     to: "/admin/user",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
@@ -35,31 +43,31 @@ const _nav = [
     component: CNavItem,
     name: "Thể loại",
     to: "/admin/category",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Màu sắc",
     to: "/admin/color",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilColorPalette} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Nhãn hàng",
     to: "/admin/brand",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilTag} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Nhận xét",
     to: "/admin/review",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilCommentSquare} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: "Liên hệ",
     to: "/admin/contact",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilEnvelopeOpen} customClassName="nav-icon" />,
   },
   //   {
   //     component: CNavItem,
@@ -75,7 +83,7 @@ const _nav = [
     component: CNavItem,
     name: "Sản phẩm",
     to: "/admin/product",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilBasket} customClassName="nav-icon" />,
   },
   // {
   //   component: CNavItem,
@@ -87,7 +95,7 @@ const _nav = [
     component: CNavItem,
     name: "Đặt hàng",
     to: "/admin/order",
-    icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
   },
   //   {
   //     component: CNavGroup,

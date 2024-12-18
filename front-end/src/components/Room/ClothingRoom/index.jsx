@@ -26,11 +26,11 @@ export default function ClothingRoom({ imageList, productId }) {
   const [selectedImages, setSelectedImages] = useState([]);
 
   const handleImageSelect = (image) => {
-    if (selectedImages.some((selectedImage) => selectedImage.id === image.id)) {
+    if (selectedImages.some((selectedImage) => selectedImage?.id === image?.id)) {
       // Nếu ảnh đã được chọn, bỏ chọn
       setSelectedImages((prevSelectedImages) =>
         prevSelectedImages.filter(
-          (selectedImage) => selectedImage.id !== image.id
+          (selectedImage) => selectedImage?.id !== image?.id
         )
       );
     } else {
@@ -86,10 +86,10 @@ export default function ClothingRoom({ imageList, productId }) {
           <div className="flex flex-col flex-wrap hover:cursor-pointer rounded-lg">
             {imageList?.map((image) => (
               <div
-                key={image.id}
+                key={image?.id}
                 className={`flex flex-col items-center p-2 cursor-pointer rounded-lg ${
-                  selectedImages.some(
-                    (selectedImage) => selectedImage.id === image.id
+                  selectedImages?.some(
+                    (selectedImage) => selectedImage?.id === image?.id
                   )
                     ? "border-2 border-blue-500"
                     : ""
@@ -98,10 +98,10 @@ export default function ClothingRoom({ imageList, productId }) {
               >
                 <img
                   className="w-[150px] h-[150px] rounded-lg"
-                  src={image.url}
-                  alt={image.name}
+                  src={image?.url}
+                  alt={image?.name}
                 />
-                <span className="text-sm mt-2">{image.name}</span>
+                <span className="text-sm mt-2">{image?.name}</span>
               </div>
             ))}
           </div>
@@ -146,10 +146,10 @@ export default function ClothingRoom({ imageList, productId }) {
 ClothingRoom.propTypes = {
   imageList: PropTypes.arrayOf(
     PropTypes.shape({
-      uid: PropTypes.string.isRequired,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, // id có thể là string hoặc number
       url: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
-  productId: PropTypes.any.isRequired,
+  productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, // Điều chỉnh thêm cho productId
 };
