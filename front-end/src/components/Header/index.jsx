@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PiNotepadFill } from "react-icons/pi";
 import { FaHeadphones, FaHome, FaShoppingCart, FaUser } from "react-icons/fa";
 import {
+    IoAppsSharp,
   IoLogOut,
   IoPersonAddSharp,
   IoPersonCircle,
@@ -152,10 +153,15 @@ export default function Header() {
       to: "/",
     },
     {
+      Icon: IoAppsSharp,
+      title: "THỂ LOẠI",
+      to: "/",
+      dropdownContent: menuCategories,
+    },
+    {
       Icon: IoShirtSharp,
       title: "SẢN PHẨM",
       to: "/products",
-      dropdownContent: menuCategories,
     },
     {
       Icon: FaHeadphones,
