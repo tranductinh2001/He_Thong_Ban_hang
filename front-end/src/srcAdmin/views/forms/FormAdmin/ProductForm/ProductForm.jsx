@@ -25,7 +25,7 @@ import productRequests from "../../../../../redux/request/productRequests.js";
 
 const { Option } = Select;
 
-const ProductForm = ({ type, product }) => {
+const ProductForm = ({ setIsModalVisible, type, product }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
 
@@ -139,7 +139,7 @@ const ProductForm = ({ type, product }) => {
         await productRequests.create(body);
         message.success("Tạo sản phẩm thành công!");
       }
-
+      setIsModalVisible(false)
       form.resetFields();
     } catch (error) {
       message.error("Đã xảy ra lỗi trong quá trình xử lý!");

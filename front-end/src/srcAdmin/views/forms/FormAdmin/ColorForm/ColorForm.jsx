@@ -8,9 +8,12 @@ import {
 } from "antd";
 
 import colorRequests from "../../../../../redux/request/colorRequests.js";
+import { fetchColorList } from "../../../../../redux/slices/colorSlice.js";
+import { useDispatch } from "react-redux";
 
-const ColorForm = ({ type, color }) => {
+const ColorForm = ({ setIsModalVisible, type, color }) => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (color && type === "edit") {
@@ -35,6 +38,8 @@ const ColorForm = ({ type, color }) => {
         await colorRequests.create(body);
         message.success("Tạo màu sắc thành công!");
       }
+      dispatch(fetchColorList());
+      setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
       message.error("Đã xảy ra lỗi trong quá trình xử lý!");

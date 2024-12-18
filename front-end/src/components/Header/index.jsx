@@ -167,7 +167,22 @@ export default function Header() {
   return (
     <div className="sticky top-0 flex-col items-center justify-start hidden w-full h-auto border-b border-b-slate-300 sm:flex z-[100]">
       {/* Top Bar */}
-      <div className="flex items-start justify-start w-full p-2 text-white bg-[#0F67B1]">
+      <div className="flex items-center justify-center w-full p-2 text-white bg-[#3FA2F6]">
+        <Link to="/">
+          <motion.img
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{
+              opacity: [0.7, 0.8, 0.9, 1],
+              scale: [1.4, 1.3, 1.2, 1],
+            }}
+            whileHover={{ scale: 1.4 }}
+            transition={{ duration: 0.4 }}
+            className="object-cover w-24 h-full grow"
+            src={logo}
+            alt=""
+          />
+        </Link>
+        <SearchBar />
         <div className="items-center justify-end hidden w-full h-full gap-4 pt-1 lg:flex">
           <NavigationLink
             title="Kiểm tra đơn hàng"
@@ -208,32 +223,17 @@ export default function Header() {
       </div>
 
       {/* Navigation Menu */}
-      <div className="flex items-center justify-between w-full px-2 py-2 bg-white">
-        <Link to="/">
-          <motion.img
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0.7, 0.8, 0.9, 1],
-              scale: [1.4, 1.3, 1.2, 1],
-            }}
-            whileHover={{ scale: 1.4 }}
-            transition={{ duration: 0.4 }}
-            className="object-cover w-24 h-full ml-8 grow"
-            src={logo}
-            alt=""
-          />
-        </Link>
-          <div className="flex flex-row items-center justify-end">
-            {menuItems.map((item, index) => (
-              <MenuLink
-                key={index}
-                Icon={item.Icon}
-                title={item.title}
-                to={item.to}
-                dropdownContent={item.dropdownContent}
-              />
-            ))}
-            <SearchBar />
+      <div className="flex items-center justify-center w-full px-2 py-2 bg-white">
+        <div className="flex flex-row items-center justify-end">
+          {menuItems.map((item, index) => (
+            <MenuLink
+              key={index}
+              Icon={item.Icon}
+              title={item.title}
+              to={item.to}
+              dropdownContent={item.dropdownContent}
+            />
+          ))}
         </div>
       </div>
     </div>

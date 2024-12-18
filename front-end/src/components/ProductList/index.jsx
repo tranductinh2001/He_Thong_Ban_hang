@@ -120,14 +120,14 @@ function ProductList({ sortParam, titleParam, searchParam }) {
           dataLength={productListByPage.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          loader={<p>Loading...</p>}
+          loader={<div className="flex items-center justify-center w-full">Loading...</div>}
           endMessage={
             <p className="p-5 text-sm text-center">
               Bạn đã xem hết danh sách sản phẩm
             </p>
           }
         >
-          <div className="grid justify-center grid-cols-1 gap-5 m-4 md:grid-cols-3 lg:grid-cols-3">
+          <div className="flex flex-wrap items-center justify-center w-full gap-4">
             {Array.isArray(productListByPage) &&
               productListByPage.map((product, index) => (
                 <ProductCard

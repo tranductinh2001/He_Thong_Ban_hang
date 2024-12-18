@@ -71,7 +71,7 @@ const ProductManager = () => {
 
   console.log("sizes:", sizes);
 
-  
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -432,6 +432,8 @@ const ProductManager = () => {
   //handle delete
   const handleDelete = async (productId) => {
     await productRequests.delete(productId);
+    dispatch(setActiveFilter({ title: 0, sort: 0 }));
+    dispatch(fetchProductList({ currentPage: currentPage, pageSize }));
     message.success("Xoá sản phẩm thành công!");
   };
 
@@ -452,27 +454,27 @@ const ProductManager = () => {
 
   const handleExcelUpload = async (file) => {
     const reader = new FileReader();
-  
+
     reader.onload = async (event) => {
       try {
         // Đọc file Excel
         const binaryStr = event.target.result;
         const workbook = XLSX.read(binaryStr, { type: "binary" });
-  
+
         // Chọn sheet đầu tiên
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         let data = XLSX.utils.sheet_to_json(sheet); // Chuyển đổi thành JSON
-  
+
         // Gợi ý chọn thư mục chứa ảnh
         const directoryHandle = await window.showDirectoryPicker();
-  
+
         // Xử lý từng dòng dữ liệu từ file Excel
         data = await Promise.all(
           data.map(async (row) => {
             const imageNames = row.images ? row.images.split(",") : []; // Tên các ảnh
             const uploadedImages = [];
-  
+
             for (let imageName of imageNames) {
               imageName = imageName.trim();
               try {
@@ -483,20 +485,20 @@ const ProductManager = () => {
                 console.warn(`Không tìm thấy file: ${imageName}`);
               }
             }
-  
+
             // Tải lên tất cả ảnh
             const formData = new FormData();
             uploadedImages.forEach((image) => {
               formData.append("file", image);
             });
-  
+
             const uploadResponse = formData.has("file")
               ? await imageRequests.upload(formData) // API upload ảnh
               : [];
-  
+
             // Lấy danh sách ID của ảnh đã upload
             const imageUrls = uploadResponse?.map((img) => img.id);
-  
+
             return {
               ...row, // Dữ liệu khác từ file Excel
               images: imageUrls, // Danh sách ID của ảnh
@@ -505,7 +507,7 @@ const ProductManager = () => {
         );
 
         console.log("data trước khi lưu product ", data);
-  
+
         // Gửi dữ liệu sản phẩm lên backend
         await processExcelData(data);
         message.success("Thêm sản phẩm từ Excel thành công!");
@@ -514,10 +516,10 @@ const ProductManager = () => {
         message.error("Có lỗi xảy ra khi xử lý file Excel!");
       }
     };
-  
+
     reader.readAsBinaryString(file);
   };
-  
+
   const processExcelData = async (data) => {
     try {
       for (const item of data) {
@@ -527,7 +529,7 @@ const ProductManager = () => {
           description: item["Mô tả"],
           categoryId: categories.find((c) => c.name === item["Thể loại"])?.id || null,
           brandId: brands.find((b) => b.name === item["Nhãn hàng"])?.id || null,
-        
+
           // Chuyển đổi dữ liệu cho "sizes" thành danh sách các đối tượng SizeRequest
           sizes: item["Kích cỡ"]
             ? item["Kích cỡ"]
@@ -537,7 +539,7 @@ const ProductManager = () => {
                   return foundSize ? { id: foundSize.id, sizeName: foundSize.sizeName, quantity: foundSize.quantity } : null;
                 }).filter((size) => size !== null) // Lọc các phần tử null ra khỏi mảng
             : [], // Nếu không có kích cỡ, trả về mảng rỗng
-        
+
           // Chuyển đổi dữ liệu cho "colors" thành danh sách ID màu sắc
           colors: item["Màu sắc"]
             ? item["Màu sắc"]
@@ -545,7 +547,7 @@ const ProductManager = () => {
                 .map((color) => colors.find((c) => c.name === color.trim())?.id)
                 .filter((id) => id !== undefined) // Lọc ra các màu không tìm thấy
             : [],
-        
+
           images: item.images || [], // Đảm bảo images có giá trị hợp lệ
           hot: item["Hot"] === 1, // So sánh với 1 để lấy giá trị boolean
           sale: item["Sale"] === 1, // So sánh với 1 để lấy giá trị boolean
@@ -556,20 +558,20 @@ const ProductManager = () => {
           createdAt: item["Ngày tạo"] || null,
           updatedAt: item["Ngày cập nhật"] || null,
         };
-        
+
         console.log("product  ", product);
         // Gửi request tạo sản phẩm
-        await productRequests.create(product);        
+        await productRequests.create(product);
       }
-  
+
       message.success("Tạo sản phẩm thành công!");
     } catch (err) {
       console.error("Lỗi khi tạo sản phẩm:", err);
       message.error("Không thể tạo sản phẩm từ Excel!");
     }
   };
-  
-  
+
+
   const beforeUpload = (file) => {
     const isExcel =
       file.type ===
@@ -591,7 +593,7 @@ const ProductManager = () => {
       <CCardBody>
         <div>
           <div className="flex flex-col ">
-            <div className="flex justify-between items-center p-2">
+            <div className="flex items-center justify-between p-2">
               {/* Nút "Thêm sản phẩm" ở đầu hàng */}
               <Button
                 type="primary"
@@ -615,7 +617,7 @@ const ProductManager = () => {
                       icon={<DownloadOutlined />}
                       size={size}
                       href="http://localhost:8080/photos/download/rename_tool_image.exe"
-                      className="bg-blue-500 text-white hover:bg-blue-600"
+                      className="text-white bg-blue-500 hover:bg-blue-600"
                     />
                   </Tooltip>
                 </div>
@@ -650,7 +652,7 @@ const ProductManager = () => {
           onCancel={handleCancel}
           footer={null} // Nếu không muốn có nút footer
         >
-          <ProductForm type={typeModal} product={selectedRecord} />
+          <ProductForm setIsModalVisible={setIsModalVisible} type={typeModal} product={selectedRecord} />
         </Modal>
       </CCardBody>
     </CRow>

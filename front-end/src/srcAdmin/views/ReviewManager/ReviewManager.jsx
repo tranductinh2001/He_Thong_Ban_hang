@@ -247,6 +247,7 @@ const ReviewManager = () => {
   //handle delete
   const handleDelete = async (reviewId) => {
     await reviewRequests.delete(reviewId);
+    dispatch(fetchReviewList());
     message.success("Xoá nhận xét thành công!");
   };
 
