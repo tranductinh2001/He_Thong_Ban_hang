@@ -47,14 +47,14 @@ const RatingModal = ({ productId }) => {
     const reviewData = {
       ...values,
       rating: ratingValue,
-      product_id: Number(productId),
-      user_id: Number(userId),
+      productId: Number(productId),
+      userId: Number(userId)
     };
 
     try {
       const response = await reviewRequests.create(reviewData);
 
-      if (response.success) {
+      if (response) {
         message.success("Cảm ơn bạn đã gửi đánh giá!");
       } else {
         message.error("Đã xảy ra lỗi khi gửi đánh giá.");

@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+import com.example.demo.DTO.ReviewDTO;
 import com.example.demo.entity.Reviews;
 import com.example.demo.entity.ServiceEntity;
 import com.example.demo.response.MessageResponse;
@@ -29,7 +30,7 @@ public class ReviewsController {
 
     @PostMapping("/create")
     @Operation(summary = "Tạo mới một đánh giá")
-    public ResponseEntity<Reviews> createReview(@RequestBody Reviews review) {
+    public ResponseEntity<Reviews> createReview(@RequestBody ReviewDTO review) {
         Reviews newReview = reviewsService.createReview(review);
         return ResponseEntity.ok(newReview);
     }
