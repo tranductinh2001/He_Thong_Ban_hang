@@ -51,7 +51,7 @@ const API_ENDPOINTS = {
   //user
   GET_USER: `/user`,
   UPDATE_USER_PROFILE: (id) => `/user/updateProfile/${id}`,
-  UPDATE_USER: (id) => `/user/update/${id}`,
+  UPDATE_USER: `/user/update`,
   DELETE_USER: `/user/delete`,
   USER_DETAIL: "/user/profile",
 

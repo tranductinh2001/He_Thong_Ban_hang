@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.DTO.ReviewDTO;
 import com.example.demo.entity.Reviews;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.repository.ReviewsRepository;
@@ -28,9 +29,15 @@ public class ReviewsServiceImpl implements ReviewsService {
     }
 
     @Override
-    public Reviews createReview(Reviews review) {
-        return reviewsRepository.save(review);
+    public Reviews createReview(ReviewDTO reviewDTO) {
+        Reviews review = new Reviews();
+        review.setName(reviewDTO.getName());
+        review.setDescription(reviewDTO.getDescription());
+        review.setRating(reviewDTO.getRating());
+        reviewsRepository.save(review);
+        return review;
     }
+
 
     @Override
     public Reviews updateReview(Reviews review, Long id) {
