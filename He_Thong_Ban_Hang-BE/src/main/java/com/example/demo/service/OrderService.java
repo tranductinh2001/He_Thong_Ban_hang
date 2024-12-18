@@ -18,7 +18,7 @@ public interface OrderService {
 
     Order createOrder(Order order);
 
-    Order updateOrder(Order order, Long id);
+    Order updateOrder(String status, Long id);
 
     List<Order> getOrdersByUserId(Long userId);
 
