@@ -189,9 +189,12 @@ public class TexelModaServiceImpl implements TexelModaService {
                 if (isImagePublic(messageSKURL) && retryCount >= 10) {
                     System.out.println("Ảnh đã được lưu vào server. " + "http://localhost:8080/photos/" + uid + "." + extension);
 
+                    Map<String, String> imageData = new HashMap<>();
+                    imageData.put("url", messageSKURL);
+                    imageData.put("base64", messageSKBase64);
+
                     // Ảnh đã public, bắn WebSocket
-                    messagingTemplate.convertAndSend("/topic/room/createImage", messageSKURL);
-                    messagingTemplate.convertAndSend("/topic/room/createImage", messageSKBase64);
+                    messagingTemplate.convertAndSend("/topic/room/createImage", imageData);
                     break;
                 }
                 retryCount++;

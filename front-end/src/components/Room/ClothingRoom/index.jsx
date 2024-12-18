@@ -24,7 +24,15 @@ export default function ClothingRoom({ imageList, productId }) {
       setIsLoading(true);
       const messageKey = Object.keys(receivedData)[0];
       const messageValue = receivedData[messageKey];
-      setMessageSocket(messageValue);
+      // Kiểm tra nếu có dữ liệu URL và Base64
+      if (messageKey === "image") {
+        // Ưu tiên Base64 hơn URL
+        if (messageValue.base64) {
+          setMessageSocket(`data:image/jpeg;base64,${messageValue.base64}`); // Nếu có Base64, sử dụng nó
+        } else if (messageValue.url) {
+          setMessageSocket(messageValue.url); // Nếu không có Base64, sử dụng URL
+        }
+      }
       setIsLoading(false);
       setConfettiVisible(true);
     }
@@ -81,10 +89,10 @@ export default function ClothingRoom({ imageList, productId }) {
             <div className="grid grid-cols-2 gap-4">
               {imageList?.map((image) => (
                 <div
-                  key={image.id}
+                  key={image?.id}
                   className={`flex flex-col items-center p-2 cursor-pointer rounded-lg transition-all duration-300 ${
                     selectedImages.some(
-                      (selectedImage) => selectedImage.id === image.id
+                      (selectedImage) => selectedImage?.id === image?.id
                     )
                       ? "border-2 border-blue-500 bg-blue-100"
                       : "hover:bg-gray-100"
@@ -93,8 +101,8 @@ export default function ClothingRoom({ imageList, productId }) {
                 >
                   <img
                     className="object-cover w-full h-32 rounded-lg"
-                    src={image.url}
-                    alt={image.name}
+                    src={image?.url}
+                    alt={image?.name}
                   />
                   <span className="mt-2 text-sm text-center">{image.name}</span>
                 </div>
@@ -140,7 +148,7 @@ export default function ClothingRoom({ imageList, productId }) {
             <h3 className="mb-4 text-lg font-semibold">Thông tin người dùng</h3>
             <UserInfoForm
               setIsSubmitting={setIsSubmitting}
-              selectedImages={selectedImages}
+              selectedImage={selectedImage}
               productId={productId}
             />
 
@@ -178,5 +186,6 @@ UserInfoForm.propTypes = {
     url: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }),
-  productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
 };

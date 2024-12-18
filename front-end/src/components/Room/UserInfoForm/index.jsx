@@ -98,11 +98,12 @@ export default function UserInfoForm({
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Không thể gửi biểu mẫu. Vui lòng thử lại.");
-    } finally {
-      setTimeout(() => {
-        setIsSubmitting(false);
-      }, 2000);
-    }
+    } 
+    // finally {
+    //   setTimeout(() => {
+    //     setIsSubmitting(false);
+    //   }, 2000);
+    // }
   }
 
   const initialValues = {
