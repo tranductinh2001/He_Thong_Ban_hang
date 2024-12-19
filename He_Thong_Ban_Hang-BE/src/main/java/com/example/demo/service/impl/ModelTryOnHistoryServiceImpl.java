@@ -166,7 +166,7 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
         imageRepository.save(image);
 
         // Cập nhật trường createdImageGenerateAI của ModelTryOnHistory với ảnh đã lưu
-        tryOnHistory.setCreatedImageGenerateAI(Collections.singletonList(image)); // Đặt ảnh duy nhất vào danh sách
+        tryOnHistory.setCreatedImageGenerateAI(image); // Đặt ảnh duy nhất vào danh sách
 
         // Lưu ModelTryOnHistory đã cập nhật
         return modelTryOnHistoryRepository.save(tryOnHistory);

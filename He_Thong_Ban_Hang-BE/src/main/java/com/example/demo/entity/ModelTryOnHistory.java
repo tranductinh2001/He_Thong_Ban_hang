@@ -37,9 +37,8 @@ public class ModelTryOnHistory {
     private String wc; // Số đo vòng eo
     private String hip; // Số đo vòng hông
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tryon_history_id")  // Chỉ định khóa ngoại
-    private List<Image> createdImageGenerateAI;
+    @OneToOne
+    private Image createdImageGenerateAI;
 
     @OneToOne
     private Image faceImage;

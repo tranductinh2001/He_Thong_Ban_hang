@@ -1,8 +1,8 @@
-import { Table, Button } from "antd";
-import React, { useEffect } from "react";
+import { Table, Button,Image } from "antd";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchModelTryOnHistoryList } from "../../redux/slices/modelTryOnHistorySlice";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import modelTryOnHistoryRequests from "../../redux/request/modelTryOnHistoryRequests";
 
@@ -12,7 +12,6 @@ const ModelTryOnHistoryForm = () => {
   const modelTryOnHistories = useSelector(
     (state) => state?.modelTryOnHistory?.modelTryOnHistoryList
   );
-
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (userId) {
@@ -107,46 +106,54 @@ const ModelTryOnHistoryForm = () => {
         date ? new Date(date).toLocaleDateString("vi-VN") : "Không có",
     },
     {
-      title: "Ảnh mặt",
-      dataIndex: "faceImageId",
-      key: "faceImageId",
-      render: (imageId) => (imageId ? `Ảnh ID: ${imageId}` : "Không có"),
+      title: "Ảnh AI tạo",
+      dataIndex: "createdImageGenerateAI",
+      key: "createdImageGenerateAI",
+      render: (image) =>
+        image ? (
+          <div className="relative group">
+            {" "}
+            {/* Thêm group để dễ dàng kiểm soát hover */}
+            {/* Kiểm tra ảnh có tải không */}
+            <Image
+              src={image?.url || "/default_image.png"} // Ảnh mặc định nếu không có URL hợp lệ
+              alt={image?.name || "Ảnh AI"}
+              className="w-16 h-16 sm:w-24 sm:h-24 object-cover rounded-xl cursor-pointer transition-all duration-300 group-hover:scale-110 group-hover:opacity-80"
+            />
+          </div>
+        ) : (
+          "Không có ảnh AI tạo"
+        ),
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      filters: [
-        { text: "PENDING", value: "PENDING" },
-        { text: "COMPLETED", value: "COMPLETED" },
-        { text: "CANCELED", value: "CANCELED" },
-      ],
-      onFilter: (value, record) => record.status === value,
-      render: (status) => {
-        let color;
-        switch (status) {
-          case "PENDING":
-            color = "orange";
-            break;
-          case "COMPLETED":
-            color = "green";
-            break;
-          case "CANCELED":
-            color = "red";
-            break;
-          default:
-            color = "blue";
-        }
-        return <span style={{ color, fontWeight: "bold" }}>{status}</span>;
-      },
-    },
-    {
-      title: "Hành động",
-      key: "action",
+      key: "action_delete",  // Đổi key để phân biệt
+      fixed: "right",
       render: (_, record) => (
-        <Button danger onClick={() => handleDelete(record.id)}>
-          Xoá
-        </Button>
+        <div className="flex space-x-2">
+          <Button danger onClick={() => handleDelete(record.id)}>
+            Xoá
+          </Button>
+        </div>
+      ),
+    },
+    {
+      key: "action_view",  // Đổi key cho cột 'Xem chi tiết'
+      fixed: "right",
+      render: (_, record) => (
+        <div className="flex space-x-2">
+          <Button
+            type="link"
+            onClick={() => {
+              if (record?.product?.id) {
+                navigate(`/product/${record.product.id}`);
+              } else {
+                console.error("No product_id found for this record.", record);
+              }
+            }}
+          >
+            Xem chi tiết
+          </Button>
+        </div>
       ),
     },
   ];
@@ -159,15 +166,6 @@ const ModelTryOnHistoryForm = () => {
         onChange={onChange}
         rowKey="id"
         scroll={{ x: 1200 }}
-        onRow={(record) => ({
-          onClick: () => {
-            if (record?.product?.id) {
-              navigate(`/product/${record?.product?.id}`);
-            } else {
-              console.error('No product_id found for this record.', record);
-            }
-          },
-        })}
       />
     </div>
   );

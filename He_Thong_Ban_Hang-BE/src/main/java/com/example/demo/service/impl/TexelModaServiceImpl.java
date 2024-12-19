@@ -102,22 +102,8 @@ public class TexelModaServiceImpl implements TexelModaService {
         if (response.getStatusCode().is2xxSuccessful()) {
             byte[] imageBytes = response.getBody();
 
-            // Lấy đối tượng ModelTryOnHistory từ repository bằng ID
-            Optional<ModelTryOnHistory> optionalHistory = modelTryOnHistoryRepository.findById(tryOnHistoryId);
+            saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);
 
-            if (optionalHistory.isPresent()) {
-                ModelTryOnHistory history = optionalHistory.get();
-
-                // Kiểm tra và khởi tạo danh sách nếu nó là null
-                if (history.getCreatedImageGenerateAI() == null) {
-                    history.setCreatedImageGenerateAI(new ArrayList<>());
-                }
-                modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
-            }
-
-            saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
-
-            // Trả về ảnh đã được tạo
             return imageBytes;
         } else {
             throw new RuntimeException("Error while trying on clothes: " + response.getStatusCode());
@@ -164,13 +150,8 @@ public class TexelModaServiceImpl implements TexelModaService {
 
             messagingTemplate.convertAndSend("/topic/room/createImage", cloudinaryResult);
 
-            // Kiểm tra và khởi tạo danh sách nếu null
-            if (tryOnHistory.getCreatedImageGenerateAI() == null) {
-                tryOnHistory.setCreatedImageGenerateAI(new ArrayList<>());
-            }
-
             // Liên kết ảnh với `ModelTryOnHistory`
-            tryOnHistory.getCreatedImageGenerateAI().add(savedImg);
+            tryOnHistory.setCreatedImageGenerateAI(savedImg);
             modelTryOnHistoryRepository.save(tryOnHistory);
 
         } catch (IOException e) {
