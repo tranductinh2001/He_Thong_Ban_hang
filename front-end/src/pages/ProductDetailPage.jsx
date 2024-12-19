@@ -112,10 +112,7 @@ const ProductDetailPage = () => {
   const product = useSelector(
     (state) => state.products?.productDetails?.product
   );
-  const sizeByProduct = useSelector(
-    (state) => state.size?.sizeListByIdProduct
-  );
-  // console.log("p=iamge produc  ", product?.images);
+  const sizeByProduct = useSelector((state) => state.size?.sizeListByIdProduct);
   const saleProducts = useSelector((state) => state.products?.saleProductList);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
 
@@ -158,6 +155,13 @@ const ProductDetailPage = () => {
     dispatch(fetchProductDetail(productId));
     dispatch(fetchSizesByProductId(productId));
   }, [dispatch, productId]);
+
+  useEffect(() => {
+    if (product) {
+      setSelectedImage(product.images[0]?.url);
+      console.log("Updated selectedImage:", product.images[0]?.url);
+    }
+  }, [product]);
 
   //check viewed product
   useEffect(() => {
@@ -287,31 +291,35 @@ const ProductDetailPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="relative w-full h-full md:h-[400px] sm:w-3/5 overflow-hidden">
+              {/* Hình ảnh lớn */}
+              <div className="relative w-full h-[500px] sm:h-[600px] md:h-[700px] overflow-hidden flex items-center justify-center">
                 <Image
-                  className="object-cover w-full h-full rounded-xl"
+                  className="object-contain w-full h-full sm:max-h-[700px] md:max-h-[800px] xl:max-h-[900px] max-w-full rounded-xl"
                   src={selectedImage}
-                  alt={product?.name}
+                  alt={product?.name || "Product Image"}
                 />
               </div>
 
-              {product?.images.length > 1 && (
-                <div className="absolute bottom-0 flex sm:flex-col sm:flex-wrap sm:gap-2 sm:left-0 sm:top-auto sm:bottom-2 sm:w-full sm:justify-center">
-                  {product.images.map((image, index) => (
-                    <div key={index} className="w-16 h-16 sm:w-24 sm:h-24">
+              {/* Thumbnail hình ảnh nhỏ */}
+              {product?.images?.length > 1 && (
+                <div className="absolute bottom-2 left-0 right-0 flex sm:flex-col sm:flex-wrap gap-2 sm:w-auto sm:justify-center">
+                  {product?.images?.map((image, index) => (
+                    <div
+                      key={index}
+                      className="w-16 h-16 sm:w-24 sm:h-24 flex-shrink-0 rounded-xl border border-gray-200 overflow-hidden cursor-pointer"
+                      onClick={() => handleImageClick(image?.url)}
+                    >
                       <Image
-                        className="cursor-pointer rounded-xl"
-                        src={image.url}
+                        className="w-full h-full object-cover"
+                        src={image?.url}
                         alt={`Thumbnail ${index + 1}`}
-                        width={100}
-                        height={100}
-                        onClick={() => handleImageClick(image.url)}
                       />
                     </div>
                   ))}
                 </div>
               )}
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, x: 200 }}
               animate={{ opacity: 1, x: 0 }}
@@ -400,7 +408,10 @@ const ProductDetailPage = () => {
               <span className="text-sm font-medium">
                 Quý khách vui lòng để lại số điện thoại để được tư vấn sỉ
               </span>
-              <ClothingRoom imageList={product?.images || []} productId={product?.id || 0}/>
+              <ClothingRoom
+                imageList={product?.images || []}
+                productId={product?.id || 0}
+              />
               <div className="flex flex-row items-center gap-1">
                 <Input
                   className="border-2 border-blue-500"
