@@ -8,7 +8,8 @@ import userRequests from "../../../../../redux/request/userRequests";
 
 const UserForm = ({ type, user }) => {
   const [form] = Form.useForm();
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(user?.avatarUrl || null);
+
 
   useEffect(() => {
     if (user && type === "edit") {
@@ -30,7 +31,8 @@ const UserForm = ({ type, user }) => {
 
   const normFile = (e) => {
     if (e.fileList.length > 0) {
-      const uploadedAvatar = e.fileList[0].url || e.fileList[0].thumbUrl;
+      const uploadedAvatar =
+        e.fileList[0]?.url || e.fileList[0]?.thumbUrl || null;
       setAvatar(uploadedAvatar);
     } else {
       setAvatar(null);
@@ -54,25 +56,26 @@ const UserForm = ({ type, user }) => {
 
   const onFinish = async (values) => {
     try {
+      let finalAvatarUrl = avatar;
       const formData = new FormData();
 
       if (values.avatarUrl && values.avatarUrl.length > 0) {
         formData.append("file", values.avatarUrl[0]?.originFileObj);
+        const uploadResponse = formData.has("file")
+        ? await imageRequests.upload(formData)
+        : "";
+        finalAvatarUrl = uploadResponse.length ? uploadResponse[0]?.url : avatar;
       } else if (avatar) {
         formData.append("file", avatar);
       }
 
-      const uploadResponse = formData.has("file")
-        ? await imageRequests.upload(formData)
-        : "";
-
       const body = {
         ...values,
-        avatarUrl: uploadResponse.length ? uploadResponse[0]?.url : avatar,
+        avatarUrl: finalAvatarUrl
       };
 
       if (type === "edit") {
-        await userRequests.update(user?.id , body);
+        await userRequests.update(user?.id, body);
         message.success("Cập nhật người dùng thành công!");
       } else {
         await userRequests.create(body);
@@ -166,7 +169,16 @@ const UserForm = ({ type, user }) => {
           }}
           beforeUpload={beforeUpload}
           onChange={normFile}
-          fileList={avatar ? [{ url: avatar }] : []}
+          fileList={
+            avatar
+              ? [
+                  {
+                    url: typeof avatar === "string" ? avatar : null,
+                    uid: "-1",
+                  },
+                ]
+              : []
+          }
           maxCount={1}
         >
           {!avatar && (

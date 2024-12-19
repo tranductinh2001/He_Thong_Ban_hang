@@ -17,6 +17,7 @@ export default function ClothingRoom({ imageList, productId }) {
   const [isConfettiVisible, setConfettiVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -47,13 +48,21 @@ export default function ClothingRoom({ imageList, productId }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageSelect = (image) => {
-    // Nếu ảnh đã được chọn, bỏ chọn
-    if (selectedImage?.id === image?.id) {
-      setSelectedImage(null);
-    } else {
-      // Nếu ảnh chưa được chọn, chọn ảnh
-      setSelectedImage(image);
-    }
+    // // Nếu ảnh đã được chọn, bỏ chọn
+    // if (selectedImage?.id === image?.id) {
+    //   setSelectedImage(null);
+    // } else {
+    //   // Nếu ảnh chưa được chọn, chọn ảnh
+    //   setSelectedImage(image);
+    // }
+    setSelectedImage(image);
+    setSelectedImages((prevSelectedImages) =>
+      prevSelectedImages.some((selectedImage) => selectedImage.id === image.id)
+        ? prevSelectedImages.filter(
+            (selectedImage) => selectedImage.id !== image.id
+          )
+        : [...prevSelectedImages, image]
+    );
   };
 
   const showDrawer = () => setOpen(true);
@@ -96,11 +105,9 @@ export default function ClothingRoom({ imageList, productId }) {
                 <div
                   key={image?.id}
                   className={`flex flex-col items-center p-2 cursor-pointer rounded-lg transition-all duration-300 ${
-                    selectedImages.some(
-                      (selectedImage) => selectedImage?.id === image?.id
-                    )
+                    selectedImage?.id === image.id
                       ? "border-2 border-blue-500 bg-blue-100"
-                      : "hover:bg-gray-100"
+                      : "border-2 border-transparent hover:bg-gray-100"
                   }`}
                   onClick={() => handleImageSelect(image)}
                 >

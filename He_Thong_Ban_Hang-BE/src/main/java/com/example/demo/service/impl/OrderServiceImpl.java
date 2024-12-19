@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.DTO.OrderAddressDTO;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.OrderAddress;
+import com.example.demo.entity.OrderStatus;
 import com.example.demo.entity.User;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.repository.OrderAddressRepository;
@@ -10,12 +11,16 @@ import com.example.demo.repository.OrderRepository;
 import com.example.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     private OrderRepository orderRepository;
@@ -61,13 +66,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrder(Order order, Long id) {
-        Order existingOrder = getOrderById(id)
-                .orElseThrow(() -> new NotFoundException("Order not found with id: " + id));
-        existingOrder.setStatus(order.getStatus());
-        return orderRepository.save(existingOrder);
-    }
+    public Order updateOrder(String status, Long id) {
+        Order existingOrder = orderRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error("Order not found with id: {}", id);
+                    return new NotFoundException("Order not found with id: " + id);
+                });
 
+        try {
+            OrderStatus newStatus = OrderStatus.valueOf(status.toUpperCase());
+            existingOrder.setStatus(newStatus);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid status value: {}", status);
+            throw new NotFoundException("Invalid status value: " + status);
+        }
+
+        Order updatedOrder = orderRepository.save(existingOrder);
+        return updatedOrder;
+    }
     @Override
     public List<Order> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserId(userId);

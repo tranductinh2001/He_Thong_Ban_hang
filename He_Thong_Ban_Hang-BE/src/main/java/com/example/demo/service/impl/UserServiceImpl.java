@@ -194,13 +194,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUser() {
-        return userRepository.findAll();
+        return userRepository.findByIsDeleted(false);
     }
 
     @Override
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        userRepository.delete(user);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        user.setIsDeleted(true);
+        userRepository.save(user);
     }
 
     @Override

@@ -57,7 +57,7 @@ const userRequests = {
   },
   delete: async (userId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_USER}?id=${userId}`);
+      const response = await axiosInstance.delete(`${API_ENDPOINTS.DELETE_USER}/${userId}`);
       return response.data;
     } catch (error) {
       return errorHandler(error);

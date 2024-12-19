@@ -301,6 +301,7 @@ const UserManager = () => {
   //handle delete
   const handleDelete = async (userId) => {
     await userRequests.delete(userId);
+    dispatch(fetchUserList());
     message.success("Xoá người dùng thành công!");
   };
 

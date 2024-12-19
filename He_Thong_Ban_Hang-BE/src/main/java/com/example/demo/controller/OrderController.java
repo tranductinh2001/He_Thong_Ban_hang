@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -101,8 +102,9 @@ public class OrderController {
 
     @PutMapping(value = "/update/{id}", consumes = {"application/json"})
     @Operation(summary = "Cập nhật trạng thái đơn hàng")
-    public ResponseEntity<Order> updateOrder(@RequestBody Order order, @PathVariable Long id) {
-        Order updatedOrder = orderService.updateOrder(order, id);
+    public ResponseEntity<Order> updateOrder(@RequestBody Map<String, String> request, @PathVariable Long id) {
+        String status = request.get("status");
+        Order updatedOrder = orderService.updateOrder(status, id);
         return ResponseEntity.ok(updatedOrder);
     }
 
