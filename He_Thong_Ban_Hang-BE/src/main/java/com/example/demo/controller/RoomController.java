@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
+import com.cloudinary.Cloudinary;
 import com.example.demo.DTO.FileListClothesDTO;
 import com.example.demo.entity.ModelTryOnHistory;
 import com.example.demo.request.CreateModelInRoomRequest;
 import com.example.demo.request.ImageProcessingRequest;
 import com.example.demo.response.MessageResponse;
+import com.example.demo.service.CloudinaryService;
 import com.example.demo.service.LeonardoService;
 import com.example.demo.service.ModelTryOnHistoryService;
 import com.example.demo.service.TexelModaService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;  // Thư viện Jackson
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -40,6 +43,7 @@ public class RoomController {
     @Autowired
     private TexelModaService TexelModaService;
 
+
     @PostMapping("/create-model")
     public ResponseEntity<MessageResponse> createModelInRoomRequest(
             @RequestParam(value = "weight", required = false) String weight,
@@ -56,7 +60,11 @@ public class RoomController {
             @RequestParam(value = "hip", required = false) String hip,
             @RequestParam(value = "product_id", required = false) Long ProductId,
             @RequestParam("image_face") MultipartFile imageFace,  // Đảm bảo hình ảnh khuôn mặt
-            @RequestParam("fileListClothes") String fileListClothesJson) {
+            @RequestParam("fileListClothes") String fileListClothesJson) throws IOException {
+
+//        String a = cloudinaryService.uploadFile(imageFace);
+//        System.out.println("cloudinaryService:  "+ a);
+
         // Log ra các tham số nhận được
         System.out.println("Received parameters:");
         System.out.println("Weight: " + weight);
@@ -78,8 +86,8 @@ public class RoomController {
         try {
             // Chuyển đổi danh sách quần áo từ JSON
             ObjectMapper objectMapper = new ObjectMapper();
-            List<FileListClothesDTO> fileListClothes = objectMapper.readValue(fileListClothesJson, new TypeReference<List<FileListClothesDTO>>() {
-            });
+
+            FileListClothesDTO fileListClothes = objectMapper.readValue(fileListClothesJson, FileListClothesDTO.class);
 
             // Lưu thông tin lịch sử thử đồ
             ModelTryOnHistory tryOnHistory = ModelTryOnHistoryService.saveTryOnHistory(
@@ -116,23 +124,21 @@ public class RoomController {
             System.out.println("WC: " + tryOnHistory.getWc());
             System.out.println("Hip: " + tryOnHistory.getHip());
             System.out.println("Face Image URL: " + tryOnHistory.getFaceImage().getUrl());
-
-            tryOnHistory.getClothesImages().forEach(image -> {
-                System.out.println("Clothes Image URL: " + image.getUrl());
-            });
+            System.out.println("Clothes Image URL: " + tryOnHistory.getClothesImage().getUrl());
             System.out.println("Tried At: " + tryOnHistory.getTriedAt());
 
             // Chuyển đổi URL cho ảnh nếu cần thiết
             // Chuyển đổi URL cho ảnh nếu cần thiết
             // Chuyển đổi URL cho ảnh nếu cần thiết
             String faceImageUrl = tryOnHistory.getFaceImage().getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos");
-            List<String> updatedClothesImageUrls = tryOnHistory.getClothesImages().stream()
-                    .map(image -> image.getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"))
-                    .collect(Collectors.toList());
 
-            // Lấy phần tử đầu tiên trong danh sách quần áo (nếu có)
-            String updatedClothesImageUrl = updatedClothesImageUrls.isEmpty() ? "" : updatedClothesImageUrls.get(0);
-
+//            String updatedClothesImageUrls = tryOnHistory.getClothesImage().stream()
+//                    .map(image -> image.getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"))
+//                    .collect(Collectors.joining(", "));
+            String updatedClothesImageUrl = tryOnHistory.getClothesImage().getUrl().replace(
+                    "http://localhost:8080/photos",
+                    "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"
+            );
 
             System.out.println("faceImageUrl url   : " + faceImageUrl);
             System.out.println("updatedClothesImageUrl url   : " + updatedClothesImageUrl);
@@ -158,7 +164,7 @@ public class RoomController {
                     avatarPrompt,
                     tryOnHistory.getId() // Truyền ID lịch sử thử đồ
             ));
-//            System.out.println("generatedImage url   : " + generatedImage);
+            System.out.println("generatedImage url   : " + generatedImage);
 
 
             // Trả về phản hồi thành công

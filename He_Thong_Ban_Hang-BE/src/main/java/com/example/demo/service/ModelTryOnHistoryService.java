@@ -23,14 +23,14 @@ public interface ModelTryOnHistoryService {
             String hip,
             MultipartFile imageFace,
             Long ProductId,
-            List<FileListClothesDTO> fileListClothes
+            FileListClothesDTO fileListClothes
     );
 
     ModelTryOnHistory saveGeneratedImagesToHistory(Long tryOnHistoryId, MultipartFile generatedImages);
 
     Image saveImage(MultipartFile file); // Lưu ảnh vào cơ sở dữ liệu
 
-    List<Image> saveClothesImages(List<FileListClothesDTO> fileListClothes); // Lưu danh sách ảnh quần áo
+    Image saveClothesImages(FileListClothesDTO fileListClothes); // Lưu danh sách ảnh quần áo
 
     List<ModelTryOnHistory> getAllModelTryOnHistoriesByUserId(Long userId);
 

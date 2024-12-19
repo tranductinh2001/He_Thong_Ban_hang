@@ -21,23 +21,28 @@ export default function ClothingRoom({ imageList, productId }) {
 
   useEffect(() => {
     if (receivedData) {
-      setIsLoading(true);
       const messageKey = Object.keys(receivedData)[0];
       const messageValue = receivedData[messageKey];
-      // Kiểm tra nếu có dữ liệu URL và Base64
-      if (messageKey === "image") {
-        // Ưu tiên Base64 hơn URL
-        if (messageValue.base64) {
-          setMessageSocket(`data:image/jpeg;base64,${messageValue.base64}`); // Nếu có Base64, sử dụng nó
-        } else if (messageValue.url) {
-          setMessageSocket(messageValue.url); // Nếu không có Base64, sử dụng URL
-        }
+  
+      const isImageUrl = messageValue?.match(/\.(jpeg|jpg|gif|png)$/i);
+  
+      if (isImageUrl) {
+        setMessageSocket(messageValue);  
+        setConfettiVisible(false);  
+      } else {
+        setMessageSocket(messageValue); 
+        setConfettiVisible(true);  
       }
+  
+      // Cập nhật trạng thái loading
       setIsLoading(false);
-      setConfettiVisible(true);
+      setIsSubmitting(false);  // Nếu cần, tắt trạng thái submit
+    } else {
+      setIsLoading(true);  // Nếu không nhận được dữ liệu, bật lại loading
+      setConfettiVisible(false);  // Ẩn confetti khi không có dữ liệu
     }
-  }, [receivedData]);
-  // console.log("selectedImage nè: ", imageList);
+  }, [receivedData]); // Dependency là receivedData, khi dữ liệu thay đổi sẽ trigger lại useEffect
+  
 
   const [selectedImage, setSelectedImage] = useState(null);
 

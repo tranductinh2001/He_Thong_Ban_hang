@@ -68,13 +68,13 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
             String hip,
             MultipartFile imageFace,
             Long ProductId,
-            List<FileListClothesDTO> fileListClothes
+            FileListClothesDTO fileListClothes
     ) {
         // Lưu hình ảnh khuôn mặt
         Image faceImage = saveImage(imageFace);
 
         // Lưu danh sách ảnh quần áo từ fileListClothes
-        List<Image> clothesImages = saveClothesImages(fileListClothes);
+        Image clothesImages = saveClothesImages(fileListClothes);
 
         String username = getCurrentUsername();
         User user = userRepository.findByUsername(username)
@@ -91,7 +91,7 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
         tryOnHistory.setHairStyle(hairStyle);
         tryOnHistory.setGender(gender);
         tryOnHistory.setFaceImage(faceImage);
-        tryOnHistory.setClothesImages(clothesImages);
+        tryOnHistory.setClothesImage(clothesImages);
         tryOnHistory.setTriedAt(LocalDateTime.now());
         tryOnHistory.setAge(age);
         tryOnHistory.setBodyShape(bodyShape);
@@ -137,17 +137,14 @@ public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
     }
 
     @Override
-    public List<Image> saveClothesImages(List<FileListClothesDTO> fileListClothes) {
-        List<Image> images = new ArrayList<>();
-        for (FileListClothesDTO clothesDTO : fileListClothes) {
+    public Image saveClothesImages(FileListClothesDTO fileListClothes) {
             Image image = new Image();
-            image.setName(clothesDTO.getName());
-            image.setType(clothesDTO.getType());
-            image.setSize(Long.valueOf(clothesDTO.getSize()));
-            image.setUrl(clothesDTO.getUrl());
-            images.add(imageRepository.save(image));
-        }
-        return images;
+            image.setName(fileListClothes.getName());
+            image.setType(fileListClothes.getType());
+            image.setSize(Long.valueOf(fileListClothes.getSize()));
+            image.setUrl(fileListClothes.getUrl());
+            imageRepository.save(image);
+        return image;
     }
 
     @Override

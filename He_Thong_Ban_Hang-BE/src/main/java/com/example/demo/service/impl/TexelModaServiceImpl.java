@@ -4,6 +4,7 @@ import com.example.demo.entity.Image;
 import com.example.demo.entity.ModelTryOnHistory;
 import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.ModelTryOnHistoryRepository;
+import com.example.demo.service.CloudinaryService;
 import com.example.demo.service.TexelModaService;
 import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.mock.web.MockMultipartFile;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,6 +49,9 @@ public class TexelModaServiceImpl implements TexelModaService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Override
     public byte[] tryOnClothes(String clothingImageUrl, String avatarImageUrl, String clothingPrompt,
@@ -151,56 +155,53 @@ public class TexelModaServiceImpl implements TexelModaService {
     }
 
 
-    private void saveGeneratedImageToHistory(Long tryOnHistoryId, byte[] imageBytes) {
-        // Tìm kiếm `ModelTryOnHistory` theo ID
-        Optional<ModelTryOnHistory> tryOnHistoryOptional = modelTryOnHistoryRepository.findById(tryOnHistoryId);
-        if (tryOnHistoryOptional.isEmpty()) {
-            throw new RuntimeException("ModelTryOnHistory not found with ID: " + tryOnHistoryId);
-        }
-
-        ModelTryOnHistory tryOnHistory = tryOnHistoryOptional.get();
-
+    public void saveGeneratedImageToHistory(Long tryOnHistoryId, byte[] imageBytes) {
         try {
+            Optional<ModelTryOnHistory> tryOnHistoryOptional = modelTryOnHistoryRepository.findById(tryOnHistoryId);
+            if (tryOnHistoryOptional.isEmpty()) {
+                throw new RuntimeException("ModelTryOnHistory not found with ID: " + tryOnHistoryId);
+            }
+
+            ModelTryOnHistory tryOnHistory = tryOnHistoryOptional.get();
+
             // Tạo tên file duy nhất để lưu ảnh
             String uid = UUID.randomUUID().toString();
-            String extension = "png"; // Giả định ảnh được tạo là PNG
+            String extension = "png"; // Định dạng ảnh giả sử là PNG
             String filePath = UPLOAD_DIR + uid + "." + extension;
 
-            // Lưu file ảnh dưới dạng byte[] vào server
+            // Lưu ảnh vào server dưới dạng byte[]
             File serverFile = new File(filePath);
             try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
                 stream.write(imageBytes);
             }
 
-            // Lưu thông tin ảnh vào database
+            // Lưu thông tin ảnh vào cơ sở dữ liệu
             Image img = new Image();
-            img.setName(uid + "." + extension); // Lưu tên file duy nhất
-            img.setSize((long) imageBytes.length); // Kích thước file
-            img.setType(extension); // Định dạng file
-            img.setUrl("http://localhost:8080/photos/" + uid + "." + extension); // URL truy cập ảnh
+            img.setName(uid + "." + extension);
+            img.setSize((long) imageBytes.length);
+            img.setType(extension);
+            img.setUrl("http://localhost:8080/photos/" + uid + "." + extension);
             img.setData(imageBytes);
             Image savedImg = imageRepository.save(img);
 
+            // Tải ảnh lên Cloudinary
+            MultipartFile multipartFile = new MockMultipartFile("file", img.getName(), "image/png", img.getData());
+            String cloudinaryResult = cloudinaryService.uploadFile(multipartFile);
+
+//             Cập nhật URL Cloudinary vào ảnh trong cơ sở dữ liệu
+            savedImg.setUrl(cloudinaryResult);
+            imageRepository.save(savedImg);
+
+            // Gửi thông tin ảnh qua WebSocket
             String messageSKURL = savedImg.getUrl();
             String messageSKBase64 = Arrays.toString(savedImg.getData());
 
-            int retryCount = 0;
-            while (retryCount < 300) { // Tối đa 10 lần thử
-                if (isImagePublic(messageSKURL) && retryCount >= 10) {
-                    System.out.println("Ảnh đã được lưu vào server. " + "http://localhost:8080/photos/" + uid + "." + extension);
+            Map<String, String> imageData = new HashMap<>();
+            imageData.put("url", messageSKURL);
+            imageData.put("base64", messageSKBase64);
+            System.out.println("u r l clound . " + cloudinaryResult);
 
-                    Map<String, String> imageData = new HashMap<>();
-                    imageData.put("url", messageSKURL);
-                    imageData.put("base64", messageSKBase64);
-
-                    // Ảnh đã public, bắn WebSocket
-                    messagingTemplate.convertAndSend("/topic/room/createImage", imageData);
-                    break;
-                }
-                retryCount++;
-                Thread.sleep(1000); // Chờ 1 giây trước khi thử lại
-            }
-
+            messagingTemplate.convertAndSend("/topic/room/createImage", cloudinaryResult);
 
             // Kiểm tra và khởi tạo danh sách nếu null
             if (tryOnHistory.getCreatedImageGenerateAI() == null) {
@@ -209,15 +210,93 @@ public class TexelModaServiceImpl implements TexelModaService {
 
             // Liên kết ảnh với `ModelTryOnHistory`
             tryOnHistory.getCreatedImageGenerateAI().add(savedImg);
-            modelTryOnHistoryRepository.save(tryOnHistory); // Lưu cập nhật
+            modelTryOnHistoryRepository.save(tryOnHistory);
 
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Lỗi khi lưu ảnh vào lịch sử", e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
+
+//    private void saveGeneratedImageToHistory(Long tryOnHistoryId, byte[] imageBytes) {
+//        // Tìm kiếm `ModelTryOnHistory` theo ID
+//        Optional<ModelTryOnHistory> tryOnHistoryOptional = modelTryOnHistoryRepository.findById(tryOnHistoryId);
+//        if (tryOnHistoryOptional.isEmpty()) {
+//            throw new RuntimeException("ModelTryOnHistory not found with ID: " + tryOnHistoryId);
+//        }
+//
+//        ModelTryOnHistory tryOnHistory = tryOnHistoryOptional.get();
+//
+//        try {
+//            // Tạo tên file duy nhất để lưu ảnh
+//            String uid = UUID.randomUUID().toString();
+//            String extension = "png"; // Giả định ảnh được tạo là PNG
+//            String filePath = UPLOAD_DIR + uid + "." + extension;
+//
+//            // Lưu file ảnh dưới dạng byte[] vào server
+//            File serverFile = new File(filePath);
+//            String extension = "png"; // Giả định ảnh là PNG
+//            File tempFile = File.createTempFile("generated-image-", "." + extension);
+//            try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
+//                stream.write(imageBytes);
+//            }
+//
+//            // Upload ảnh lên Cloudinary
+//            Map<String, String> cloudinaryResult = cloudinaryService.uploadImage(new MockMultipartFile(
+//                    tempFile.getName(),
+//                    tempFile.getName(),
+//                    "image/png",
+//                    imageBytes
+//            ));
+//
+//            // Lưu thông tin ảnh vào database
+//            Image img = new Image();
+//            img.setName(uid + "." + extension); // Lưu tên file duy nhất
+//            img.setSize((long) imageBytes.length); // Kích thước file
+//            img.setType(extension); // Định dạng file
+//            img.setUrl("http://localhost:8080/photos/" + uid + "." + extension); // URL truy cập ảnh
+//            img.setData(imageBytes);
+//            Image savedImg = imageRepository.save(img);
+//
+//            String messageSKURL = savedImg.getUrl();
+//            String messageSKBase64 = Arrays.toString(savedImg.getData());
+//            int retryCount = 0;
+//            while (retryCount < 300) { // Tối đa 10 lần thử
+//                if (isImagePublic(messageSKURL) && retryCount >= 10) {
+//                    System.out.println("Ảnh đã được lưu vào server. " + "http://localhost:8080/photos/" + uid + "." + extension);
+//
+//                    Map<String, String> imageData = new HashMap<>();
+//
+//                    imageData.put("url", messageSKURL);
+//                    imageData.put("base64", messageSKBase64);
+//                    System.out.println("Ảnh base64 đã được lưu vào server. " + messageSKBase64);
+//                    System.out.println("Ảnh cả 2 đã được lưu vào server. " + imageData);
+//
+//                    // Ảnh đã public, bắn WebSocket
+//                    messagingTemplate.convertAndSend("/topic/room/createImage", imageData);
+//                    break;
+//                }
+//                retryCount++;
+//                Thread.sleep(1000); // Chờ 1 giây trước khi thử lại
+//            }
+//
+//
+//            // Kiểm tra và khởi tạo danh sách nếu null
+//            if (tryOnHistory.getCreatedImageGenerateAI() == null) {
+//                tryOnHistory.setCreatedImageGenerateAI(new ArrayList<>());
+//            }
+//
+//            // Liên kết ảnh với `ModelTryOnHistory`
+//            tryOnHistory.getCreatedImageGenerateAI().add(savedImg);
+//            modelTryOnHistoryRepository.save(tryOnHistory); // Lưu cập nhật
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Lỗi khi lưu ảnh vào lịch sử", e);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public boolean isImagePublic(String imageUrl) {
         try {

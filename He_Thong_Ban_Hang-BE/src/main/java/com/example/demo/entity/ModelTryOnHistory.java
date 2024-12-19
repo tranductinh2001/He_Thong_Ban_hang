@@ -44,8 +44,8 @@ public class ModelTryOnHistory {
     @OneToOne
     private Image faceImage;
 
-    @OneToMany
-    private List<Image> clothesImages;
+    @OneToOne
+    private Image clothesImage;
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
