@@ -38,9 +38,9 @@ public class TexelModaServiceImpl implements TexelModaService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    private static String UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/resources/static/photos/";
+    private static final String UPLOAD_DIR = "C:\\Users\\Admin\\OneDrive\\Desktop\\Luu_tru_project\\quanlybanhang_teamLead\\He_Thong_Ban_Hang-BE\\src\\main\\resources\\static\\photos\\";
 
-    private static String apiKey = "3d0be417acmsh0966b664a86e14dp1278b4jsn5ef298ce2e0d";
+    private static String apiKey = "fb9fa360e2msh6b549691a822cbap1728e1jsn721dd35c422c";
 
     private static final String API_URL = "https://try-on-diffusion.p.rapidapi.com/try-on-file";
 

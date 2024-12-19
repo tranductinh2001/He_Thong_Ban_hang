@@ -30,7 +30,9 @@ export default function CartPage() {
   const cartData = useSelector((state) => state.cart?.products);
   const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
   const total = useSelector((state) => state.cart?.total);
-  const order_addresses = useSelector((state) => state.orderAddress?.order_addresses);
+  const order_addresses = useSelector(
+    (state) => state.orderAddress?.order_addresses
+  );
   const currentUser = useSelector((state) => state.auth?.currentUser);
   const messageError = useSelector((state) => state.order?.error);
   const prevPaymentUrl = useSelector((state) => state.order?.prevPaymentUrl);
@@ -50,13 +52,18 @@ export default function CartPage() {
   const [selectedAddress, setSelectedAddress] = useState(null);
 
   const calculatedTotal = cartData?.reduce((total, item) => {
-    const price = item?.product?.sale && item.product.salePrice
-      ? item.product.salePrice
-      : item?.product?.price;
-    return total + price * item.count;
+    const price =
+      item?.product?.sale && item.product.salePrice
+        ? item?.product?.salePrice
+        : item?.product?.price;
+    return total + price * item?.count;
   }, 0);
-
   const priceSale = total - calculatedTotal;
+
+  console.log("cartData", cartData);
+  console.log("total", total);
+  console.log("priceSale", priceSale);
+  console.log("calculatedTotal", calculatedTotal);
 
   useEffect(() => {
     if (receivedData) {
@@ -81,7 +88,7 @@ export default function CartPage() {
 
   useEffect(() => {
     if (currentUser) {
-      setOrderForm(prev => ({
+      setOrderForm((prev) => ({
         ...prev,
         number_phone: currentUser?.numberPhone,
         email: currentUser?.email,
@@ -93,7 +100,7 @@ export default function CartPage() {
     const defaultAddr = order_addresses?.find((item) => item.isDefault);
     if (defaultAddr) {
       setSelectedAddress(defaultAddr);
-      setOrderForm(prev => ({
+      setOrderForm((prev) => ({
         ...prev,
         order_address: defaultAddr.address,
         name: defaultAddr.name,
@@ -110,24 +117,26 @@ export default function CartPage() {
   const closeModal = () => setIsModalVisible(false);
 
   const handleAddToCart = (product) => dispatch(addToCart({ product }));
-  const handleRemoveFromCart = (product) => dispatch(removeFromCart({ product }));
-  const handleDeleteFromCart = (cartItem) => dispatch(deleteFromCart({ cartItem }));
+  const handleRemoveFromCart = (product) =>
+    dispatch(removeFromCart({ product }));
+  const handleDeleteFromCart = (cartItem) =>
+    dispatch(deleteFromCart({ cartItem }));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setOrderForm(prev => ({ ...prev, [name]: value }));
+    setOrderForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddressChange = (value) => {
     const address = order_addresses.find((item) => item.id === value);
     setSelectedAddress(address);
-    setOrderForm(prev => ({ ...prev, order_address: address.address }));
+    setOrderForm((prev) => ({ ...prev, order_address: address.address }));
   };
 
   const handleNameChange = (value) => {
     const address = order_addresses.find((item) => item.id === value);
     setSelectedAddress(address);
-    setOrderForm(prev => ({ ...prev, name: address.name }));
+    setOrderForm((prev) => ({ ...prev, name: address.name }));
   };
 
   const checkQuantityCartItem = () => {
@@ -195,7 +204,10 @@ export default function CartPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="number_phone" className="block mb-1 text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="number_phone"
+                  className="block mb-1 text-sm font-medium text-gray-700"
+                >
                   Số điện thoại
                 </label>
                 <Input
@@ -207,7 +219,10 @@ export default function CartPage() {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block mb-1 text-sm font-medium text-gray-700"
+                >
                   Email
                 </label>
                 <Input
@@ -220,7 +235,10 @@ export default function CartPage() {
               </div>
             </div>
             <div>
-              <label htmlFor="name" className="block mb-1 text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block mb-1 text-sm font-medium text-gray-700"
+              >
                 Chọn tên
               </label>
               <Select
@@ -238,7 +256,10 @@ export default function CartPage() {
               </Select>
             </div>
             <div>
-              <label htmlFor="address" className="block mb-1 text-sm font-medium text-gray-700">
+              <label
+                htmlFor="address"
+                className="block mb-1 text-sm font-medium text-gray-700"
+              >
                 Chọn địa chỉ
               </label>
               <Select
@@ -256,7 +277,10 @@ export default function CartPage() {
               </Select>
             </div>
             <div>
-              <label htmlFor="notes" className="block mb-1 text-sm font-medium text-gray-700">
+              <label
+                htmlFor="notes"
+                className="block mb-1 text-sm font-medium text-gray-700"
+              >
                 Ghi chú
               </label>
               <TextArea
@@ -311,7 +335,7 @@ export default function CartPage() {
                 transition={{ duration: 0.3 }}
                 className="font-semibold text-red-500"
               >
-                -{priceSale?.toLocaleString()}đ
+                {priceSale?.toLocaleString()}đ
               </motion.span>
             </div>
             <div className="flex items-center justify-between text-lg font-bold">

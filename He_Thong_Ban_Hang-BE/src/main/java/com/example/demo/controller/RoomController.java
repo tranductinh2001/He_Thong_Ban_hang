@@ -126,14 +126,14 @@ public class RoomController {
             System.out.println("Tried At: " + tryOnHistory.getTriedAt());
 
             // Chuyển đổi URL cho ảnh nếu cần thiết
-            String faceImageUrl = tryOnHistory.getFaceImage().getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos");
+            String faceImageUrl = tryOnHistory.getFaceImage().getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/OneDrive/Desktop/Luu_tru_project/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos");
 
 //            String updatedClothesImageUrls = tryOnHistory.getClothesImage().stream()
 //                    .map(image -> image.getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"))
 //                    .collect(Collectors.joining(", "));
             String updatedClothesImageUrl = tryOnHistory.getClothesImage().getUrl().replace(
                     "http://localhost:8080/photos",
-                    "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"
+                    "C:/Users/Admin/OneDrive/Desktop/Luu_tru_project/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos"
             );
 
             System.out.println("faceImageUrl url   : " + faceImageUrl);

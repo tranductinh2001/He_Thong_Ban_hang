@@ -8,6 +8,7 @@ import com.example.demo.service.ServiceService;
 import com.example.demo.service.StatisticsService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,13 @@ public class ReviewsController {
 
     @Autowired
     private ReviewsService reviewsService;
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByProductId(@PathVariable Long productId) {
+        System.out.println("productId  " + productId);
+        List<ReviewDTO> reviews = reviewsService.getReviewsByProductId(productId);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
 
     @GetMapping
     @Operation(summary = "Lấy danh sách tất cả đánh giá")

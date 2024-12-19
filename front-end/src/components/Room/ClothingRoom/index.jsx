@@ -8,7 +8,7 @@ import imagBackgroundRoom from "../../../assets/room/room.jpg";
 import { Image } from "antd";
 import { useWebSocket } from "../../../WebSocket/WebSocketContext";
 import { CloseOutlined } from "@ant-design/icons";
-
+import placeholder from "../../../assets/playholder.png";
 export default function ClothingRoom({ imageList, productId }) {
   const { receivedData } = useWebSocket();
   const [MessageSocket, setMessageSocket] = useState("");
@@ -143,7 +143,7 @@ export default function ClothingRoom({ imageList, productId }) {
                     className="object-contain h-full max-w-lg rounded-lg"
                     src={
                       MessageSocket ||
-                      "https://cdn.sanity.io/images/hvisvj7q/production/26d2af036d7c08461ebde22c775230ee753880e1-1920x1080.jpg"
+                      placeholder
                     }
                     alt="Ảnh thử đồ"
                   />

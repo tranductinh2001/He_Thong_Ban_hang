@@ -61,6 +61,7 @@ const API_ENDPOINTS = {
   CREATE_REVIEW: `/reviews/create`,
   UPDATE_REVIEW: `/reviews/update/`,
   DELETE_REVIEW: `/reviews/delete`,
+  GETBYIDPRODUCT: (productId) => `/reviews/${productId}`,
 
   //contacts
   GET_CONTACT: `/contact`,

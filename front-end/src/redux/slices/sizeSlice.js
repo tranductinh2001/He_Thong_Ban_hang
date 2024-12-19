@@ -19,7 +19,7 @@ export const fetchSizesByProductId = createAsyncThunk(
   "sizes/fetchSizesByProductId",
   async (id, { rejectWithValue }) => {
     try {
-      console.log("fetchSizesByProductId   id   ", id);
+      // console.log("fetchSizesByProductId   id   ", id);
       const response = await sizeRequests.getSizesByProductId(id);
       return response;
     } catch (error) {
@@ -64,7 +64,7 @@ const sizeSlice = createSlice({
       .addCase(fetchSizesByProductId.fulfilled, (state, action) => {
         state.loadingSizeByProductId = false;
         state.sizeListByIdProduct = action.payload;
-        console.log("slice size  ", state.sizeListByIdProduct );
+        // console.log("slice size  ", state.sizeListByIdProduct );
       })
       .addCase(fetchSizesByProductId.rejected, (state, action) => {
         state.loadingSizeByProductId = false;

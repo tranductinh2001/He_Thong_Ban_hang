@@ -49,7 +49,7 @@ export default function HomePage() {
   useEffect(() => {
     dispatch(fetchProductListAll());
   }, [dispatch]);
-  console.log("productListAll  ", productListAll);
+  // console.log("productListAll  ", productListAll);
 
   useEffect(() => {
     if (productListAll?.length > 0) {

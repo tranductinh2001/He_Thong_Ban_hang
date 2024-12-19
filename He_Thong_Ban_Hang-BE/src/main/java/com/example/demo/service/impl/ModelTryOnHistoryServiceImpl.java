@@ -27,8 +27,7 @@ import java.util.*;
 @Service
 public class ModelTryOnHistoryServiceImpl implements ModelTryOnHistoryService {
 
-    private static String uploadDirectory  = System.getProperty("user.dir") + "/src/main/resources/static/photos/";
-
+    private static final String uploadDirectory = "C:\\Users\\Admin\\OneDrive\\Desktop\\Luu_tru_project\\quanlybanhang_teamLead\\He_Thong_Ban_Hang-BE\\src\\main\\resources\\static\\photos\\";
 
     @Autowired
     private ImageRepository imageRepository;

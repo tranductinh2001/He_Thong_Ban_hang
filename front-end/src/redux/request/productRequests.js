@@ -86,7 +86,7 @@ const productRequests = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.PRODUCT_DETAIL(productId)
       );
-      console.log("ProductDetail requaeets   ",response.data );
+      // console.log("ProductDetail requaeets   ",response.data );
       return response.data;
     } catch (error) {
       console.error("Error fetching product detail data:", error);

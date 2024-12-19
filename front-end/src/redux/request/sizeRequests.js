@@ -14,7 +14,7 @@ const sizeRequests = {
   getSizesByProductId: async (id) => {
     try {
       const response = await axiosInstance.get(API_ENDPOINTS.GET_SIZE_BY_PRODUCT_ID(id));
-      console.log("getSizesByProductId ", response.data);
+      // console.log("getSizesByProductId ", response.data);
       return response.data;
     } catch (error) {
       return errorHandler(error);

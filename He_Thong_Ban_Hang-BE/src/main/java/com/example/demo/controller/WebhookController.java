@@ -38,7 +38,7 @@ public class WebhookController {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    private static final String VALID_SIGNATURE = "7ad215375bed512f790cd2ba621abdd097f7a3f176174a753677132bd6ae2ab3";
+    private static final String VALID_SIGNATURE = "70a7dab3322f9ceb958152a77930670a425f398f1099488a971eb69a1e39a2f5";
 
     private String customerName;
     private String totalAmount;

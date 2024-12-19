@@ -7,6 +7,7 @@ import {
   message,
   Table,
 } from "antd";
+import CommentList from "../components/commentsData";
 import { motion } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
@@ -123,7 +124,7 @@ const ProductDetailPage = () => {
     count: 0,
   }));
 
-  console.log("sizeByProduct   ", sizeByProduct);
+  // console.log("sizeByProduct   ", sizeByProduct);
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef(null);
   const [messageApi, contextHolder] = message.useMessage();
@@ -159,7 +160,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     if (product) {
       setSelectedImage(product.images[0]?.url);
-      console.log("Updated selectedImage:", product.images[0]?.url);
+      // console.log("Updated selectedImage:", product.images[0]?.url);
     }
   }, [product]);
 
@@ -331,8 +332,8 @@ const ProductDetailPage = () => {
                   {product?.name} - {product?.brand?.name.toUpperCase()}
                 </span>
                 <ClothingRoom
-                  imageList={product?.images}
-                  productId={product?.id}
+                  imageList={product?.images || []}
+                  productId={product?.id || 0}
                 />
               </div>
               <RatingModal productId={productId} />
@@ -408,10 +409,6 @@ const ProductDetailPage = () => {
               <span className="text-sm font-medium">
                 Quý khách vui lòng để lại số điện thoại để được tư vấn sỉ
               </span>
-              <ClothingRoom
-                imageList={product?.images || []}
-                productId={product?.id || 0}
-              />
               <div className="flex flex-row items-center gap-1">
                 <Input
                   className="border-2 border-blue-500"
@@ -431,6 +428,7 @@ const ProductDetailPage = () => {
               Nội dung Chi Tiết
             </span>
           </div>
+
           <span className="p-2 bg-white">{product?.description}</span>
         </div>
         <div className="flex flex-col rounded-lg shadow-lg sm:w-1/3 basis-1/3">
@@ -457,6 +455,15 @@ const ProductDetailPage = () => {
               </Link>
             ))}
           </div>
+        </div>
+      </div>
+      <div className="flex flex-col bg-[#0F67B1] rounded-lg shadow-lg w-full">
+        <span className="p-4 text-lg font-semibold text-white border-b border-blue-300">
+          Bình luận của sản phẩm
+        </span>
+        <div className="p-6 bg-white rounded-b-lg">
+          {/* Thêm class Tailwind để chỉnh sửa nội dung */}
+          <CommentList className="w-full" />
         </div>
       </div>
 

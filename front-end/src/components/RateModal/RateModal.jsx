@@ -50,7 +50,6 @@ const RatingModal = ({ productId }) => {
       productId: Number(productId),
       userId: Number(userId)
     };
-
     try {
       const response = await reviewRequests.create(reviewData);
 

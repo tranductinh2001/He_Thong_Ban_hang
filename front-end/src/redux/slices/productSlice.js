@@ -81,7 +81,7 @@ export const fetchSaleProductList = createAsyncThunk(
   "products/fetchSaleProductList",
   async ({ currentPage, pageSize }, { rejectWithValue }) => {
     try {
-      console.log(" page ", currentPage, pageSize);
+      // console.log(" page ", currentPage, pageSize);
       const response = await productRequests.ListSaleProduct(
         currentPage,
         pageSize

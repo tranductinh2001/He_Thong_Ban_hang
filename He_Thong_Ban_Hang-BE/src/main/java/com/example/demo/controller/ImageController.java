@@ -20,8 +20,8 @@ import java.util.*;
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class ImageController {
 
-	
-	private static String UPLOAD_DIR  = System.getProperty("user.dir") + "/src/main/resources/static/photos/";
+
+    private static final String UPLOAD_DIR = "C:\\Users\\Admin\\OneDrive\\Desktop\\Luu_tru_project\\quanlybanhang_teamLead\\He_Thong_Ban_Hang-BE\\src\\main\\resources\\static\\photos\\";
 
     @Autowired
     private ImageService imageService;
