@@ -49,7 +49,7 @@ export default function CartPage() {
 
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  const calculatedTotal = cartData.reduce((total, item) => {
+  const calculatedTotal = cartData?.reduce((total, item) => {
     const price = item?.product?.sale && item.product.salePrice
       ? item.product.salePrice
       : item?.product?.price;

@@ -6,11 +6,12 @@ import homeImage2 from "../assets/home-image2.png";
 import { CiMedal } from "react-icons/ci";
 import CategoryDropdown from "../components/CategoryDropdown";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Button } from "antd";
 import { motion } from "framer-motion";
 import ProductCard from "../components/ProductCard";
-
+import { fetchProductListAll } from "../redux/slices/productSlice";
+import { useState } from "react";
 const adsList = [
   {
     icon: CiMedal,
@@ -42,10 +43,24 @@ const adsList = [
 
 export default function HomePage() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const productListAll = useSelector((state) => state.products?.productListAll);
+  const [latestProducts, setLatestProducts] = useState([]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchProductListAll());
+  }, [dispatch]);
+  console.log("productListAll  ", productListAll);
 
-  const productListByPage = useSelector(
-    (state) => state.products?.combinedProductList
-  );
+  useEffect(() => {
+    if (productListAll?.length > 0) {
+      // Sắp xếp danh sách theo ngày tạo mới nhất
+      const sortedProducts = [...productListAll].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      // Lấy 10 sản phẩm đầu tiên
+      setLatestProducts(sortedProducts.slice(0, 10));
+    }
+  }, [productListAll]);
 
   return (
     <motion.div
@@ -74,26 +89,26 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="flex flex-col items-start justify-start w-full gap-4 my-10">
-        <h1 className="text-xl md:text-3xl">Sản phẩm mới nhất</h1>
-        <div className="flex flex-wrap items-center justify-center w-full gap-4 md:justify-start">
-          {Array.isArray(productListByPage) &&
-            productListByPage
-              .slice(0, 4)
-              .map((product, index) => (
-                <ProductCard
-                  key={product.id || index}
-                  product={product}
-                  displayQuantity={true}
-                />
-              ))}
-        </div>
-      </div>
+      <div className="flex flex-col items-center justify-center w-full gap-6 my-10">
+  <h1 className="text-xl md:text-3xl text-center">Sản phẩm mới nhất</h1>
+  <div className="flex flex-row flex-wrap items-center justify-center gap-6 w-full">
+    {Array.isArray(latestProducts) &&
+      latestProducts
+        .slice(0, 6)
+        .map((product, index) => (
+          <ProductCard
+            key={product.id || index}
+            product={product}
+            displayQuantity={true}
+          />
+        ))}
+  </div>
+</div>
+
 
       <div className="flex flex-col items-start justify-start w-full gap-4 my-10">
-        <h1 className="text-xl md:text-3xl">Ưu đãi khách hàng</h1>
         <div className="flex flex-col items-center justify-between w-full gap-3 sm:flex-row sm:items-stretch">
-          {adsList.map((item, index) => (
+          {adsList?.map((item, index) => (
             <AdsCard
               key={index}
               Icon={item.icon}

@@ -22,10 +22,6 @@ public class Image {
 
     private long size;
 
-    @Lob
-    @Column(name = "data", columnDefinition = "LONGBLOB") // Nếu bạn dùng MEDIUMBLOB thì ghi "MEDIUMBLOB"
-    private byte[] data;
-
     @ManyToOne
     @JoinColumn(name = "uploaded_by")
     private User uploadedBy;

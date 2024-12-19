@@ -62,8 +62,6 @@ public class RoomController {
             @RequestParam("image_face") MultipartFile imageFace,  // Đảm bảo hình ảnh khuôn mặt
             @RequestParam("fileListClothes") String fileListClothesJson) throws IOException {
 
-//        String a = cloudinaryService.uploadFile(imageFace);
-//        System.out.println("cloudinaryService:  "+ a);
 
         // Log ra các tham số nhận được
         System.out.println("Received parameters:");
@@ -128,8 +126,6 @@ public class RoomController {
             System.out.println("Tried At: " + tryOnHistory.getTriedAt());
 
             // Chuyển đổi URL cho ảnh nếu cần thiết
-            // Chuyển đổi URL cho ảnh nếu cần thiết
-            // Chuyển đổi URL cho ảnh nếu cần thiết
             String faceImageUrl = tryOnHistory.getFaceImage().getUrl().replace("http://localhost:8080/photos", "C:/Users/Admin/Desktop/quanlybanhang_teamLead/He_Thong_Ban_Hang-BE/src/main/resources/static/photos");
 
 //            String updatedClothesImageUrls = tryOnHistory.getClothesImage().stream()
@@ -164,8 +160,6 @@ public class RoomController {
                     avatarPrompt,
                     tryOnHistory.getId() // Truyền ID lịch sử thử đồ
             ));
-            System.out.println("generatedImage url   : " + generatedImage);
-
 
             // Trả về phản hồi thành công
             return ResponseEntity.ok(new MessageResponse("Mô hình đã được tạo thành công"));

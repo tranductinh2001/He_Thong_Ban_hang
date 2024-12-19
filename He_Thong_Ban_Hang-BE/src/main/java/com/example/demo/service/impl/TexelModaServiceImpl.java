@@ -68,14 +68,11 @@ public class TexelModaServiceImpl implements TexelModaService {
         // Tạo một MultiValueMap để chứa tham số và URL
         MultiValueMap<String, Object> multipartRequest = new LinkedMultiValueMap<>();
 
-// Thêm các tham số văn bản vào multipart request
 
-// Đoạn mô tả avatar
-
-// Thêm thông tin về trang phục
+        // Thêm thông tin về trang phục
         String clothingDescription = "A " + clothingPrompt;  // Description for clothing (e.g., "red sleeveless mini dress")
 
-// Truyền thông tin vào multipartRequest
+        // Truyền thông tin vào multipartRequest
         multipartRequest.add("clothing_prompt", clothingDescription);
         multipartRequest.add("avatar_sex", avatarSex);
         multipartRequest.add("avatar_prompt", avatarPrompt);
@@ -92,11 +89,11 @@ public class TexelModaServiceImpl implements TexelModaService {
 
         // Thiết lập HttpEntity với các headers và dữ liệu form
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(multipartRequest, headers);
+
         System.out.println("dữ liệu trước khi học:");
         for (String key : Objects.requireNonNull(entity.getBody()).keySet()) {
             System.out.println("Key: " + key + ", Values: " + entity.getBody().get(key));
         }
-//            byte[] imageBytes = null;
 
         // Gửi yêu cầu API dưới dạng multipart/form-data và nhận phản hồi
         ResponseEntity<byte[]> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, byte[].class);
@@ -125,33 +122,6 @@ public class TexelModaServiceImpl implements TexelModaService {
         } else {
             throw new RuntimeException("Error while trying on clothes: " + response.getStatusCode());
         }
-
-//        File imageFile = new File(clothingImageUrl);
-//
-//        if (!imageFile.exists()) {
-//            throw new IOException("File không tồn tại: " + clothingImageUrl);
-//        }
-//
-//        byte[] imageBytes = Files.readAllBytes(Paths.get(clothingImageUrl));  // Đọc ảnh dưới dạng byte[]
-//
-//        //Kiểm tra và lưu ảnh vào lịch sử mà không cần gọi API
-//        Optional<ModelTryOnHistory> optionalHistory = modelTryOnHistoryRepository.findById(tryOnHistoryId);
-//
-//        if (optionalHistory.isPresent()) {
-//            ModelTryOnHistory history = optionalHistory.get();
-//
-//            // Kiểm tra và khởi tạo danh sách nếu nó là null
-//            if (history.getCreatedImageGenerateAI() == null) {
-//                history.setCreatedImageGenerateAI(new ArrayList<>());
-//            }
-//
-//            modelTryOnHistoryRepository.save(history);  // Lưu lại đối tượng đã thay đổi
-//        }
-//
-//        saveGeneratedImageToHistory(tryOnHistoryId, imageBytes);  // Lưu ảnh vào lịch sử
-//
-//        // Trả về ảnh đã được tạo
-//        return imageBytes;
     }
 
 
@@ -181,25 +151,16 @@ public class TexelModaServiceImpl implements TexelModaService {
             img.setSize((long) imageBytes.length);
             img.setType(extension);
             img.setUrl("http://localhost:8080/photos/" + uid + "." + extension);
-            img.setData(imageBytes);
             Image savedImg = imageRepository.save(img);
 
             // Tải ảnh lên Cloudinary
-            MultipartFile multipartFile = new MockMultipartFile("file", img.getName(), "image/png", img.getData());
+            MultipartFile multipartFile = new MockMultipartFile("file", img.getName(), "image/png", imageBytes);
             String cloudinaryResult = cloudinaryService.uploadFile(multipartFile);
 
 //             Cập nhật URL Cloudinary vào ảnh trong cơ sở dữ liệu
             savedImg.setUrl(cloudinaryResult);
             imageRepository.save(savedImg);
 
-            // Gửi thông tin ảnh qua WebSocket
-            String messageSKURL = savedImg.getUrl();
-            String messageSKBase64 = Arrays.toString(savedImg.getData());
-
-            Map<String, String> imageData = new HashMap<>();
-            imageData.put("url", messageSKURL);
-            imageData.put("base64", messageSKBase64);
-            System.out.println("u r l clound . " + cloudinaryResult);
 
             messagingTemplate.convertAndSend("/topic/room/createImage", cloudinaryResult);
 

@@ -92,8 +92,8 @@ export default function Footer() {
                 <Twitter size={24} />
               </a>
             </div>
-            <p className="mb-2">Hotline: 1900 1234</p>
-            <p>Email: support@tingmobile.vn</p>
+            <p className="mb-2">Hotline: 0352911750</p>
+            <p>Email: tinhkikhoat@gmail.com</p>
           </div>
         </div>
       </div>

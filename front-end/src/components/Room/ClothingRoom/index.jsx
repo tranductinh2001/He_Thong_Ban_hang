@@ -29,7 +29,7 @@ export default function ClothingRoom({ imageList, productId }) {
   
       if (isImageUrl) {
         setMessageSocket(messageValue);  
-        setConfettiVisible(false);  
+        setConfettiVisible(true);  
       } else {
         setMessageSocket(messageValue); 
         setConfettiVisible(true);  
@@ -44,9 +44,6 @@ export default function ClothingRoom({ imageList, productId }) {
     }
   }, [receivedData]); // Dependency là receivedData, khi dữ liệu thay đổi sẽ trigger lại useEffect
   
-
-  const [selectedImage, setSelectedImage] = useState(null);
-
   const handleImageSelect = (image) => {
     // // Nếu ảnh đã được chọn, bỏ chọn
     // if (selectedImage?.id === image?.id) {
@@ -116,7 +113,6 @@ export default function ClothingRoom({ imageList, productId }) {
                     src={image?.url}
                     alt={image?.name}
                   />
-                  <span className="mt-2 text-sm text-center">{image.name}</span>
                 </div>
               ))}
             </div>
@@ -139,7 +135,7 @@ export default function ClothingRoom({ imageList, productId }) {
                     <Confetti
                       width={window.innerWidth}
                       height={window.innerHeight}
-                      numberOfPieces={200}
+                      numberOfPieces={2000}
                       recycle={false}
                     />
                   )}

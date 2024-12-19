@@ -21,6 +21,7 @@ const roomRequests = {
         data,
         {
           headers: {
+            timeout: 5000,
             "Content-Type": data instanceof FormData
               ? "multipart/form-data"
               : "application/json",
