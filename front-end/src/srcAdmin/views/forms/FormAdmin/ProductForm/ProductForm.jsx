@@ -135,7 +135,7 @@ const ProductForm = ({ setIsModalVisible, type, product }) => {
         await productRequests.update(product.id, body);
         message.success("Cập nhật sản phẩm thành công!");
       } else {
-        console.log("body  ", body );
+       //console.log("body  ", body );
         await productRequests.create(body);
         message.success("Tạo sản phẩm thành công!");
       }

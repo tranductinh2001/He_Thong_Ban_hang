@@ -71,7 +71,7 @@ const ProductManager = () => {
     dispatch(fetchSizeList());
   }, [dispatch]);
 
-  console.log("sizes:", sizes);
+ //console.log("sizes:", sizes);
 
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -409,7 +409,7 @@ const ProductManager = () => {
     (state) => state.products.combinedProductList
   );
 
-  console.log(productListByPage);
+ //console.log(productListByPage);
 
   const totalProductItems = useSelector(
     (state) => state.products.totalProductItems
@@ -511,7 +511,7 @@ const ProductManager = () => {
           })
         );
 
-        console.log("data trước khi lưu product ", data);
+       //console.log("data trước khi lưu product ", data);
 
         // Gửi dữ liệu sản phẩm lên backend
         await processExcelData(data);
@@ -574,7 +574,7 @@ const ProductManager = () => {
           updatedAt: item["Ngày cập nhật"] || null,
         };
 
-        console.log("product  ", product);
+       //console.log("product  ", product);
         // Gửi request tạo sản phẩm
         await productRequests.create(product);
       }

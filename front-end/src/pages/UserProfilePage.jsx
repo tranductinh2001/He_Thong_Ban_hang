@@ -67,7 +67,7 @@ export default function UserProfilePage() {
       options.push({
         icon: "admin",
         title: "Admin",
-        path: "/admin",
+        path: "/admin/dashboard",
       });
     }
     return options;

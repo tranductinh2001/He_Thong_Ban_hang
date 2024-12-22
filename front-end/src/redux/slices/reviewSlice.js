@@ -40,7 +40,7 @@ const reviewSlice = createSlice({
   },
   reducers: {
     clearReviewList: (state) => {
-      console.log("Resetting review list to empty"); // In ra thông báo khi dữ liệu bị reset
+     //console.log("Resetting review list to empty"); // In ra thông báo khi dữ liệu bị reset
       state.reviewList = [];
       state.loading = false;
       state.error = null;

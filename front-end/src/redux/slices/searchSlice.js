@@ -6,7 +6,7 @@ export const fetchFiveProduct = createAsyncThunk(
   "products/fetchFiveProduct",
   async({keyWord, currentPage},{rejectWithValue}) =>{
     try {
-      console.log("keyword 2", keyWord, currentPage)
+     //console.log("keyword 2", keyWord, currentPage)
       return await request.searchProduct(keyWord , currentPage);
     } catch (error) {
       return rejectWithValue(error.message);
@@ -40,7 +40,7 @@ const searchSlice = createSlice({
       .addCase(fetchFiveProduct.fulfilled, (state, action)=> {
         state.loading = false;
         state.productListSearch = [...state.productListSearch, ...action.payload.products];
-        console.log(action.payload)
+       //console.log(action.payload)
 
         state.totalProductItems = action.payload?.totalItems;
         state.pageSize = action.payload?.totalPages;

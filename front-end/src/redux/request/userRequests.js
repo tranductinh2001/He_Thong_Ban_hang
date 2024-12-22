@@ -27,8 +27,8 @@ const userRequests = {
   },
   UpdateUserProdfile: async (data, id) => {
     try {
-      console.log("datât trong request UpdateUserProdfile", data, id, API_ENDPOINTS.UPDATE_USER_PROFILE(id));
-      console.log("API Endpoint:", API_ENDPOINTS.UPDATE_USER_PROFILE(id)); // Log URL với id
+     //console.log("datât trong request UpdateUserProdfile", data, id, API_ENDPOINTS.UPDATE_USER_PROFILE(id));
+     //console.log("API Endpoint:", API_ENDPOINTS.UPDATE_USER_PROFILE(id)); // Log URL với id
 
       const response = await axiosInstance.put(
         API_ENDPOINTS.UPDATE_USER_PROFILE(id),

@@ -9,6 +9,7 @@ import { Image } from "antd";
 import { useWebSocket } from "../../../WebSocket/WebSocketContext";
 import { CloseOutlined } from "@ant-design/icons";
 import placeholder from "../../../assets/playholder.png";
+
 export default function ClothingRoom({ imageList, productId }) {
   const { receivedData } = useWebSocket();
   const [MessageSocket, setMessageSocket] = useState("");
@@ -34,7 +35,7 @@ export default function ClothingRoom({ imageList, productId }) {
         setMessageSocket(messageValue); 
         setConfettiVisible(true);  
       }
-  
+  console.log("MessageSocket",MessageSocket)
       // Cập nhật trạng thái loading
       setIsLoading(false);
       setIsSubmitting(false);  // Nếu cần, tắt trạng thái submit
@@ -54,9 +55,9 @@ export default function ClothingRoom({ imageList, productId }) {
     // }
     setSelectedImage(image);
     setSelectedImages((prevSelectedImages) =>
-      prevSelectedImages.some((selectedImage) => selectedImage.id === image.id)
+      prevSelectedImages.some((selectedImage) => selectedImage?.id === image?.id)
         ? prevSelectedImages.filter(
-            (selectedImage) => selectedImage.id !== image.id
+            (selectedImage) => selectedImage?.id !== image?.id
           )
         : [...prevSelectedImages, image]
     );
@@ -102,7 +103,7 @@ export default function ClothingRoom({ imageList, productId }) {
                 <div
                   key={image?.id}
                   className={`flex flex-col items-center p-2 cursor-pointer rounded-lg transition-all duration-300 ${
-                    selectedImage?.id === image.id
+                    selectedImage?.id === image?.id
                       ? "border-2 border-blue-500 bg-blue-100"
                       : "border-2 border-transparent hover:bg-gray-100"
                   }`}

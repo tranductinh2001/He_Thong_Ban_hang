@@ -45,7 +45,7 @@ export default function CheckoutPage() {
         try {
           // Parse chuỗi JSON bên trong
           const parsedData = JSON.parse(messageData);
-          console.log("Parsed Payment Data: ", parsedData);
+         //console.log("Parsed Payment Data: ", parsedData);
 
           // Kiểm tra xem parsedData có đủ thông tin không
           if (parsedData?.username && parsedData?.message) {
@@ -89,7 +89,7 @@ export default function CheckoutPage() {
       } else {
         setTimeout(() => {
           // window.location.href = "/";
-          console.log("sai jwwt rồi : ");
+         //console.log("sai jwwt rồi : ");
         }, 100);
       }
     }

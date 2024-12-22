@@ -11,7 +11,7 @@ export default function PaymentCancelPage() {
   const dispatch = useDispatch();
   const session_detail = useSelector((state) => state.order?.session_detail);
   const isLoading = useSelector((state) => state.order.loading);
-  console.log(session_detail);
+ //console.log(session_detail);
 
   useEffect(() => {
     if (sessionId) {
@@ -27,7 +27,7 @@ export default function PaymentCancelPage() {
       dispatch(
         updateOrderStatus({ order_id: order_id, order_status: "canceled" })
       );
-      console.log("canceled");
+     //console.log("canceled");
     }
   }, [dispatch, session_detail]);
 

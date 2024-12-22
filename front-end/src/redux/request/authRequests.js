@@ -9,7 +9,7 @@ const authRequests = {
         username: payload.email,
         password: payload.password,
       });
-      console.log(response);
+     //console.log(response);
       return response;
     } catch (error) {
       return errorHandler(error);

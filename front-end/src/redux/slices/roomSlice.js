@@ -7,7 +7,7 @@ export const createModelInRoom = createAsyncThunk(
     try {
             // In tất cả dữ liệu trong FormData
             // data.forEach((value, key) => {
-            //   console.log(`Key: ${key}, Value:`, value);
+            //  //console.log(`Key: ${key}, Value:`, value);
             // });
       // console.log("data trong room slice === ", data);  // Kiểm tra data nhận được
       return await roomRequests.createModelInRoom(data);
@@ -38,7 +38,7 @@ const roomSlice = createSlice({
       .addCase(createModelInRoom.fulfilled, (state, action)=> {
         state.loading = false;
         state.listImageModel = [...state.listImageModel, ...action.payload.listImageModel];
-        console.log(action.payload)
+       //console.log(action.payload)
 
         state.totalProductItems = action.payload?.totalItems;
         state.pageSize = action.payload?.totalPages;

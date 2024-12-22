@@ -23,7 +23,7 @@ export const fetchProductListWithSortOrTitle = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log(" ------ ", sortParam, titleParam);
+     //console.log(" ------ ", sortParam, titleParam);
       return await productRequests.ListSort({
         sort: sortParam,
         title: titleParam,
@@ -55,7 +55,7 @@ export const fetchProductList = createAsyncThunk(
   "products/fetchProductList",
   async ({ currentPage, pageSize }, { rejectWithValue }) => {
     try {
-      console.log("fetchProductList   trang:  ", currentPage, pageSize);
+     //console.log("fetchProductList   trang:  ", currentPage, pageSize);
       return await productRequests.List(currentPage, pageSize);
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -122,7 +122,7 @@ const productSlice = createSlice({
   reducers: {
     setActiveFilter(state, action) {
       const { title, sort } = action.payload;
-      console.log(title, sort);
+     //console.log(title, sort);
       state.activeFilter = { title: title, sort: sort };
       state.productList = [];
       state.newProductList = [];
@@ -274,7 +274,7 @@ const productSlice = createSlice({
           ...state.productListWithSearchbyPage,
           ...action.payload.products,
         ];
-        console.log("state.productListWithSearchbyPage ", action.payload.data);
+       //console.log("state.productListWithSearchbyPage ", action.payload.data);
         state.combinedProductList = [
           ...state.combinedProductList,
           ...state.productListWithSearchbyPage,

@@ -20,7 +20,7 @@ export default function LoginPage() {
   const from = location.state?.from || "/";
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("handleSubmit    payload   ", payload);
+   //console.log("handleSubmit    payload   ", payload);
     dispatch(login(payload));
   };
 

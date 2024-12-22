@@ -10,7 +10,7 @@ const roomRequests = {
       if (data instanceof FormData) {
         // Hiển thị các giá trị trong FormData (phục vụ debug)
         for (const [key, value] of data.entries()) {
-          console.log(`roomRequests Key: ${key}, Value:`, value);
+         //console.log(`roomRequests Key: ${key}, Value:`, value);
         }
       } else {
         console.warn("Data provided is not a FormData instance.");

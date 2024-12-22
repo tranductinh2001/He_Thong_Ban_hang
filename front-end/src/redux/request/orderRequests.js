@@ -40,7 +40,7 @@ const orderRequests = {
   },
   createOrderAddress: async (order_address) => {
     try {
-      console.log("request ", order_address);
+     //console.log("request ", order_address);
       const response = await axiosInstance.post(
         API_ENDPOINTS.CREATE_ORDER_ADDRESS,
         order_address
@@ -55,7 +55,7 @@ const orderRequests = {
       const response = await axiosInstance.put(
         API_ENDPOINTS.SET_DEFAULT_ORDER_ADDRESS(order_address_id)
       );
-      console.log(order_address_id);
+     //console.log(order_address_id);
       return response.data;
     } catch (error) {
       console.error("Error set default order address:", error);
@@ -64,9 +64,9 @@ const orderRequests = {
   },
   CreateOrder: async (order) => {
     try {
-      console.log("request", order);
+     //console.log("request", order);
       const response = await axiosInstance.post(API_ENDPOINTS.ADD_ORDER, order);
-      console.log("response", response);
+     //console.log("response", response);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -83,7 +83,7 @@ const orderRequests = {
   },
   UpdateOrderStatus: async (order_id, order_status) => {
     try {
-      console.log("request order_id and order_status", order_id, order_status);
+     //console.log("request order_id and order_status", order_id, order_status);
       const response = await axiosInstance.put(
         API_ENDPOINTS.UPDATE_ORDER_STATUS(order_id),
         { status: order_status }
@@ -113,7 +113,7 @@ const orderRequests = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.CHECKOUT_SESSION(session_id)
       );
-      console.log("request checkout session", response.data);
+     //console.log("request checkout session", response.data);
       return response.data;
     } catch (error) {
       console.error("Error when checkout session:", error);
@@ -128,7 +128,7 @@ const orderRequests = {
           endYear,
         },
       });
-      console.log("Data fetched (by year):", response.data);
+     //console.log("Data fetched (by year):", response.data);
       return response.data;
     } catch (error) {
       console.error("Error when fetching data by year:", error.response ? error.response.data : error.message);
@@ -144,7 +144,7 @@ const orderRequests = {
           endMonth,
         },
       });
-      console.log("Data fetched (by month):", response.data);
+     //console.log("Data fetched (by month):", response.data);
       return response.data;
     } catch (error) {
       console.error("Error when fetching data by month:", error.response ? error.response.data : error.message);
@@ -160,7 +160,7 @@ const orderRequests = {
           endDate,
         },
       });
-      console.log("Data fetched (by date range):", response.data);
+     //console.log("Data fetched (by date range):", response.data);
       return response.data;
     } catch (error) {
       console.error("Error when fetching data by date range:", error.response ? error.response.data : error.message);

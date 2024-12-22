@@ -19,7 +19,7 @@ const request = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.SEARCH_PRODUCTS(keyWord, currentPage)
       );
-      console.log(response);
+     //console.log(response);
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -30,7 +30,7 @@ const request = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.SEARCH_LIST_PRODUCTS(keyWord, currentPage, pageSize)
       );
-      console.log("Response data:", response.data.data);
+     //console.log("Response data:", response.data.data);
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -48,7 +48,7 @@ const request = {
         title != "category"
       ) {
         url += API_ENDPOINTS.LIST_SORT(sort, currentPage, pageSize);
-         console.log("api 1 ", url);
+        //console.log("api 1 ", url);
       } else {
         if (title == "Hot") {
           title = "hot";
@@ -64,7 +64,7 @@ const request = {
       }
       // console.log("api 2: ", url);
       const response = await axiosInstance.get(url);
-       console.log("Response data:", response.data);
+      //console.log("Response data:", response.data);
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -88,7 +88,7 @@ const request = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.PRODUCT_DETAIL(productId)
       );
-      console.log("product detail    ", response.data);
+     //console.log("product detail    ", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching product detail data:", error);
@@ -110,7 +110,7 @@ const request = {
         username: payload.email,
         password: payload.password
       });
-      console.log("login: ", response);
+     //console.log("login: ", response);
       return response;
     } catch (error) {
       console.error("Error fetching login:", error);
@@ -120,7 +120,7 @@ const request = {
   fetchOrderAddress: async (userId) => {
     try {
       const response = await axiosInstance.get(`${API_ENDPOINTS.GET_ORDER_ADDRESS}/${userId}`);
-      console.log("data ", response);
+     //console.log("data ", response);
       return response;
     } catch (error) {
       return errorHandler(error);
@@ -128,7 +128,7 @@ const request = {
   },
   createOrderAddress: async (order_address) => {
     try {
-      console.log("request ", order_address);
+     //console.log("request ", order_address);
       const response = await axiosInstance.post(
         API_ENDPOINTS.CREATE_ORDER_ADDRESS,
         { order_address: order_address }
@@ -143,7 +143,7 @@ const request = {
       const response = await axiosInstance.put(
         API_ENDPOINTS.SET_DEFAULT_ORDER_ADDRESS(order_address_id)
       );
-      console.log(order_address_id);
+     //console.log(order_address_id);
       return response.data;
     } catch (error) {
       console.error("Error set default order address:", error);
@@ -266,7 +266,7 @@ const request = {
 
   RemoveFromCart: async (userId, cartItem) => {
     try {
-      console.log("request remove from cart", cartItem);
+     //console.log("request remove from cart", cartItem);
       //get current user cart
       const userCart = await axiosInstance.get(
         API_ENDPOINTS.GET_CART_BY_ID_USER()
@@ -344,7 +344,7 @@ const request = {
         API_ENDPOINTS.GET_CART_BY_ID_USER()
       );
 
-       console.log("user cart response", userCartResponse.data);
+      //console.log("user cart response", userCartResponse.data);
       let userCart = userCartResponse?.data || { products: [], total: 0 };
       // Create a copy of the current cart products
       const updatedCartProducts = [...userCart.items];
@@ -378,7 +378,7 @@ const request = {
           total_of_price: updatedCartTotal,
         }
       );
-      console.log("updated cart products", updatedCartProducts);
+     //console.log("updated cart products", updatedCartProducts);
       return response.data;
     } catch (error) {
       console.error("Failed to add many to cart:", error);
@@ -393,7 +393,7 @@ const request = {
       const userCart = await axiosInstance.get(
         API_ENDPOINTS.GET_CART_BY_ID_USER()
       );
-      console.log("request get user cart", userCart.data);
+     //console.log("request get user cart", userCart.data);
       //check the product
       let existingProduct = userCart?.data?.items.find((item) => {
         return (
@@ -447,7 +447,7 @@ const request = {
   GetOrders: async () => {
     try {
       const response = await axiosInstance.get(API_ENDPOINTS.GET_ORDERS);
-      console.log("data ", response);
+     //console.log("data ", response);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -464,9 +464,9 @@ const request = {
   },
   CreateOrder: async (order) => {
     try {
-      console.log("request", order);
+     //console.log("request", order);
       const response = await axiosInstance.post(API_ENDPOINTS.ADD_ORDER, order);
-      console.log("response", response);
+     //console.log("response", response);
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -483,7 +483,7 @@ const request = {
   },
   UpdateOrderStatus: async (order_id, order_status) => {
     try {
-      console.log("request order_id and order_status", order_id, order_status);
+     //console.log("request order_id and order_status", order_id, order_status);
       const response = await axiosInstance.put(
         API_ENDPOINTS.UPDATE_ORDER_STATUS(order_id),
         { status: order_status }
@@ -496,7 +496,7 @@ const request = {
   },
   CreateCheckoutSession: async (order) => {
     try {
-      console.log("request js", order);
+     //console.log("request js", order);
       const response = await axiosInstance.post(
         API_ENDPOINTS.CREATE_CHECKOUT_SESSION,
         order
@@ -512,7 +512,7 @@ const request = {
       const response = await axiosInstance.get(
         API_ENDPOINTS.CHECKOUT_SESSION(session_id)
       );
-      console.log("request checkout session", response.data);
+     //console.log("request checkout session", response.data);
       return response.data;
     } catch (error) {
       console.error("Error when checkout session:", error);
@@ -521,7 +521,7 @@ const request = {
   },
   Register: async (data) => {
     try {
-      console.log("request ", data);
+     //console.log("request ", data);
       const response = await axiosInstance.post(API_ENDPOINTS.RIGISTER, {
         email: data.email,
         password: data.password,

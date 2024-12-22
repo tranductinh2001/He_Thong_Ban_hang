@@ -69,7 +69,7 @@ const cartRequests = {
       const response = await axiosInstance.get(API_ENDPOINTS.GET_CART_BY_ID_USER);
       const userCart = response?.data;
   
-      console.log(" response cart do userr", response);
+     //console.log(" response cart do userr", response);
 
       // Tìm sản phẩm cần xóa trong giỏ hàng
       let existingProduct = userCart?.items.find((item) => 
@@ -108,7 +108,7 @@ const cartRequests = {
         updatedTotalOfPrice,
         totalOfProduct,
       }
-      console.log("cart gửi tới backend   ", a);
+     //console.log("cart gửi tới backend   ", a);
       // Gửi cập nhật lên server
       const updateResponse = await axiosInstance.put(API_ENDPOINTS.UPDATE_CART, {
         items: updatedItems,
@@ -178,7 +178,7 @@ const cartRequests = {
   },
   DeleteFromCart: async (cartItem) => {
     try {
-      console.log("delete frrom to cart   ");
+     //console.log("delete frrom to cart   ");
       // Lấy giỏ hàng hiện tại của người dùng
       const response = await axiosInstance.get(API_ENDPOINTS.GET_CART_BY_ID_USER);
       const userCart = response?.data;

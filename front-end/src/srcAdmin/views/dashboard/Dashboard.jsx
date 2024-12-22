@@ -57,7 +57,7 @@ const Dashboard = () => {
             endDate: endDay,
           })
         );
-        console.log("Lấy dữ liệu theo ngày:", startDay, endDay);
+       //console.log("Lấy dữ liệu theo ngày:", startDay, endDay);
       } else if (option === "month") {
         const startMonth = dates[0].format("YYYY-MM");
         const endMonth = dates[1].format("YYYY-MM");
@@ -68,7 +68,7 @@ const Dashboard = () => {
             endMonth: endMonth,
           })
         );
-        console.log("Lấy dữ liệu theo tháng:", startMonth, endMonth);
+       //console.log("Lấy dữ liệu theo tháng:", startMonth, endMonth);
       } else if (option === "year") {
         const startYear = dates[0].year();
         const endYear = dates[1].year();
@@ -79,7 +79,7 @@ const Dashboard = () => {
             endYear: endYear,
           })
         );
-        console.log("Lấy dữ liệu theo năm:", startYear, endYear);
+       //console.log("Lấy dữ liệu theo năm:", startYear, endYear);
       }
       setSelectedDateRange(dateRangeString);
     }

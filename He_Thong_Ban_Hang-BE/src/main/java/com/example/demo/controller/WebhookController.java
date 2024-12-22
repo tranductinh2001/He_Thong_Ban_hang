@@ -95,7 +95,7 @@ public class WebhookController {
             User firstUser = users.get(0);
 
             // Kiểm tra điều kiện thanh toán thành công
-            if (firstUser.getVerificationCode().equals(comment) && amount == 5001) {
+            if (firstUser.getVerificationCode().equals(comment) && amount == firstUser.getCart().getTotalOfPrice()) {
                 // Tạo và lưu đơn hàng
                 Order order = orderService.getOrderByVerificationCode(comment);
                 order.setStatus(OrderStatus.PAID); // Trạng thái thanh toán thành công

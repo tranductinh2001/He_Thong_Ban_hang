@@ -20,7 +20,7 @@ export default function ChatBox() {
   const [isChatBoxVisible, setIsChatBoxVisible] = useState(false);
 
   const toggleChatBox = () => {
-    console.log("object");
+   //console.log("object");
     setIsChatBoxVisible(!isChatBoxVisible);
   };
 

@@ -22,7 +22,7 @@ export default function ChangPasswordForm() {
   const dispatch = useDispatch();
   const handleChangePassword = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định của form submission
-    console.log("object", formData);
+   //console.log("object", formData);
     dispatch(changePassword(formData));
   };
   const handleChange = (e) => {

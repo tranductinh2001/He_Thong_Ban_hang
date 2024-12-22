@@ -225,7 +225,7 @@ const ReviewManager = () => {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.review.reviewList);
 
-  console.log(reviews);
+ //console.log(reviews);
 
   const totalReviewItems = reviews?.length;
   const pageSize = 10000; //Max

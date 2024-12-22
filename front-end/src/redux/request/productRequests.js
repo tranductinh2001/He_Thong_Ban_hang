@@ -13,16 +13,16 @@ const productRequests = {
   },
   List: async (currentPage, pageSize) => {
     try {
-      console.log(
-        "productRequests     currentPage   ",
-        currentPage,
-        "pageSize   ",
-        pageSize
-      );
+     //console.log(
+      //   "productRequests     currentPage   ",
+      //   currentPage,
+      //   "pageSize   ",
+      //   pageSize
+      // );
       const response = await axiosInstance.get(
         API_ENDPOINTS.GET_LIST_PRODUCTS(currentPage, pageSize)
       );
-      console.log("kkk", response);
+     //console.log("kkk", response);
       return response.data;
     } catch (error) {
       return errorHandler(error);
@@ -62,7 +62,7 @@ const productRequests = {
         url += API_ENDPOINTS.LIST_SORT(sort, currentPage, pageSize);
       } else {
         title = title === "Hot" ? "hot" : title;
-        console.log("======= ", title, sort);
+       //console.log("======= ", title, sort);
         url += API_ENDPOINTS.LIST_FILLTER(title, sort, currentPage, pageSize);
       }
       const response = await axiosInstance.get(url);

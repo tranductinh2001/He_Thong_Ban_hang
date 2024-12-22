@@ -12,14 +12,14 @@ class WebSocketService {
 
   connect() {
     if (!this.isConnected) {
-      console.log("Connecting to WebSocket...");
+     //console.log("Connecting to WebSocket...");
       this.socket = new SockJS("http://localhost:8080/ws");
       this.stompClient = Stomp.over(this.socket);
 
       this.stompClient.connect(
         {},
         () => {
-          console.log("WebSocket connected!");
+         //console.log("WebSocket connected!");
           this.isConnected = true;
         },
         (error) => {
@@ -37,10 +37,10 @@ class WebSocketService {
     }
 
     if (this.stompClient && this.isConnected) {
-      console.log(`Subscribing to topic: ${topic}`);
+     //console.log(`Subscribing to topic: ${topic}`);
       this.stompClient.subscribe(topic, (message) => {
         const data = message.body; // Chuyển đổi dữ liệu nếu cần
-        console.log(`Received message from ${topic}:`, data);
+       //console.log(`Received message from ${topic}:`, data);
         this.topicSubjects[topic].next(data); // Cập nhật dữ liệu vào BehaviorSubject
       });
     } else {

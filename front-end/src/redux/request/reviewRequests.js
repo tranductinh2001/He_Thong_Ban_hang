@@ -14,12 +14,12 @@ const reviewRequests = {
   getAllByProductId: async (productId) => {
     // Thay đổi URL theo API bạn có
     const response = await axiosInstance.get(API_ENDPOINTS.GETBYIDPRODUCT(productId));
-    console.log(" response  ", response.data, API_ENDPOINTS.GETBYIDPRODUCT(productId))
+   //console.log(" response  ", response.data, API_ENDPOINTS.GETBYIDPRODUCT(productId))
     return response.data; // trả về danh sách bình luận
   },
   create: async (body) => {
     try {
-      console.log("body  ", body)
+     //console.log("body  ", body)
       const response = await axiosInstance.post(API_ENDPOINTS.CREATE_REVIEW, body);
       return response.data;
     } catch (error) {

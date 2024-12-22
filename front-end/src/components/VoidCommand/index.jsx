@@ -27,11 +27,11 @@ const VoiceCommand = ({ isVoiceEnabled }) => {
       recognitionInstance.lang = "vi-VN";
 
       recognitionInstance.onstart = () => {
-        console.log("Voice recognition started.");
+       //console.log("Voice recognition started.");
       };
 
       recognitionInstance.onend = () => {
-        console.log("Voice recognition ended.");
+       //console.log("Voice recognition ended.");
         if (isListening) {
           recognitionInstance.start();
         }
@@ -40,19 +40,19 @@ const VoiceCommand = ({ isVoiceEnabled }) => {
       recognitionInstance.onresult = (event) => {
         const transcript =
           event.results[event.results.length - 1][0].transcript.trim();
-        console.log("Transcript:", transcript);
+       //console.log("Transcript:", transcript);
 
         setTextVoice(transcript);
 
         if (transcript.toLowerCase() === "hey siri") {
-          console.log("Hey Siri detected!");
+         //console.log("Hey Siri detected!");
           setIsListening(false);
         }
       };
 
       setRecognition(recognitionInstance);
     } else {
-      console.log("Speech recognition not supported in this browser.");
+     //console.log("Speech recognition not supported in this browser.");
     }
   }, []);
 
@@ -99,7 +99,7 @@ const VoiceCommand = ({ isVoiceEnabled }) => {
         .replace("tìm kiếm", "")
         .trim()
         .replace(/\.$/, ""); // Loại bỏ dấu "." cuối cùng nếu có
-      console.log("Keyword Search:", keywordSearch);
+     //console.log("Keyword Search:", keywordSearch);
       navigate(`/products?search=${keywordSearch}`);
     } else {
       switch (keyword) {
@@ -171,7 +171,7 @@ const VoiceCommand = ({ isVoiceEnabled }) => {
           navigate("/cart");
           break;
         default:
-          console.log("Không tìm thấy trang tương ứng cho từ khóa:", keyword);
+         //console.log("Không tìm thấy trang tương ứng cho từ khóa:", keyword);
       }
     }
   };
@@ -181,17 +181,17 @@ const VoiceCommand = ({ isVoiceEnabled }) => {
     const matchKeyword = keywords.find((keyword) =>
       searchTermLower?.includes(keyword)
     );
-    console.log("   searchTermLower ", searchTermLower);
-    console.log("   matchKeyword ", matchKeyword);
+   //console.log("   searchTermLower ", searchTermLower);
+   //console.log("   matchKeyword ", matchKeyword);
 
     if (matchKeyword?.includes("tìm kiếm")) {
-      console.log(
+     console.log(
         "Từ khóa phù hợp được phát hiện để tìm kiếm:",
         searchTermLower
       );
       handleNavigation(searchTermLower);
     } else if (matchKeyword) {
-      console.log("Từ khóa phù hợp được phát hiện:", matchKeyword);
+     //console.log("Từ khóa phù hợp được phát hiện:", matchKeyword);
       handleNavigation(matchKeyword);
     }
   }, [useDebounceSearchTerm, navigate]);

@@ -34,7 +34,7 @@ export default function UserInfoForm({
   selectedImage,
   productId,
 }) {
-  console.log("productId   ", productId);
+ //console.log("productId   ", productId);
   const dispatch = useDispatch();
   const [filesFace, setFilesFace] = useState([]);
   const [fileListClothes, setFileListClothes] = useState(null);
@@ -89,7 +89,7 @@ export default function UserInfoForm({
 
       // In tất cả dữ liệu trong FormData
       formData.forEach((value, key) => {
-        console.log(`Key: ${key}, Value:`, value);
+       //console.log(`Key: ${key}, Value:`, value);
       });
 
       dispatch(createModelInRoom({ data: formData }));

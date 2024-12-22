@@ -16,7 +16,7 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ product }, { rejectWithValue }) => {
     try {
-      console.log("addToCart     ", product);
+     //console.log("addToCart     ", product);
       const response = await cartRequests.AddToCart(product);
       return response;
     } catch (error) {
@@ -29,7 +29,7 @@ export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ product }, { rejectWithValue }) => {
     try {
-      console.log("removeFromCart    ", product);
+     //console.log("removeFromCart    ", product);
       const response = await cartRequests.RemoveFromCart(product);
       return response;
     } catch (error) {
@@ -42,7 +42,7 @@ export const addManyToCart = createAsyncThunk(
   "cart/addManyToCart",
   async ({ products }, { rejectWithValue }) => {
     try {
-      console.log("addManyToCart     ", products);
+     //console.log("addManyToCart     ", products);
       const response = await cartRequests.AddManyToCart(products);
       return response;
     } catch (error) {
@@ -55,7 +55,7 @@ export const deleteFromCart = createAsyncThunk(
   "cart/deleteFromCart",
   async ({ cartItem }, { rejectWithValue }) => {
     try {
-      console.log("deleteFromCart   ", cartItem);
+     //console.log("deleteFromCart   ", cartItem);
       const response = await cartRequests.DeleteFromCart(cartItem);
       return response;
     } catch (error) {

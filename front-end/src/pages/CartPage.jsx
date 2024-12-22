@@ -60,10 +60,10 @@ export default function CartPage() {
   }, 0);
   const priceSale = total - calculatedTotal;
 
-  console.log("cartData", cartData);
-  console.log("total", total);
-  console.log("priceSale", priceSale);
-  console.log("calculatedTotal", calculatedTotal);
+ //console.log("cartData", cartData);
+ //console.log("total", total);
+ //console.log("priceSale", priceSale);
+ //console.log("calculatedTotal", calculatedTotal);
 
   useEffect(() => {
     if (receivedData) {

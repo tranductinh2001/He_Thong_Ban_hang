@@ -13,7 +13,7 @@ export default function PaymentSuccessPage() {
   const cartData = useSelector((state) => state.cart?.products);
 
 
-  console.log("object", cartData);
+ //console.log("object", cartData);
   const columns = [
     {
       title: "Sản phẩm",

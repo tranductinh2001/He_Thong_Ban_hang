@@ -31,7 +31,7 @@ export const fetchUpdateUser = createAsyncThunk(
   "user/fetchUpdateUser",
   async ({ data, id}, { rejectWithValue }) => {
     try {
-      console.log("fetchUpdateUser",data, id)
+     //console.log("fetchUpdateUser",data, id)
       const response = await userRequests.UpdateUserProdfile(data , id);
       return response.data;
     } catch (error) {

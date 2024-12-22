@@ -97,7 +97,7 @@ const OrderAddressSlice = createSlice({
         state.defaultOrderAddress = action.payload?.find(
           (item) => item.isDefault === true
         );
-        console.log(state.defaultOrderAddress);
+       //console.log(state.defaultOrderAddress);
         state.orderAddress = action.payload;
         if (!Array.isArray(state.order_addresses)) {
           state.order_addresses = [];

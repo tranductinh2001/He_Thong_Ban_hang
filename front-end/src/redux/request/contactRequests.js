@@ -13,7 +13,7 @@ const contactRequests = {
   },
   sendMail: async (mailData) => {
     try {
-      console.log("data gửi mail contact nè ",mailData);
+     //console.log("data gửi mail contact nè ",mailData);
       const response = await axiosInstance.post(
         API_ENDPOINTS.SEND_MAIL,
         mailData

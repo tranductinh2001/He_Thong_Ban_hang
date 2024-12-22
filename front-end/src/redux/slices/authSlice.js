@@ -7,7 +7,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async (payload, { rejectWithValue }) => {
     try {
-      console.log("payload   ", payload);
+     //console.log("payload   ", payload);
       const response = await authRequests.loginService(payload);
       const { jwt, user } = response.data;
       localStorage.setItem("jwt", jwt?.value);
@@ -103,14 +103,14 @@ const authSlice = createSlice({
       state.errorMessages = "";
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log(" auth ",action.payload)
+     //console.log(" auth ",action.payload)
       state.isLoading = false;
       state.currentUser = action.payload;
       state.jwt = action.payload.jwt?.value;
       state.isAuthenticated = true;
     });
     builder.addCase(login.rejected, (state, action) => {
-      console.log(" auth rejected ",action.payload)
+     //console.log(" auth rejected ",action.payload)
       state.isLoading = false;
       state.errorMessages = action.payload?.message;
     });
@@ -138,7 +138,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
     });
     builder.addCase(fetchUserDetail.rejected, (state, action) => {
-      console.log("vào     builder.addCase(fetchUserDetail.rejected, (state, action) ");
+     //console.log("vào     builder.addCase(fetchUserDetail.rejected, (state, action) ");
       state.isLoading = false;
       state.jwt = null;
       state.isAuthenticated = false;
@@ -158,7 +158,7 @@ const authSlice = createSlice({
     builder.addCase(register.rejected, (state, action) => {
       state.isLoading = false;
       state.errorRegisterMessages = action.payload;
-      console.log(action.payload);
+     //console.log(action.payload);
       state.registerForm = null;
       state.createdAccountSuccess = false;
     });

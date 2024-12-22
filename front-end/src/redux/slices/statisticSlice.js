@@ -34,7 +34,7 @@ export const fetchStatisticsByYear = createAsyncThunk(
   "statistic/fetchStatisticsByYear",
   async ({ startYear, endYear }, { rejectWithValue }) => {
     try {
-      console.log("vào rồi ", startYear, endYear);
+     //console.log("vào rồi ", startYear, endYear);
       const response = await orderRequests.getTotalPriceByYear(
         startYear,
         endYear
@@ -50,7 +50,7 @@ export const fetchStatisticsByDateRange = createAsyncThunk(
   "statistic/fetchStatisticsByDateRange",
   async ({ startDate, endDate }, { rejectWithValue }) => {
     try {
-      console.log("vào rồi ", startDate, endDate);
+     //console.log("vào rồi ", startDate, endDate);
       const response = await orderRequests.getTotalPriceByDateRange(
         startDate,
         endDate
@@ -66,7 +66,7 @@ export const fetchStatisticsByMonth = createAsyncThunk(
   "statistic/fetchStatisticsByMonth",
   async ({ startMonth, endMonth }, { rejectWithValue }) => {
     try {
-      console.log("Fetching data for months:", startMonth, endMonth);
+     //console.log("Fetching data for months:", startMonth, endMonth);
       const response = await orderRequests.getTotalPriceByMonth(
         startMonth,
         endMonth

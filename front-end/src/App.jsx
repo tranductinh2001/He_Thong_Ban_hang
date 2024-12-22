@@ -158,15 +158,15 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
 
             {/* Admin Routes */}
-            {/* <Route
-            path="/admin/*"
-            element={
-              <ProtectedRoute>
-                <DefaultLayout />
-              </ProtectedRoute>
-            }
-          /> */}
-            <Route path="/admin/*" element={<DefaultLayout />} />
+            <Route
+              path="/admin/*"
+              element={
+                <ProtectedRoute>
+                  <DefaultLayout />
+                </ProtectedRoute>
+              }
+            />
+            {/* <Route path="/admin/*" element={<DefaultLayout />} /> */}
           </Routes>
         </WebSocketProvider>
       </Suspense>
